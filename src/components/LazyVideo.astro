@@ -1,0 +1,159 @@
+---
+/**
+ * Decorative/cinematic video with a poster-first, lazy-init loading model.
+ *
+ * - `hero`: loads and attempts to play immediately (use for the one
+ *   above-the-fold video on a page, per the "only the hero may initialize
+ *   immediately" rule).
+ * - Everything else waits for an IntersectionObserver to bring it near the
+ *   viewport before a src is ever assigned, and pauses once it scrolls
+ *   significantly out of view.
+ * - `prefers-reduced-motion: reduce` skips video entirely — the poster is
+ *   the whole experience for those users, not a fallback bolted on after.
+ * - Pass `muxPlaybackId` once real Mux assets exist; `src` remains for a
+ *   direct progressive-mp4 fallback. Neither is required yet — the poster
+ *   alone is a valid, complete state.
+ */
+interface Props {
+  poster: string;
+  alt: string;
+  src?: string;
+  muxPlaybackId?: string;
+  aspectRatio?: string;
+  hero?: boolean;
+  loop?: boolean;
+  class?: string;
+}
+
+const {
+  poster,
+  alt,
+  src,
+  muxPlaybackId,
+  aspectRatio = "16 / 9",
+  hero = false,
+  loop = true,
+  class: className,
+} = Astro.props;
+
+const videoSrc = muxPlaybackId
+  ? `https://stream.mux.com/${muxPlaybackId}.m3u8`
+  : src;
+---
+
+<div
+  class:list={["lazy-video", className]}
+  style={`aspect-ratio: ${aspectRatio};`}
+  data-lazy-video
+  data-hero={hero ? "true" : undefined}
+>
+  <img
+    class="lazy-video__poster"
+    src={poster}
+    alt={alt}
+    loading={hero ? "eager" : "lazy"}
+    fetchpriority={hero ? "high" : "auto"}
+    decoding="async"
+  />
+  {videoSrc && (
+    <video
+      class="lazy-video__video"
+      muted
+      loop={loop}
+      playsinline
+      preload="none"
+      aria-hidden="true"
+      tabindex="-1"
+      data-src={hero ? undefined : videoSrc}
+      src={hero ? videoSrc : undefined}
+      autoplay={hero}
+    />
+  )}
+</div>
+
+<style>
+  .lazy-video {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: var(--color-charcoal);
+  }
+
+  .lazy-video__poster,
+  .lazy-video__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .lazy-video__video {
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease-out);
+  }
+
+  .lazy-video__video.is-playing {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  const PLAYING_CLASS = "is-playing";
+
+  function initVideo(container: HTMLElement) {
+    const video = container.querySelector<HTMLVideoElement>(".lazy-video__video");
+    if (!video) return;
+
+    const src = video.dataset.src;
+    if (src && !video.src) {
+      video.src = src;
+    }
+
+    video.addEventListener("playing", () => video.classList.add(PLAYING_CLASS));
+    video.addEventListener("pause", () => video.classList.remove(PLAYING_CLASS));
+
+    video.play().catch(() => {
+      /* Autoplay blocked — poster remains the entire experience, by design. */
+    });
+  }
+
+  function pauseVideo(container: HTMLElement) {
+    const video = container.querySelector<HTMLVideoElement>(".lazy-video__video");
+    video?.pause();
+  }
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const heroEls = document.querySelectorAll<HTMLElement>("[data-lazy-video][data-hero]");
+  if (!reducedMotion) {
+    heroEls.forEach((el) => {
+      const video = el.querySelector<HTMLVideoElement>(".lazy-video__video");
+      if (!video) return;
+      video.addEventListener("playing", () => video.classList.add(PLAYING_CLASS));
+      video.play().catch(() => {});
+    });
+  }
+
+  const lazyEls = document.querySelectorAll<HTMLElement>(
+    "[data-lazy-video]:not([data-hero])"
+  );
+
+  if (!reducedMotion && lazyEls.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const el = entry.target as HTMLElement;
+          if (entry.isIntersecting) {
+            initVideo(el);
+          } else {
+            pauseVideo(el);
+          }
+        }
+      },
+      { rootMargin: "200px 0px", threshold: 0 }
+    );
+
+    lazyEls.forEach((el) => observer.observe(el));
+  }
+</script>

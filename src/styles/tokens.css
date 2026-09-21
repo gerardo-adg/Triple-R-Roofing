@@ -1,0 +1,113 @@
+/*
+  Design tokens for Triple R Roofing.
+  Palette is a flat interpretation of the existing gold/charcoal brand mark —
+  no gradients, no bevels, no drop shadows. Swap --color-gold-* if the client
+  supplies exact brand hex values later; nothing downstream depends on the
+  specific value.
+
+  Breakpoints (documented, not enforced as tokens — CSS custom properties
+  can't drive @media conditions without a build step):
+    480px  small phones
+    768px  tablets / large phones landscape
+    1024px small desktop / laptop
+    1440px large desktop
+*/
+
+:root {
+  /* ---- Color: base palette ---- */
+  --color-paper: #f6f1e7;
+  --color-paper-raised: #ffffff;
+  --color-charcoal: #17140f;
+  --color-charcoal-raised: #211d16;
+  --color-gold: #b8923f;
+  --color-gold-deep: #8f702c;
+  --color-gold-pale: #efe6ce;
+
+  /* ---- Color: semantic ---- */
+  --color-bg: var(--color-paper);
+  --color-bg-raised: var(--color-paper-raised);
+  --color-bg-inverse: var(--color-charcoal);
+  --color-bg-inverse-raised: var(--color-charcoal-raised);
+
+  --color-text: var(--color-charcoal);
+  --color-text-muted: #5c5748;
+  --color-text-inverse: var(--color-paper);
+  --color-text-muted-inverse: rgb(246 241 231 / 68%);
+
+  --color-accent: var(--color-gold);
+  --color-accent-strong: var(--color-gold-deep);
+  --color-accent-tint: var(--color-gold-pale);
+
+  --color-border: rgb(23 20 15 / 12%);
+  --color-border-inverse: rgb(255 255 255 / 14%);
+
+  --color-focus-ring: var(--color-gold-deep);
+
+  /* ---- Typography ---- */
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --leading-tight: 1.08;
+  --leading-snug: 1.25;
+  --leading-normal: 1.6;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.08em;
+
+  --text-body-sm: 0.875rem;
+  --text-body: 1rem;
+  --text-body-lg: 1.1875rem;
+
+  --text-eyebrow: 0.8125rem;
+
+  --text-h6: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);
+  --text-h5: clamp(1.375rem, 1.25rem + 0.6vw, 1.75rem);
+  --text-h4: clamp(1.75rem, 1.5rem + 1.1vw, 2.375rem);
+  --text-h3: clamp(2.125rem, 1.7rem + 1.8vw, 3.125rem);
+  --text-h2: clamp(2.5rem, 1.9rem + 2.6vw, 4rem);
+  --text-h1: clamp(2.75rem, 1.9rem + 3.8vw, 5.5rem);
+
+  /* ---- Spacing (4px base) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  /* ---- Shape ---- */
+  --radius-input: 2px;
+  --radius-none: 0;
+
+  /* ---- Elevation (used sparingly — nav-on-scroll, dialogs) ---- */
+  --shadow-soft: 0 1px 2px rgb(23 20 15 / 6%), 0 12px 32px rgb(23 20 15 / 10%);
+
+  /* ---- Motion ---- */
+  --duration-fast: 150ms;
+  --duration-base: 320ms;
+  --duration-slow: 600ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---- Layout ---- */
+  --container-max: 1320px;
+  --container-padding: clamp(1.25rem, 4vw, 3rem);
+  --nav-height: 84px;
+
+  /* ---- Z-index scale ---- */
+  --z-nav: 100;
+  --z-overlay: 200;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}

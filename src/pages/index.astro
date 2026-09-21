@@ -1,0 +1,274 @@
+---
+// INTERNAL — Phase 2 design-system preview. Not the production homepage.
+// Gets replaced by the real homepage in Phase 4.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+import Button from "../components/Button.astro";
+import LazyVideo from "../components/LazyVideo.astro";
+
+const colorTokens = [
+  { name: "Paper", css: "--color-paper", hex: "#f6f1e7" },
+  { name: "Paper raised", css: "--color-paper-raised", hex: "#ffffff" },
+  { name: "Charcoal", css: "--color-charcoal", hex: "#17140f" },
+  { name: "Charcoal raised", css: "--color-charcoal-raised", hex: "#211d16" },
+  { name: "Gold", css: "--color-gold", hex: "#b8923f" },
+  { name: "Gold deep", css: "--color-gold-deep", hex: "#8f702c" },
+  { name: "Gold pale", css: "--color-gold-pale", hex: "#efe6ce" },
+];
+
+const spacingTokens = [
+  "--space-1",
+  "--space-2",
+  "--space-3",
+  "--space-4",
+  "--space-5",
+  "--space-6",
+  "--space-7",
+  "--space-8",
+  "--space-9",
+  "--space-10",
+];
+---
+
+<BaseLayout
+  title="Design System Preview — Triple R Roofing"
+  description="Internal Phase 2 design-system reference. Not a public page."
+>
+  <main id="main">
+    <header class="preview-banner">
+      <Container>
+        <p class="eyebrow">Phase 2 — internal only</p>
+        <h1>Design system preview</h1>
+        <p>
+          Tokens, type, color, buttons, spacing, and the lazy-loading video
+          behavior — reviewed here before any real page gets built on top of
+          it. This page is not part of the production sitemap.
+        </p>
+      </Container>
+    </header>
+
+    <section class="block">
+      <Container>
+        <p class="eyebrow">Color</p>
+        <h2>Flat palette, sampled from the mark</h2>
+        <p>
+          No gradients, no bevels. Gold is a placeholder value read from the
+          submitted logo file — swap it in tokens.css once exact brand hex
+          values are confirmed; nothing else changes.
+        </p>
+        <div class="swatch-grid">
+          {colorTokens.map((token) => (
+            <div class="swatch">
+              <div class="swatch__chip" style={`background:${token.hex};`}></div>
+              <p class="swatch__name">{token.name}</p>
+              <p class="swatch__meta">{token.css} · {token.hex}</p>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </section>
+
+    <section class="block">
+      <Container>
+        <p class="eyebrow">Typography</p>
+        <h2>Fraunces + Public Sans</h2>
+        <p>
+          An editorial serif for display type against a clean, restrained
+          sans for body and UI — enough contrast to feel architectural
+          rather than templated, deliberately not the bold-condensed-caps
+          treatment used elsewhere in the category.
+        </p>
+        <div class="type-scale">
+          <h1>Aa — H1 Roofing</h1>
+          <h2>Aa — H2 Roofing</h2>
+          <h3>Aa — H3 Roofing</h3>
+          <h4>Aa — H4 Roofing</h4>
+          <h5>Aa — H5 Roofing</h5>
+          <h6>Aa — H6 Roofing</h6>
+          <p class="eyebrow">Eyebrow label</p>
+          <p class="type-scale__body">
+            Body copy in Public Sans — the workhorse text for paragraphs,
+            FAQs, and service descriptions. Sized for comfortable reading at
+            a generous line height, capped at 62 characters per line by
+            default.
+          </p>
+          <p class="quote">
+            "The crew took pride in every detail and kept us informed
+            throughout the entire roofing project." — a set quote/testimonial
+            treatment in italic Fraunces.
+          </p>
+        </div>
+      </Container>
+    </section>
+
+    <section class="block section--inverse">
+      <Container>
+        <p class="eyebrow">Buttons</p>
+        <h2>On dark</h2>
+        <div class="button-row">
+          <Button variant="primary" inverse>Request a Free Estimate</Button>
+          <Button variant="secondary" inverse>Call Triple R</Button>
+          <Button variant="text" inverse href="#">View Our Work</Button>
+        </div>
+      </Container>
+    </section>
+
+    <section class="block">
+      <Container>
+        <p class="eyebrow">Buttons</p>
+        <h2>On light</h2>
+        <div class="button-row">
+          <Button variant="primary">Request a Free Estimate</Button>
+          <Button variant="secondary">Call Triple R</Button>
+          <Button variant="text" href="#">View Our Work</Button>
+        </div>
+      </Container>
+    </section>
+
+    <section class="block">
+      <Container>
+        <p class="eyebrow">Spacing</p>
+        <h2>4px-based scale</h2>
+        <div class="space-scale">
+          {spacingTokens.map((token) => (
+            <div class="space-scale__row">
+              <span class="space-scale__label">{token}</span>
+              <span class="space-scale__bar" style={`width: var(${token});`}></span>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </section>
+
+    <section class="block">
+      <Container>
+        <p class="eyebrow">Media behavior</p>
+        <h2>Lazy video, poster-first</h2>
+        <p>
+          No real footage yet, so this shows the architecture rather than
+          the payoff: a poster image loads first and stays the whole
+          experience under <code>prefers-reduced-motion</code> or a blocked
+          autoplay. Below the fold, a &lt;video&gt; only gets a src via
+          IntersectionObserver shortly before it enters view, and pauses
+          again once it scrolls well past. Once real Mux playback IDs exist,
+          they drop straight into the <code>muxPlaybackId</code> prop.
+        </p>
+        <LazyVideo
+          poster="/media/placeholder-poster.svg"
+          alt="Placeholder — real project or drone footage will replace this poster"
+          aspectRatio="16 / 9"
+        />
+      </Container>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .preview-banner {
+    padding-block: var(--space-9) var(--space-8);
+    background: var(--color-bg-inverse);
+    color: var(--color-text-inverse);
+  }
+
+  .preview-banner h1 {
+    color: var(--color-text-inverse);
+    margin-block: var(--space-3) var(--space-4);
+  }
+
+  .preview-banner p {
+    color: var(--color-text-muted-inverse);
+  }
+
+  .block {
+    padding-block: var(--space-9);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .block h2 {
+    margin-block: var(--space-2) var(--space-4);
+  }
+
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--space-5);
+    margin-top: var(--space-6);
+  }
+
+  .swatch__chip {
+    aspect-ratio: 1;
+    border: 1px solid var(--color-border);
+  }
+
+  .swatch__name {
+    margin-top: var(--space-2);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .swatch__meta {
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+    font-family: monospace;
+  }
+
+  .type-scale {
+    margin-top: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .type-scale__body {
+    margin-top: var(--space-2);
+  }
+
+  .quote {
+    font-size: var(--text-h6);
+    max-width: 44ch;
+    color: var(--color-text);
+    margin-top: var(--space-2);
+  }
+
+  .button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+    align-items: center;
+  }
+
+  .space-scale {
+    margin-top: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .space-scale__row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .space-scale__label {
+    width: 8ch;
+    font-family: monospace;
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  .space-scale__bar {
+    display: block;
+    height: 10px;
+    background: var(--color-accent);
+  }
+
+  code {
+    font-family: monospace;
+    background: var(--color-gold-pale);
+    padding: 0.1em 0.35em;
+    font-size: 0.9em;
+  }
+</style>

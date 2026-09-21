@@ -1,0 +1,15 @@
+/*
+  Self-hosted via @fontsource — latin subset only, only the weights actually
+  used. font-display: swap is set by the package.
+*/
+
+/* Fraunces — display/editorial. Regular for large headlines, italic for
+   pull-quotes/testimonials, semibold for subheads. */
+@import "@fontsource/fraunces/latin-400.css";
+@import "@fontsource/fraunces/latin-400-italic.css";
+@import "@fontsource/fraunces/latin-600.css";
+
+/* Public Sans — body copy and UI. Regular for body, semibold for buttons,
+   nav, and labels. */
+@import "@fontsource/public-sans/latin-400.css";
+@import "@fontsource/public-sans/latin-600.css";
