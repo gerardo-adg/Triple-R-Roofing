@@ -22,10 +22,28 @@ h4,
 h5,
 h6 {
   font-family: var(--font-display);
-  font-weight: 400;
   line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
   text-wrap: balance;
+}
+
+/* h1/h2 carry the most visual authority — heavy weight, expanded width
+   (Archivo's wdth axis), tracked just slightly tight. h3 and below stay at
+   normal width so body-adjacent headings don't compete with true display
+   type. */
+h1,
+h2 {
+  font-weight: var(--weight-black);
+  font-stretch: var(--stretch-expanded);
+  letter-spacing: -0.01em;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--weight-bold);
+  font-stretch: var(--stretch-normal);
+  letter-spacing: var(--tracking-tight);
 }
 
 h1 {
@@ -39,15 +57,12 @@ h3 {
 }
 h4 {
   font-size: var(--text-h4);
-  font-weight: 600;
 }
 h5 {
   font-size: var(--text-h5);
-  font-weight: 600;
 }
 h6 {
   font-size: var(--text-h6);
-  font-weight: 600;
 }
 
 p {
@@ -61,14 +76,23 @@ p:not(:last-child) {
 }
 
 strong {
-  font-weight: 600;
+  font-weight: var(--weight-bold);
   color: var(--color-text);
 }
 
+/* No italic anywhere — a grotesk italic still reads too soft/editorial
+   for this brand. Quotes/emphasis get a gold accent instead of a style
+   change. */
 em,
 .quote {
-  font-family: var(--font-display);
-  font-style: italic;
+  font-style: normal;
+  font-weight: var(--weight-medium);
+  color: var(--color-accent-strong);
+}
+
+.section--inverse .quote,
+.section--inverse em {
+  color: var(--color-accent);
 }
 
 a {
@@ -97,7 +121,7 @@ a:not([class]):hover {
   display: inline-block;
   font-family: var(--font-body);
   font-size: var(--text-eyebrow);
-  font-weight: 600;
+  font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--color-accent-strong);
@@ -145,7 +169,7 @@ a:not([class]):hover {
   padding: var(--space-3) var(--space-5);
   background: var(--color-charcoal);
   color: var(--color-paper);
-  font-weight: 600;
+  font-weight: var(--weight-bold);
   transition: top var(--duration-fast) var(--ease-standard);
 }
 

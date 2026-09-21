@@ -40,8 +40,8 @@ const classes = ["btn", `btn--${variant}`, inverse && "btn--inverse", className]
     align-items: center;
     gap: var(--space-2);
     font-family: var(--font-body);
-    font-weight: 600;
-    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    font-size: var(--btn-font-size, var(--text-body-sm));
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     white-space: nowrap;
@@ -52,9 +52,15 @@ const classes = ["btn", `btn--${variant}`, inverse && "btn--inverse", className]
       transform var(--duration-fast) var(--ease-standard);
   }
 
+  /*
+    Padding/font-size read from custom properties (with defaults) rather
+    than being hardcoded, so an ancestor element can compact a specific
+    button instance — e.g. the header CTA on narrow viewports — without
+    needing a variant prop or fighting Astro's per-component style scoping.
+  */
   .btn--primary,
   .btn--secondary {
-    padding: var(--space-4) var(--space-6);
+    padding: var(--btn-padding-y, var(--space-4)) var(--btn-padding-x, var(--space-6));
     border-radius: var(--radius-none);
   }
 

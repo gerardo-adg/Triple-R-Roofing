@@ -1,15 +1,10 @@
 /*
-  Self-hosted via @fontsource — latin subset only, only the weights actually
-  used. font-display: swap is set by the package.
+  Single-family system: Archivo (variable), self-hosted via @fontsource.
+  One file covers weight 100–900 AND width 62%–125% (font-stretch), which
+  is how hierarchy is built — a bold, expanded cut for display headlines,
+  normal width/weight for body and UI — without a second typeface.
+  Unicode-range subsetting means the browser only ever fetches the "latin"
+  file for this site; the vietnamese/cyrillic/etc. subsets in this import
+  are never downloaded. Upright only — no italic, by design.
 */
-
-/* Fraunces — display/editorial. Regular for large headlines, italic for
-   pull-quotes/testimonials, semibold for subheads. */
-@import "@fontsource/fraunces/latin-400.css";
-@import "@fontsource/fraunces/latin-400-italic.css";
-@import "@fontsource/fraunces/latin-600.css";
-
-/* Public Sans — body copy and UI. Regular for body, semibold for buttons,
-   nav, and labels. */
-@import "@fontsource/public-sans/latin-400.css";
-@import "@fontsource/public-sans/latin-600.css";
+@import "@fontsource-variable/archivo/wdth.css";

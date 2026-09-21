@@ -1,0 +1,248 @@
+---
+import Container from "./Container.astro";
+import Button from "./Button.astro";
+import LazyVideo from "./LazyVideo.astro";
+
+interface CTA {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  /** Headline authored as short, stacked capability statements — brand/message first, per the required hierarchy (media -> message -> location -> action). */
+  lines: string[];
+  location: string;
+  primaryCta: CTA;
+  secondaryCta?: CTA;
+  poster: string;
+  alt: string;
+  muxPlaybackId?: string;
+  videoSrc?: string;
+}
+
+const { lines, location, primaryCta, secondaryCta, poster, alt, muxPlaybackId, videoSrc } =
+  Astro.props;
+---
+
+<section class="hero">
+  <div class="hero__media" aria-hidden="true">
+    <div class="hero__media-inner">
+      <LazyVideo
+        poster={poster}
+        alt={alt}
+        hero
+        muxPlaybackId={muxPlaybackId}
+        src={videoSrc}
+        aspectRatio="auto"
+        class="hero__video"
+      />
+    </div>
+  </div>
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <Container>
+  <div class="hero__content">
+    <h1 class="hero__headline">
+      {lines.map((line, i) => (
+        <span class="hero__line-mask">
+          <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
+            {line}
+          </span>
+        </span>
+      ))}
+    </h1>
+
+    <div class="hero__location">
+      <span class="hero__rule" aria-hidden="true"></span>
+      <span>{location}</span>
+    </div>
+
+    <div class="hero__actions">
+      <Button variant="primary" inverse href={primaryCta.href}>
+        {primaryCta.label}
+      </Button>
+      {secondaryCta && (
+        <Button variant="text" inverse href={secondaryCta.href}>
+          {secondaryCta.label}
+        </Button>
+      )}
+    </div>
+  </div>
+  </Container>
+
+  <div class="hero__seam" aria-hidden="true"></div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 100svh;
+    overflow: hidden;
+    background: var(--color-charcoal);
+    color: var(--color-text-inverse);
+  }
+
+  /*
+    Media lives in its own isolated layer, separate from the entrance
+    animation (.hero__media-inner) and from the scrim/content. A later
+    "signature transition" (contained frame, mask/crop on scroll, etc.)
+    can transform .hero__media directly without touching this markup.
+  */
+  .hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .hero__media-inner {
+    position: absolute;
+    inset: 0;
+    transform: scale(1.045);
+    opacity: 0.92;
+    animation: hero-media-in var(--duration-slow) var(--ease-out) forwards;
+  }
+
+  .hero__media-inner :global(.lazy-video) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  /* Neutral near-black scrim — no warm tint. A tinted overlay here was the
+     biggest single reason the previous version read brown/espresso instead
+     of true black. */
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(to bottom, rgb(10 10 10 / 55%) 0%, rgb(10 10 10 / 0%) 24%),
+      linear-gradient(to top, rgb(10 10 10 / 70%) 0%, rgb(10 10 10 / 20%) 34%, rgb(10 10 10 / 0%) 58%);
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding-top: calc(var(--nav-height) + var(--space-6));
+    padding-bottom: calc(clamp(140px, 20vh, 220px) + env(safe-area-inset-bottom));
+  }
+
+  /* Brand/message — the strongest element on the page. Short, stacked,
+     factual capability statements rather than a run-on sentence: reads as
+     a confident construction-brand statement, not a marketing headline,
+     and avoids fragile line-wrap behavior across breakpoints. */
+  .hero__headline {
+    color: var(--color-text-inverse);
+    font-size: clamp(2.75rem, 1.8rem + 5.2vw, 7rem);
+    line-height: 0.98;
+    letter-spacing: -0.005em;
+    text-transform: uppercase;
+    margin-bottom: var(--space-6);
+  }
+
+  .hero__line-mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .hero__line {
+    display: block;
+    transform: translateY(110%);
+    animation: hero-line-in var(--duration-slow) var(--ease-out) forwards;
+  }
+
+  /* Location/context — deliberately secondary to the headline, per the
+     required hierarchy (message before location). */
+  .hero__location {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-body-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    opacity: 0;
+    animation: hero-fade-in var(--duration-base) var(--ease-out) forwards;
+    animation-delay: 460ms;
+    margin-bottom: var(--space-7);
+  }
+
+  .hero__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: var(--color-accent);
+    flex-shrink: 0;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-5);
+    opacity: 0;
+    transform: translateY(8px);
+    animation: hero-fade-in var(--duration-base) var(--ease-out) forwards;
+    animation-delay: 580ms;
+  }
+
+  .hero__seam {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    height: clamp(56px, 8vh, 110px);
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent 0%, transparent 40%, var(--color-bg) 100%);
+  }
+
+  @keyframes hero-media-in {
+    from {
+      transform: scale(1.045);
+      opacity: 0.92;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes hero-line-in {
+    from {
+      transform: translateY(110%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hero-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero__headline {
+      font-size: clamp(2.15rem, 1.5rem + 6.5vw, 2.6rem);
+    }
+
+    .hero__location {
+      margin-bottom: var(--space-6);
+    }
+  }
+</style>

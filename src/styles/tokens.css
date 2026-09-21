@@ -1,9 +1,10 @@
 /*
   Design tokens for Triple R Roofing.
-  Palette is a flat interpretation of the existing gold/charcoal brand mark —
-  no gradients, no bevels, no drop shadows. Swap --color-gold-* if the client
-  supplies exact brand hex values later; nothing downstream depends on the
-  specific value.
+  Black / white / gold. True near-black foundation (not brown/espresso —
+  that direction was rejected in review), gold strictly as an accent, never
+  a dominant background. --color-gold is a clean placeholder pending the
+  client's verified brand hex; nothing downstream depends on the specific
+  value.
 
   Breakpoints (documented, not enforced as tokens — CSS custom properties
   can't drive @media conditions without a build step):
@@ -15,13 +16,13 @@
 
 :root {
   /* ---- Color: base palette ---- */
-  --color-paper: #f6f1e7;
+  --color-paper: #f5f3ee;
   --color-paper-raised: #ffffff;
-  --color-charcoal: #17140f;
-  --color-charcoal-raised: #211d16;
-  --color-gold: #b8923f;
-  --color-gold-deep: #8f702c;
-  --color-gold-pale: #efe6ce;
+  --color-charcoal: #0a0a0a;
+  --color-charcoal-raised: #151515;
+  --color-gold: #c9a227;
+  --color-gold-deep: #a1821f;
+  --color-gold-pale: #f1e7c9;
 
   /* ---- Color: semantic ---- */
   --color-bg: var(--color-paper);
@@ -30,25 +31,40 @@
   --color-bg-inverse-raised: var(--color-charcoal-raised);
 
   --color-text: var(--color-charcoal);
-  --color-text-muted: #5c5748;
+  --color-text-muted: #4a4a48;
   --color-text-inverse: var(--color-paper);
-  --color-text-muted-inverse: rgb(246 241 231 / 68%);
+  --color-text-muted-inverse: rgb(245 243 238 / 68%);
 
   --color-accent: var(--color-gold);
   --color-accent-strong: var(--color-gold-deep);
   --color-accent-tint: var(--color-gold-pale);
 
-  --color-border: rgb(23 20 15 / 12%);
+  --color-border: rgb(10 10 10 / 12%);
   --color-border-inverse: rgb(255 255 255 / 14%);
+  --color-border-gold: rgb(201 162 39 / 22%);
 
   --color-focus-ring: var(--color-gold-deep);
 
-  /* ---- Typography ---- */
-  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
-  --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* ---- Typography ----
+     Single family (Archivo, variable) rather than a display/body pairing —
+     a serif+sans pairing was part of what read editorial/hospitality
+     regardless of which serif. Hierarchy comes from weight + width
+     (font-stretch) instead: expanded + heavy for display, normal width for
+     body/UI. Both tokens point at the same family; kept as two tokens so
+     display-specific tracking/weight rules have somewhere to live. */
+  --font-display: "Archivo Variable", "Archivo", Arial, sans-serif;
+  --font-body: "Archivo Variable", "Archivo", Arial, sans-serif;
 
-  --leading-tight: 1.08;
-  --leading-snug: 1.25;
+  --weight-body: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  --weight-black: 800;
+
+  --stretch-normal: 100%;
+  --stretch-expanded: 122%;
+
+  --leading-tight: 1.02;
+  --leading-snug: 1.2;
   --leading-normal: 1.6;
 
   --tracking-tight: -0.02em;
@@ -85,7 +101,7 @@
   --radius-none: 0;
 
   /* ---- Elevation (used sparingly — nav-on-scroll, dialogs) ---- */
-  --shadow-soft: 0 1px 2px rgb(23 20 15 / 6%), 0 12px 32px rgb(23 20 15 / 10%);
+  --shadow-soft: 0 1px 2px rgb(10 10 10 / 6%), 0 12px 32px rgb(10 10 10 / 10%);
 
   /* ---- Motion ---- */
   --duration-fast: 150ms;
