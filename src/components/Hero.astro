@@ -9,9 +9,10 @@ interface CTA {
 }
 
 interface Props {
-  /** Headline authored as short, stacked capability statements — brand/message first, per the required hierarchy (media -> message -> location -> action). */
+  /** Headline authored as short, stacked lines — brand/message first, per the required hierarchy (media -> message -> location -> action). */
   lines: string[];
-  location: string;
+  /** Secondary, smaller — should never compete with the headline. */
+  subheadline: string;
   primaryCta: CTA;
   secondaryCta?: CTA;
   poster: string;
@@ -20,12 +21,12 @@ interface Props {
   videoSrc?: string;
 }
 
-const { lines, location, primaryCta, secondaryCta, poster, alt, muxPlaybackId, videoSrc } =
+const { lines, subheadline, primaryCta, secondaryCta, poster, alt, muxPlaybackId, videoSrc } =
   Astro.props;
 ---
 
-<section class="hero">
-  <div class="hero__media" aria-hidden="true">
+<section class="hero" data-hero>
+  <div class="hero__media" data-hero-media aria-hidden="true">
     <div class="hero__media-inner">
       <LazyVideo
         poster={poster}
@@ -52,10 +53,7 @@ const { lines, location, primaryCta, secondaryCta, poster, alt, muxPlaybackId, v
       ))}
     </h1>
 
-    <div class="hero__location">
-      <span class="hero__rule" aria-hidden="true"></span>
-      <span>{location}</span>
-    </div>
+    <p class="hero__subheadline">{subheadline}</p>
 
     <div class="hero__actions">
       <Button variant="primary" inverse href={primaryCta.href}>
@@ -86,15 +84,19 @@ const { lines, location, primaryCta, secondaryCta, poster, alt, muxPlaybackId, v
 
   /*
     Media lives in its own isolated layer, separate from the entrance
-    animation (.hero__media-inner) and from the scrim/content. A later
-    "signature transition" (contained frame, mask/crop on scroll, etc.)
-    can transform .hero__media directly without touching this markup.
+    animation (.hero__media-inner) and from the scrim/content. This is the
+    layer the scroll-driven transition (below) transforms directly — the
+    signature interaction for this phase: as the hero scrolls past, the
+    media eases inward and gains a soft frame rather than just sliding
+    off-screen as a flat rectangle.
   */
   .hero__media {
     position: absolute;
     inset: 0;
     z-index: 0;
     overflow: hidden;
+    transform: scale(calc(1 - var(--hero-scroll, 0) * 0.06));
+    border-radius: calc(var(--hero-scroll, 0) * 28px);
   }
 
   .hero__media-inner {
@@ -134,22 +136,22 @@ const { lines, location, primaryCta, secondaryCta, poster, alt, muxPlaybackId, v
     padding-bottom: calc(clamp(140px, 20vh, 220px) + env(safe-area-inset-bottom));
   }
 
-  /* Brand/message — the strongest element on the page. Short, stacked,
-     factual capability statements rather than a run-on sentence: reads as
-     a confident construction-brand statement, not a marketing headline,
-     and avoids fragile line-wrap behavior across breakpoints. */
+  /* Brand/message — the strongest element on the page. */
   .hero__headline {
     color: var(--color-text-inverse);
-    font-size: clamp(2.75rem, 1.8rem + 5.2vw, 7rem);
+    font-size: clamp(2.75rem, 1.4rem + 5.6vw, 7rem);
     line-height: 0.98;
     letter-spacing: -0.005em;
     text-transform: uppercase;
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-5);
   }
 
   .hero__line-mask {
     display: block;
     overflow: hidden;
+    /* Safety net: if a future copy change introduces a word too long for
+       its line, it breaks rather than silently overflowing off-screen. */
+    overflow-wrap: break-word;
   }
 
   .hero__line {
@@ -158,29 +160,17 @@ const { lines, location, primaryCta, secondaryCta, poster, alt, muxPlaybackId, v
     animation: hero-line-in var(--duration-slow) var(--ease-out) forwards;
   }
 
-  /* Location/context — deliberately secondary to the headline, per the
-     required hierarchy (message before location). */
-  .hero__location {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    font-weight: var(--weight-bold);
-    font-size: var(--text-body-sm);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-accent);
+  /* Secondary by design — smaller, muted, constrained width so it never
+     competes with the headline above it. */
+  .hero__subheadline {
+    max-width: 46ch;
+    font-size: var(--text-body);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted-inverse);
     opacity: 0;
     animation: hero-fade-in var(--duration-base) var(--ease-out) forwards;
     animation-delay: 460ms;
     margin-bottom: var(--space-7);
-  }
-
-  .hero__rule {
-    display: block;
-    width: 40px;
-    height: 2px;
-    background: var(--color-accent);
-    flex-shrink: 0;
   }
 
   .hero__actions {
@@ -238,11 +228,49 @@ const { lines, location, primaryCta, secondaryCta, poster, alt, muxPlaybackId, v
 
   @media (max-width: 480px) {
     .hero__headline {
-      font-size: clamp(2.15rem, 1.5rem + 6.5vw, 2.6rem);
+      /* "Sacramento." is the longest single word in the headline and
+         can't break mid-word — measured against the actual rendered
+         glyph widths at the narrowest supported viewport (375px), not
+         estimated, with a margin of safety. */
+      font-size: 2.1rem;
     }
 
-    .hero__location {
+    .hero__subheadline {
       margin-bottom: var(--space-6);
     }
   }
 </style>
+
+<script>
+  // Signature interaction: as the hero scrolls past, its media layer eases
+  // inward and softens into a frame instead of just sliding away as a flat
+  // rectangle — using the isolated .hero__media layer built for exactly
+  // this. One CSS custom property, set from scroll position; the actual
+  // scale/radius easing lives in CSS above.
+  const hero = document.querySelector<HTMLElement>("[data-hero]");
+  const media = document.querySelector<HTMLElement>("[data-hero-media]");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (hero && media && !reducedMotion) {
+    let ticking = false;
+
+    const update = () => {
+      const rect = hero.getBoundingClientRect();
+      const progress = Math.min(Math.max(-rect.top / rect.height, 0), 1);
+      media.style.setProperty("--hero-scroll", progress.toFixed(3));
+      ticking = false;
+    };
+
+    update();
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          requestAnimationFrame(update);
+          ticking = true;
+        }
+      },
+      { passive: true }
+    );
+  }
+</script>

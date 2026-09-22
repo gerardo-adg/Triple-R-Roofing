@@ -1,0 +1,356 @@
+---
+import Container from "./Container.astro";
+
+// Descriptions carried over verbatim from the client's existing site
+// (confirmed during the Phase 1 audit) rather than rewritten from
+// scratch — real, already-vetted copy, not invented marketing language.
+const SERVICES = [
+  {
+    index: "01",
+    name: "Roof Replacement",
+    description:
+      "Full roof replacements using durable, weather-tested materials, installed with precision to protect your home for years to come.",
+    href: "/services/roof-replacement",
+    image: "/media/placeholder-service-1.svg",
+  },
+  {
+    index: "02",
+    name: "Roof Repair",
+    description:
+      "Fast, reliable repairs for leaks, missing shingles, and storm damage — keeping small problems from becoming big ones.",
+    href: "/services/roof-repair",
+    image: "/media/placeholder-service-2.svg",
+  },
+  {
+    index: "03",
+    name: "Gutters",
+    description:
+      "Cleaning, repair, and maintenance to keep your gutters flowing freely and protecting your home from water damage year-round.",
+    href: "/services/gutters",
+    image: "/media/placeholder-service-3.svg",
+  },
+];
+---
+
+<section class="services section--inverse">
+  <Container>
+    <div class="services__intro">
+      <h2 class="services__lead">
+        Three core services, done to the same standard on every job.
+      </h2>
+      <a href="/services" class="services__more">See every service →</a>
+    </div>
+
+    <!-- Desktop: list (left) + one shared media viewport (right), the
+         viewport swapping per row on hover/focus. -->
+    <div class="services__desktop">
+      <div class="services__list">
+        {SERVICES.map((service, i) => (
+          <a
+            class="services__row"
+            href={service.href}
+            data-service-trigger
+            data-index={i}
+          >
+            <span class="services__index">{service.index}</span>
+            <span class="services__body">
+              <h3 class="services__name">{service.name}</h3>
+              <span class="services__description">{service.description}</span>
+            </span>
+            <span class="services__arrow" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="services__viewport" data-service-viewport aria-hidden="true">
+        {SERVICES.map((service, i) => (
+          <img
+            src={service.image}
+            alt=""
+            loading={i === 0 ? "eager" : "lazy"}
+            class="services__viewport-image"
+            class:list={{ "is-active": i === 0 }}
+            data-viewport-image
+            data-index={i}
+          />
+        ))}
+      </div>
+    </div>
+
+    <!-- Mobile: native exclusive accordion (details[name]) — one open at a
+         time, no JS required for the core interaction. -->
+    <div class="services__accordion">
+      {SERVICES.map((service, i) => (
+        <details class="services__panel" name="services-mobile" open={i === 0}>
+          <summary class="services__panel-summary">
+            <span class="services__index">{service.index}</span>
+            <span class="services__panel-name">{service.name}</span>
+            <span class="services__chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="services__panel-content">
+            <div class="services__panel-media">
+              <img src={service.image} alt="" loading="lazy" />
+            </div>
+            <p class="services__description">{service.description}</p>
+            <a href={service.href} class="services__panel-link">
+              View {service.name} →
+            </a>
+          </div>
+        </details>
+      ))}
+    </div>
+  </Container>
+</section>
+
+<style>
+  .services {
+    padding-block: var(--space-9);
+  }
+
+  .services__intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-8);
+    margin-bottom: var(--space-8);
+  }
+
+  .services__lead {
+    font-family: var(--font-display);
+    font-size: var(--text-h5);
+    font-weight: var(--weight-bold);
+    font-stretch: var(--stretch-normal);
+    letter-spacing: var(--tracking-normal);
+    color: var(--color-text-inverse);
+    max-width: 46ch;
+  }
+
+  .services__more {
+    flex-shrink: 0;
+    padding-bottom: var(--space-1);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-accent);
+    border-bottom: 1px solid var(--color-border-gold);
+  }
+
+  .services__more:hover {
+    border-bottom-color: var(--color-accent);
+  }
+
+  /* ---- Shared row styling (desktop list + mobile accordion summary) ---- */
+  .services__index {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-gold);
+  }
+
+  .services__name,
+  .services__panel-name {
+    font-family: var(--font-display);
+    font-weight: var(--weight-black);
+    font-stretch: var(--stretch-expanded);
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--color-text-inverse);
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  .services__description {
+    max-width: 52ch;
+    color: var(--color-text-muted-inverse);
+  }
+
+  /* ---- Desktop: list + shared viewport ---- */
+  .services__desktop {
+    display: none;
+  }
+
+  .services__accordion {
+    border-top: 1px solid var(--color-border-inverse);
+  }
+
+  @media (min-width: 900px) {
+    .services__accordion {
+      display: none;
+    }
+
+    .services__desktop {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+
+    .services__list {
+      border-top: 1px solid var(--color-border-inverse);
+    }
+
+    .services__row {
+      position: relative;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: var(--space-5);
+      padding-block: var(--space-6);
+      border-bottom: 1px solid var(--color-border-inverse);
+      transition: padding-left var(--duration-base) var(--ease-standard);
+    }
+
+    .services__row:hover,
+    .services__row:focus-visible {
+      padding-left: var(--space-4);
+    }
+
+    .services__body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      min-width: 0;
+    }
+
+    .services__name {
+      font-size: clamp(1.75rem, 1.1vw + 1.5rem, 2.5rem);
+    }
+
+    .services__row:hover .services__name,
+    .services__row:focus-visible .services__name {
+      color: var(--color-gold);
+    }
+
+    .services__arrow {
+      font-size: var(--text-h5);
+      color: var(--color-gold);
+      opacity: 0;
+      transform: translateX(-6px);
+      transition:
+        opacity var(--duration-base) var(--ease-standard),
+        transform var(--duration-base) var(--ease-standard);
+    }
+
+    .services__row:hover .services__arrow,
+    .services__row:focus-visible .services__arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Substantially larger than the old docked thumbnails — this is where
+       real photography/video carries the section. Sticky so it stays in
+       view while the list scrolls past it. */
+    .services__viewport {
+      position: sticky;
+      top: calc(var(--nav-height) + var(--space-6));
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--color-charcoal-raised);
+    }
+
+    .services__viewport-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      /* Restrained architectural wipe rather than a crossfade — clipped
+         fully closed from the right by default, opening left-to-right
+         when active. */
+      clip-path: inset(0 0 0 100%);
+      transition: clip-path var(--duration-base) var(--ease-standard);
+    }
+
+    .services__viewport-image.is-active {
+      z-index: 2;
+      clip-path: inset(0 0 0 0%);
+    }
+  }
+
+  /* ---- Mobile: native exclusive accordion ---- */
+  .services__panel {
+    border-bottom: 1px solid var(--color-border-inverse);
+  }
+
+  .services__panel-summary {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    padding-block: var(--space-5);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .services__panel-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .services__panel-name {
+    flex: 1;
+    font-size: clamp(1.5rem, 1.1rem + 3vw, 2rem);
+  }
+
+  .services__panel[open] .services__panel-name {
+    color: var(--color-gold);
+  }
+
+  .services__chevron {
+    flex-shrink: 0;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid var(--color-gold);
+    border-bottom: 2px solid var(--color-gold);
+    transform: rotate(45deg);
+    margin-top: -4px;
+  }
+
+  .services__panel[open] .services__chevron {
+    transform: rotate(-135deg);
+    margin-top: 4px;
+  }
+
+  .services__panel-content {
+    padding-bottom: var(--space-6);
+  }
+
+  .services__panel-media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    margin-bottom: var(--space-4);
+  }
+
+  .services__panel-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .services__panel-link {
+    display: inline-block;
+    margin-top: var(--space-4);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-accent);
+    border-bottom: 1px solid var(--color-border-gold);
+  }
+
+  .services__panel-link:hover {
+    border-bottom-color: var(--color-accent);
+  }
+</style>
+
+<script>
+  const triggers = document.querySelectorAll<HTMLElement>("[data-service-trigger]");
+  const images = document.querySelectorAll<HTMLElement>("[data-viewport-image]");
+
+  function setActive(index: string) {
+    images.forEach((img) => img.classList.toggle("is-active", img.dataset.index === index));
+  }
+
+  triggers.forEach((trigger) => {
+    const index = trigger.dataset.index ?? "0";
+    trigger.addEventListener("mouseenter", () => setActive(index));
+    trigger.addEventListener("focus", () => setActive(index));
+  });
+</script>

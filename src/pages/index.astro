@@ -1,8 +1,11 @@
 ---
-// Phase 3: navigation + hero only. Sections below the hero are Phase 4.
+// Phase 4A: hero + first 2 sections (trust, services). The rest of the
+// homepage is later phases.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
+import TrustSection from "../components/TrustSection.astro";
+import ServicesSection from "../components/ServicesSection.astro";
 ---
 
 <BaseLayout
@@ -12,12 +15,14 @@ import Hero from "../components/Hero.astro";
   <Header />
   <main id="main">
     <Hero
-      lines={["Roofing.", "Roof Repair.", "Gutters."]}
-      location="Sacramento, California"
-      primaryCta={{ label: "Request a Free Estimate", href: "/contact" }}
+      lines={["Premier Roofing", "in Sacramento."]}
+      subheadline="Sacramento's choice for quality roof replacements, fast leak repairs, and custom gutter installations. Licensed and insured."
+      primaryCta={{ label: "Get a Free Estimate", href: "/contact" }}
       secondaryCta={{ label: "Call (916) 420-5635", href: "tel:+19164205635" }}
       poster="/media/placeholder-poster.svg"
       alt="Placeholder — cinematic drone or installation footage will replace this poster once final media is delivered"
     />
+    <TrustSection />
+    <ServicesSection />
   </main>
 </BaseLayout>

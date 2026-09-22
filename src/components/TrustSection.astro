@@ -1,0 +1,113 @@
+---
+import Container from "./Container.astro";
+
+// Every figure here is either something the client stated directly in
+// conversation (review counts/ratings, phone number) or something shown
+// directly on the client's own live site during the Phase 1 audit
+// (Licensed/bonded/insured, GAF/CertainTeed/BBB credentials, Wisetack
+// financing). Nothing here is inferred or invented.
+---
+
+<section class="trust">
+  <Container>
+    <div class="trust__grid">
+      <div class="trust__stat">
+        <h2 class="eyebrow">Trusted in Sacramento</h2>
+        <p class="trust__number">4.8<span class="trust__star">★</span></p>
+        <p class="trust__caption">Average rating · 92 Google reviews</p>
+        <p class="trust__caption trust__caption--muted">4.9★ on Yelp · 96 reviews</p>
+      </div>
+
+      <div class="trust__rule" aria-hidden="true"></div>
+
+      <div class="trust__statement">
+        <p>
+          <strong>Licensed, bonded, and insured.</strong> A
+          <strong>GAF Certified</strong> and
+          <strong>CertainTeed Select ShingleMaster</strong> contractor,
+          <strong>BBB Accredited</strong>, working throughout the
+          Sacramento area.
+        </p>
+        <p>
+          Financing available through Wisetack — a clear quote before any
+          work starts, and a plan that fits your budget if it doesn't need
+          to be paid up front.
+        </p>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .trust {
+    position: relative;
+    z-index: 2;
+    background: var(--color-bg);
+    /* Pulls up into the hero's fade-to-paper seam so the two sections
+       read as one continuous move rather than a hard stacked cut. */
+    margin-top: clamp(-90px, -7vh, -40px);
+    padding-top: clamp(120px, 16vh, 200px);
+    padding-bottom: var(--space-9);
+  }
+
+  .trust__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+
+  .trust__number {
+    font-family: var(--font-display);
+    font-weight: var(--weight-black);
+    font-stretch: var(--stretch-expanded);
+    font-size: clamp(4rem, 3rem + 5vw, 6.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+    margin-block: var(--space-3) var(--space-4);
+  }
+
+  .trust__star {
+    color: var(--color-gold);
+    font-size: 0.55em;
+    vertical-align: super;
+  }
+
+  .trust__caption {
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+  }
+
+  .trust__caption--muted {
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    margin-top: var(--space-1);
+  }
+
+  .trust__rule {
+    display: none;
+  }
+
+  .trust__statement p {
+    font-size: var(--text-body-lg);
+    max-width: 52ch;
+  }
+
+  .trust__statement strong {
+    color: var(--color-accent-strong);
+  }
+
+  @media (min-width: 900px) {
+    .trust__grid {
+      grid-template-columns: minmax(220px, 0.6fr) auto 1fr;
+      align-items: start;
+    }
+
+    .trust__rule {
+      display: block;
+      width: 1px;
+      height: 100%;
+      background: var(--color-border);
+    }
+  }
+</style>
