@@ -21,7 +21,11 @@
   --color-charcoal: #0a0a0a;
   --color-charcoal-raised: #151515;
   --color-gold: #c9a227;
-  --color-gold-deep: #a1821f;
+  /* Darkened from #a1821f during the homepage audit - the original only
+     hit 3.31:1 against --color-paper, short of the 4.5:1 WCAG AA minimum
+     for text this small (eyebrows, index numbers). This shade hits
+     4.95:1 while staying the same hue/saturation. */
+  --color-gold-deep: #7f6618;
   --color-gold-pale: #f1e7c9;
 
   /* ---- Color: semantic ---- */

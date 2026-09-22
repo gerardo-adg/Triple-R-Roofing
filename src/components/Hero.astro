@@ -139,7 +139,14 @@ const { lines, subheadline, primaryCta, secondaryCta, poster, alt, muxPlaybackId
   /* Brand/message — the strongest element on the page. */
   .hero__headline {
     color: var(--color-text-inverse);
-    font-size: clamp(2.75rem, 1.4rem + 5.6vw, 7rem);
+    /* Max stop tuned to match where Container's own max-width (1320px)
+       plateaus (~1320px viewport). Past that point the available line
+       width stops growing, so letting the font size keep growing toward
+       7rem caused an extra, unwanted wrap right around common desktop
+       widths (confirmed: 2 lines from 1180-1400px, 3 lines from 1440px
+       up under the old 7rem cap). Capping at 6rem keeps font growth and
+       line-width growth in sync indefinitely. */
+    font-size: clamp(2.75rem, 1.4rem + 5.6vw, 6rem);
     line-height: 0.98;
     letter-spacing: -0.005em;
     text-transform: uppercase;

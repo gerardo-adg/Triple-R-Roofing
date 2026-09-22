@@ -35,7 +35,13 @@ import Button from "./Button.astro";
   }
 
   .final-cta__headline {
-    font-size: var(--text-h2);
+    /* Slightly larger than --text-h2 rather than the token itself - at
+       exactly --text-h2, this collided pixel-for-pixel with Family's
+       headline (also --text-h2, but bold/normal-width rather than this
+       section's black/expanded default), which read as an accidental
+       inconsistency rather than intentional variation once the full
+       page was reviewed together. */
+    font-size: calc(var(--text-h2) * 1.08);
   }
 
   .final-cta__body {

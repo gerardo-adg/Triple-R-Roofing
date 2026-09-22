@@ -4,15 +4,22 @@ import Container from "./Container.astro";
 // Every figure here is either something the client stated directly in
 // conversation (review counts/ratings, phone number) or something shown
 // directly on the client's own live site during the Phase 1 audit
-// (Licensed/bonded/insured, GAF/CertainTeed/BBB credentials, Wisetack
-// financing). Nothing here is inferred or invented.
+// (Licensed/bonded/insured, GAF/CertainTeed/BBB credentials). Nothing
+// here is inferred or invented.
+//
+// Financing is intentionally not mentioned here - it used to get a
+// second paragraph, but the dedicated Financing section later in the
+// page already covers it, and the near-duplicate wording read as
+// repetitive once the full homepage was reviewed together. This section
+// now has exactly one job: left = customer proof, right = professional
+// credentials.
 ---
 
 <section class="trust">
   <Container>
     <div class="trust__grid">
       <div class="trust__stat">
-        <h2 class="eyebrow">Trusted in Sacramento</h2>
+        <p class="eyebrow">Trusted in Sacramento</p>
         <p class="trust__number">4.8<span class="trust__star">★</span></p>
         <p class="trust__caption">Average rating · 92 Google reviews</p>
         <p class="trust__caption trust__caption--muted">4.9★ on Yelp · 96 reviews</p>
@@ -21,17 +28,13 @@ import Container from "./Container.astro";
       <div class="trust__rule" aria-hidden="true"></div>
 
       <div class="trust__statement">
-        <p>
+        <p class="eyebrow">Licensed &amp; certified</p>
+        <p class="trust__statement-copy">
           <strong>Licensed, bonded, and insured.</strong> A
           <strong>GAF Certified</strong> and
           <strong>CertainTeed Select ShingleMaster</strong> contractor,
           <strong>BBB Accredited</strong>, working throughout the
           Sacramento area.
-        </p>
-        <p>
-          Financing available through Wisetack, with a clear quote before
-          any work starts and a plan that fits your budget if it doesn't
-          need to be paid up front.
         </p>
       </div>
     </div>
@@ -56,6 +59,14 @@ import Container from "./Container.astro";
     gap: var(--space-7);
   }
 
+  /* Shared rhythm for both column labels - the left stat and the right
+     credential statement each get their own small caps label, so the
+     left-proof / right-credentials structure reads clearly without
+     relying on the reader to infer it from content alone. */
+  .trust__grid .eyebrow {
+    margin-bottom: var(--space-3);
+  }
+
   .trust__number {
     font-family: var(--font-display);
     font-weight: var(--weight-black);
@@ -64,7 +75,7 @@ import Container from "./Container.astro";
     line-height: 0.9;
     letter-spacing: -0.01em;
     color: var(--color-text);
-    margin-block: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-4);
   }
 
   .trust__star {
@@ -88,7 +99,7 @@ import Container from "./Container.astro";
     display: none;
   }
 
-  .trust__statement p {
+  .trust__statement-copy {
     font-size: var(--text-body-lg);
     max-width: 52ch;
   }
@@ -98,9 +109,17 @@ import Container from "./Container.astro";
   }
 
   @media (min-width: 900px) {
+    /* Both columns get a bounded width instead of the credential column
+       stretching to fill an open 1fr track - at wide desktop widths that
+       left a single short paragraph floating in a lot of dead space. The
+       grid itself is capped too (not just the columns), so the section
+       reads as one deliberately-sized editorial block, left-aligned like
+       every other section, rather than stretching to the full 1320px
+       measure just because it's available. */
     .trust__grid {
-      grid-template-columns: minmax(220px, 0.6fr) auto 1fr;
+      grid-template-columns: minmax(220px, 300px) auto minmax(280px, 480px);
       align-items: start;
+      max-width: 900px;
     }
 
     .trust__rule {
