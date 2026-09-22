@@ -1,0 +1,56 @@
+---
+import Container from "./Container.astro";
+import Button from "./Button.astro";
+---
+
+<section class="final-cta">
+  <Container width="narrow">
+    <div class="final-cta__content">
+      <h2 class="final-cta__headline">Let&rsquo;s talk about your roof.</h2>
+      <p class="final-cta__body">
+        Whether you need a repair, a replacement, or just want to know what
+        condition your roof is in, we&rsquo;ll come take a look.
+      </p>
+      <div class="final-cta__actions">
+        <Button variant="primary" href="/contact">Get a Free Estimate</Button>
+        <Button variant="secondary" href="tel:+19164205635">Call (916) 420-5635</Button>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  /* Light/cream on purpose - Financing right before this is dark, and the
+     Footer right after is dark too. Keeping this section on the default
+     paper background is what keeps the page from reading as one large
+     dark block at the very end. */
+  .final-cta {
+    padding-block: var(--space-9);
+  }
+
+  .final-cta__content {
+    max-width: 640px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .final-cta__headline {
+    font-size: var(--text-h2);
+  }
+
+  .final-cta__body {
+    max-width: 46ch;
+    margin-inline: auto;
+    margin-top: var(--space-4);
+    color: var(--color-text-muted);
+  }
+
+  .final-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-top: var(--space-7);
+  }
+</style>

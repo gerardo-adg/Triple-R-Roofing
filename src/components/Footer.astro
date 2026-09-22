@@ -1,0 +1,170 @@
+---
+import Container from "./Container.astro";
+
+// Deliberately compact - a full 7-link sitemap plus legal/social rows
+// would work against the "restrained" brand direction. Only the
+// homeowner-priority links the client called out are included.
+const SERVICE_LINKS = [
+  { label: "Roof Replacement", href: "/services/roof-replacement" },
+  { label: "Roof Repair", href: "/services/roof-repair" },
+  { label: "Gutters", href: "/services/gutters" },
+];
+
+const COMPANY_LINKS = [
+  { label: "Recent Projects", href: "/#featured-work" },
+  { label: "Financing", href: "/financing" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
+
+const PHONE_DISPLAY = "(916) 420-5635";
+const PHONE_HREF = "tel:+19164205635";
+const YEAR = new Date().getFullYear();
+
+// Intentionally not rendered yet - do not invent placeholder values for
+// these. Add each once the client confirms it:
+// - CSLB / contractor license number
+// - Social media links (only if real accounts exist)
+// - Business hours
+// - A more specific service-area list beyond "Sacramento, CA"
+---
+
+<footer class="site-footer">
+  <Container>
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <a href="/" class="site-footer__logo" aria-label="Triple R Roofing home">
+          <svg class="site-footer__mark" viewBox="0 0 64 64" width="30" height="30" aria-hidden="true">
+            <circle cx="32" cy="32" r="30.5" fill="none" stroke="var(--color-gold)" stroke-width="3" />
+            <rect x="17" y="21" width="30" height="5.5" fill="currentColor" />
+            <rect x="29.25" y="21" width="5.5" height="24" fill="currentColor" />
+          </svg>
+          <span class="site-footer__wordmark">Triple R Roofing</span>
+        </a>
+        <p class="site-footer__tagline">
+          Roof replacement, repair, and gutters in Sacramento, CA.
+        </p>
+        <a class="site-footer__phone" href={PHONE_HREF}>{PHONE_DISPLAY}</a>
+      </div>
+
+      <nav class="site-footer__nav" aria-label="Services">
+        <p class="site-footer__nav-title">Services</p>
+        <ul class="site-footer__nav-list">
+          {SERVICE_LINKS.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav class="site-footer__nav" aria-label="Company">
+        <p class="site-footer__nav-title">Company</p>
+        <ul class="site-footer__nav-list">
+          {COMPANY_LINKS.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p>&copy; {YEAR} Triple R Roofing. All rights reserved.</p>
+    </div>
+  </Container>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-bg-inverse);
+    color: var(--color-text-inverse);
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+    padding-bottom: var(--space-7);
+    border-bottom: 1px solid var(--color-border-inverse);
+  }
+
+  .site-footer__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .site-footer__mark {
+    color: var(--color-paper);
+    flex-shrink: 0;
+  }
+
+  .site-footer__wordmark {
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-stretch: var(--stretch-normal);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    font-size: var(--text-body-sm);
+    color: var(--color-text-inverse);
+  }
+
+  .site-footer__tagline {
+    max-width: 32ch;
+    margin-top: var(--space-4);
+    color: var(--color-text-muted-inverse);
+  }
+
+  .site-footer__phone {
+    display: inline-block;
+    margin-top: var(--space-4);
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-h6);
+    color: var(--color-text-inverse);
+  }
+
+  .site-footer__phone:hover {
+    color: var(--color-gold);
+  }
+
+  .site-footer__nav-title {
+    font-size: var(--text-eyebrow);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted-inverse);
+    margin-bottom: var(--space-4);
+  }
+
+  .site-footer__nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    list-style: none;
+    padding: 0;
+  }
+
+  .site-footer__nav a {
+    color: var(--color-text-inverse);
+  }
+
+  .site-footer__nav a:hover {
+    color: var(--color-gold);
+  }
+
+  .site-footer__bottom {
+    padding-top: var(--space-6);
+  }
+
+  .site-footer__bottom p {
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted-inverse);
+  }
+
+  @media (min-width: 700px) {
+    .site-footer__grid {
+      grid-template-columns: 1.6fr 1fr 1fr;
+      gap: var(--space-8);
+    }
+  }
+</style>
