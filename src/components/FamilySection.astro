@@ -1,0 +1,108 @@
+---
+import Container from "./Container.astro";
+import Button from "./Button.astro";
+import PlayableVideo from "./PlayableVideo.astro";
+
+// Confirmed directly by the client: Triple R comes from Rogelio Ramirez
+// Roofing. Owner Rogelio Ramirez works with his father (also named
+// Rogelio), brothers David and Abraham, and other Ramirez family members.
+// Primary asset: an existing ~34s vertical video of Rogelio explaining
+// what Triple R stands for (not yet delivered - placeholder in place
+// until it is). Related videos (how he got into roofing, starting from
+// zero, meeting the team) are reserved for the About page, not this
+// section.
+---
+
+<section class="family">
+  <Container>
+    <div class="family__grid">
+      <div class="family__story">
+        <p class="eyebrow">The family behind Triple R</p>
+        <h2 class="family__headline">More than a name.</h2>
+        <p class="family__body">
+          Triple R comes from Rogelio Ramirez Roofing. Rogelio works
+          alongside his father, who is also named Rogelio, his brothers
+          David and Abraham, and other members of the Ramirez family. For
+          them, roofing has always been a family business.
+        </p>
+        <Button variant="text" href="/about">Our Story</Button>
+      </div>
+
+      <div class="family__media">
+        <PlayableVideo
+          poster="/media/placeholder-family-portrait.svg"
+          alt="Placeholder. A future video of Rogelio Ramirez introducing Triple R Roofing will replace this poster."
+          aspectRatio="9 / 16"
+        />
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .family {
+    padding-block: var(--space-9);
+  }
+
+  .family__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+
+  .family__headline {
+    font-weight: var(--weight-bold);
+    font-stretch: var(--stretch-normal);
+    letter-spacing: var(--tracking-normal);
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .family__body {
+    max-width: 46ch;
+    margin-bottom: var(--space-6);
+  }
+
+  .family__media {
+    max-width: 360px;
+  }
+
+  @media (min-width: 900px) {
+    .family {
+      padding-block: var(--space-8);
+    }
+
+    /* Media gets a fixed, human-scale column instead of an open fr share -
+       a 9:16 frame stretched across an fr track dominated the section. The
+       story column takes the remaining space so the two sides read as
+       comparable weight rather than "giant video, small text column." */
+    .family__grid {
+      grid-template-columns: clamp(300px, 26vw, 360px) 1fr;
+      align-items: center;
+      gap: var(--space-8);
+    }
+
+    /* Video leads on desktop - the reverse of Services/Financing's
+       text-left rhythm, and appropriate here since this is the first
+       genuinely human moment on the page. DOM order stays story-first
+       (matches mobile, and keeps a sensible reading/tab order); only the
+       visual position moves. */
+    .family__media {
+      order: -1;
+      max-width: none;
+      width: 100%;
+    }
+
+    .family__headline {
+      font-size: var(--text-h2);
+      margin-bottom: var(--space-5);
+    }
+
+    .family__body {
+      font-size: var(--text-body-lg);
+      max-width: 54ch;
+      margin-bottom: var(--space-7);
+    }
+  }
+</style>

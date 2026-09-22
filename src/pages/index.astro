@@ -1,12 +1,15 @@
 ---
-// Homepage sections built so far: Hero, Trust, Services, Process,
-// Financing. Remaining planned order: Brand/Craftsmanship, Featured Work,
-// Final CTA, Footer.
+// Homepage sections built so far: Hero, Trust, Services, Family
+// (Brand/Craftsmanship), Process, Financing. Target final order: Hero ->
+// Trust -> Services -> Family -> Featured Work -> Process -> Financing ->
+// Final CTA -> Footer. Featured Work still needs to be built and inserted
+// between Family and Process.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import TrustSection from "../components/TrustSection.astro";
 import ServicesSection from "../components/ServicesSection.astro";
+import FamilySection from "../components/FamilySection.astro";
 import ProcessSection from "../components/ProcessSection.astro";
 import FinancingSection from "../components/FinancingSection.astro";
 ---
@@ -23,10 +26,11 @@ import FinancingSection from "../components/FinancingSection.astro";
       primaryCta={{ label: "Get a Free Estimate", href: "/contact" }}
       secondaryCta={{ label: "Call (916) 420-5635", href: "tel:+19164205635" }}
       poster="/media/placeholder-poster.svg"
-      alt="Placeholder — cinematic drone or installation footage will replace this poster once final media is delivered"
+      alt="Placeholder image. Cinematic drone or installation footage will replace this poster once final media is delivered."
     />
     <TrustSection />
     <ServicesSection />
+    <FamilySection />
     <ProcessSection />
     <FinancingSection />
   </main>

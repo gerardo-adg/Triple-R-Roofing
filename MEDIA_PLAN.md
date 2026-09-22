@@ -83,9 +83,42 @@ just a resized crop of the same layout — documented separately.
 
 ---
 
+### Family/brand video — `FamilySection.astro` ("The Family Behind Triple R")
+
+The first genuinely real (non-generic-placeholder-forever) content video
+planned for the site - a real ~34s vertical video of Rogelio Ramirez
+explaining what Triple R stands for, provided by the client. Not yet
+delivered as of this entry; a neutral placeholder is in place.
+
+- **Asset type:** Video (watchable/sound-on, not decorative loop - built
+  with the new `PlayableVideo` component, not `LazyVideo`)
+- **Aspect ratio (desktop and mobile, same asset):** 9:16 portrait - the
+  source is natively vertical, so no separate crop is needed the way the
+  Hero's landscape asset needs a mobile-specific crop
+- **Recommended shot:** Already exists - the client's ~34s video of Rogelio
+  explaining what Triple R stands for. Related videos (how he got into
+  roofing, starting from zero, meeting the team) are reserved for the
+  About page, not this section.
+- **Autoplay:** No, under any circumstance. Poster + a click-to-play
+  affordance; only plays (with sound) after a direct user click.
+- **Loading priority:** Lazy - poster only until the visitor clicks;
+  nothing else loads until then.
+- **Poster requirement:** A clean still frame from the video, or a
+  separate photo of Rogelio if one reads better as a first impression.
+- **Current placeholder:** `public/media/placeholder-family-portrait.svg`
+  - flat `#151515` field, 9:16, no source configured
+  (`src`/`muxPlaybackId` both unset), so the play button renders for
+  layout review but is inert (no click handler attached) until a real
+  source exists.
+- **Known caveat:** the client's existing export has burned-in
+  social-style captions/text. A cleaner export without that overlay is
+  preferred if the client can provide one; the component doesn't need any
+  changes either way, just a different `src`/`muxPlaybackId` value.
+
+---
+
 ## Not yet built
 
-Trust section (`TrustSection.astro`) is text/stat-only by design — no
-media slot there currently. Sections beyond Services (Brand/Story,
-Featured Project, Process, Reviews, etc.) aren't built yet; each will get
-an entry here as it's added.
+Trust section (`TrustSection.astro`) is text/stat-only by design - no
+media slot there currently. Featured Work, Final CTA, and Footer aren't
+built yet; each will get an entry here as it's added.
