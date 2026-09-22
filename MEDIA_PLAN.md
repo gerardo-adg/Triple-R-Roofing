@@ -117,8 +117,40 @@ delivered as of this entry; a neutral placeholder is in place.
 
 ---
 
+### Featured Work — `FeaturedWorkSection.astro` ("Recent projects.")
+
+A horizontal, scroll-snapped sequence of large project photos - built as
+an architecture/build-firm-style portfolio, not a 3-card gallery grid.
+Four placeholder projects are in place now; the real count and content
+will be whatever the client provides.
+
+- **Asset type:** Photo (static)
+- **Aspect ratio:** 3:2 landscape, for every project, desktop and mobile
+- **Recommended shot:** A strong finished-project or in-progress shot per
+  job - similar direction to the Services section's recommended shots
+  (tear-off/replacement in progress, a detailed repair shot, a gutter
+  install), but specific to real completed projects rather than generic
+  service photography
+- **Autoplay:** N/A (static photo)
+- **Loading priority:** Lazy for all items - none are guaranteed to be
+  in the initial viewport given the horizontal peek layout
+- **Current placeholder:** `public/media/placeholder-project-{1,2,3,4}.svg`
+  - four distinct flat neutral shades, 3:2, so the horizontal scroll-snap
+  and peek behavior are genuinely visible/verifiable before real
+  photography exists
+- **Caption content:** Real captions should follow a factual two-line
+  structure - project type on the first line (e.g. "FULL ROOF
+  REPLACEMENT"), city/location on the second (e.g. "Elk Grove, CA"). Do
+  not invent real project types or locations before the client supplies
+  them - the current placeholder captions ("Project placeholder" / "Photo
+  and details coming soon") are deliberately generic rather than
+  fabricated specifics, and should be swapped out project-by-project as
+  real photos and details arrive.
+
+---
+
 ## Not yet built
 
 Trust section (`TrustSection.astro`) is text/stat-only by design - no
-media slot there currently. Featured Work, Final CTA, and Footer aren't
-built yet; each will get an entry here as it's added.
+media slot there currently. Final CTA and Footer aren't built yet; each
+will get an entry here as it's added.

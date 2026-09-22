@@ -1,15 +1,15 @@
 ---
-// Homepage sections built so far: Hero, Trust, Services, Family
-// (Brand/Craftsmanship), Process, Financing. Target final order: Hero ->
-// Trust -> Services -> Family -> Featured Work -> Process -> Financing ->
-// Final CTA -> Footer. Featured Work still needs to be built and inserted
-// between Family and Process.
+// Homepage sections built so far: Hero, Trust, Services, Family, Featured
+// Work, Process, Financing. Target final order: Hero -> Trust -> Services
+// -> Family -> Featured Work -> Process -> Financing -> Final CTA ->
+// Footer. Final CTA and Footer still need to be built.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import TrustSection from "../components/TrustSection.astro";
 import ServicesSection from "../components/ServicesSection.astro";
 import FamilySection from "../components/FamilySection.astro";
+import FeaturedWorkSection from "../components/FeaturedWorkSection.astro";
 import ProcessSection from "../components/ProcessSection.astro";
 import FinancingSection from "../components/FinancingSection.astro";
 ---
@@ -31,6 +31,7 @@ import FinancingSection from "../components/FinancingSection.astro";
     <TrustSection />
     <ServicesSection />
     <FamilySection />
+    <FeaturedWorkSection />
     <ProcessSection />
     <FinancingSection />
   </main>

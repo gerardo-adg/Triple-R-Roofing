@@ -1,0 +1,248 @@
+---
+import Container from "./Container.astro";
+
+// Real project photography and captions (type, location) will replace
+// these once the client provides them. Placeholder count (4) and images
+// are provisional - not meant to imply how many projects will ship.
+const PROJECTS = [
+  { index: "01", image: "/media/placeholder-project-1.svg" },
+  { index: "02", image: "/media/placeholder-project-2.svg" },
+  { index: "03", image: "/media/placeholder-project-3.svg" },
+  { index: "04", image: "/media/placeholder-project-4.svg" },
+];
+const total = String(PROJECTS.length).padStart(2, "0");
+---
+
+<section class="featured-work section--inverse">
+  <Container>
+    <div class="featured-work__intro">
+      <div>
+        <p class="eyebrow">Featured work</p>
+        <h2 class="featured-work__headline">Recent projects.</h2>
+      </div>
+
+      <div class="featured-work__controls">
+        <span class="featured-work__count">
+          <span data-current-index>01</span> / {total}
+        </span>
+        <div class="featured-work__nav">
+          <button
+            class="featured-work__nav-btn"
+            type="button"
+            data-nav="prev"
+            aria-label="Previous project"
+          >
+            <span aria-hidden="true">&larr;</span>
+          </button>
+          <button
+            class="featured-work__nav-btn"
+            type="button"
+            data-nav="next"
+            aria-label="Next project"
+          >
+            <span aria-hidden="true">&rarr;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </Container>
+
+  <div class="featured-work__track" data-featured-track>
+    {PROJECTS.map((project) => (
+      <figure class="featured-work__item" data-featured-item>
+        <div class="featured-work__frame">
+          <img
+            src={project.image}
+            alt="Placeholder. Real project photography will replace this image."
+            loading="lazy"
+          />
+        </div>
+        <figcaption class="featured-work__caption">
+          <span class="featured-work__caption-label">Project placeholder</span>
+          <span class="featured-work__caption-location">Photo and details coming soon</span>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+</section>
+
+<style>
+  .featured-work {
+    padding-block: var(--space-9);
+    overflow: hidden;
+  }
+
+  .featured-work__intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-8);
+    margin-bottom: var(--space-7);
+  }
+
+  .featured-work__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+  }
+
+  .featured-work__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    flex-shrink: 0;
+  }
+
+  .featured-work__count {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted-inverse);
+  }
+
+  .featured-work__count [data-current-index] {
+    color: var(--color-gold);
+  }
+
+  .featured-work__nav {
+    display: none;
+    gap: var(--space-2);
+  }
+
+  .featured-work__nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--color-border-inverse);
+    color: var(--color-text-inverse);
+    background: transparent;
+    transition:
+      border-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard),
+      opacity var(--duration-fast) var(--ease-standard);
+  }
+
+  .featured-work__nav-btn:hover,
+  .featured-work__nav-btn:focus-visible {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+  }
+
+  .featured-work__nav-btn[disabled] {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  /* Native horizontal scroll-snap - no carousel library, no dots. The
+     track bleeds full-bleed past the container's right edge so the next
+     project peeks into view; padding-inline uses the same custom property
+     as Container so the first frame's left edge lines up with the intro
+     row above it. */
+  .featured-work__track {
+    display: flex;
+    gap: var(--space-5);
+    padding-inline: var(--container-padding);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .featured-work__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .featured-work__item {
+    flex: 0 0 90vw;
+    scroll-snap-align: start;
+  }
+
+  .featured-work__frame {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: var(--color-charcoal-raised);
+  }
+
+  .featured-work__frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .featured-work__caption {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-top: var(--space-4);
+  }
+
+  .featured-work__caption-label {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-inverse);
+  }
+
+  .featured-work__caption-location {
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted-inverse);
+  }
+
+  @media (min-width: 900px) {
+    .featured-work__nav {
+      display: flex;
+    }
+
+    .featured-work__item {
+      flex: 0 0 80vw;
+    }
+  }
+</style>
+
+<script>
+  const track = document.querySelector<HTMLElement>("[data-featured-track]");
+  const items = Array.from(document.querySelectorAll<HTMLElement>("[data-featured-item]"));
+  const counter = document.querySelector<HTMLElement>("[data-current-index]");
+  const prevBtn = document.querySelector<HTMLButtonElement>('[data-nav="prev"]');
+  const nextBtn = document.querySelector<HTMLButtonElement>('[data-nav="next"]');
+
+  if (track && items.length) {
+    let activeIndex = 0;
+
+    const setActive = (index: number) => {
+      activeIndex = index;
+      if (counter) counter.textContent = String(index + 1).padStart(2, "0");
+      prevBtn?.toggleAttribute("disabled", index === 0);
+      nextBtn?.toggleAttribute("disabled", index === items.length - 1);
+    };
+
+    // Tracks which frame is most visible in the scroll track so the 01/04
+    // counter and the prev/next disabled states follow native scroll and
+    // swipe, not just clicks on the arrows.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const mostVisible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!mostVisible) return;
+        const index = items.indexOf(mostVisible.target as HTMLElement);
+        if (index !== -1) setActive(index);
+      },
+      { root: track, threshold: [0.5, 0.75, 1] },
+    );
+
+    items.forEach((item) => observer.observe(item));
+
+    const scrollToIndex = (index: number) => {
+      const clamped = Math.max(0, Math.min(items.length - 1, index));
+      items[clamped]?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    };
+
+    prevBtn?.addEventListener("click", () => scrollToIndex(activeIndex - 1));
+    nextBtn?.addEventListener("click", () => scrollToIndex(activeIndex + 1));
+  }
+</script>
