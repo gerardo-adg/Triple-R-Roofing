@@ -1,0 +1,157 @@
+---
+import Container from "./Container.astro";
+import Button from "./Button.astro";
+
+// Offer terms ($0 down / 0% interest for 6 months) confirmed by the client
+// directly as the current source of truth — supersedes the 3-month example
+// found on the older /financing page during the Phase 1 audit. Still
+// flagged: the disclosure line below is intentionally generic (not a
+// fabricated legal/compliance disclosure) and should be replaced with
+// Wisetack's/the lender's actual required wording before launch.
+---
+
+<section class="financing section--inverse">
+  <Container>
+    <div class="financing__grid">
+      <div class="financing__intro">
+        <p class="eyebrow">Financing</p>
+        <h2 class="financing__lead">Get the roof you need. Pay over time.</h2>
+        <p class="financing__copy">
+          Financing options available through Wisetack, including 0% interest
+          for 6 months for qualified borrowers.
+        </p>
+        <Button variant="text" inverse href="/financing">
+          Explore Financing
+        </Button>
+      </div>
+
+      <div class="financing__stats">
+        <div class="financing__stat">
+          <p class="financing__stat-value">$0</p>
+          <p class="financing__stat-label">Down</p>
+        </div>
+        <div class="financing__stat financing__stat--primary">
+          <p class="financing__stat-value">0%</p>
+          <p class="financing__stat-label">Interest for 6 months*</p>
+        </div>
+        <p class="financing__disclosure">
+          *For qualified borrowers. Subject to credit approval. Terms
+          provided by Wisetack — see the financing page for full details.
+        </p>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .financing {
+    padding-block: var(--space-9);
+  }
+
+  .financing__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .financing__lead {
+    font-size: var(--text-h3);
+    font-weight: var(--weight-bold);
+    font-stretch: var(--stretch-normal);
+    letter-spacing: var(--tracking-normal);
+    /* base.css's h1/h2 rule sets text-wrap: balance, which picks whichever
+       split is most visually even — not necessarily the sentence break we
+       want here, since "Get the roof you need." is longer than "Pay over
+       time.". Reverting to normal (greedy-fill) wrapping so the max-width
+       below actually determines the break point. */
+    text-wrap: wrap;
+    /* Measured against the actual rendered text (not estimated — "ch" is
+       based on the "0" glyph, which runs much wider than this font's
+       average character), tuned so "Get the roof you need." / "Pay over
+       time." resolves to two lines at typical desktop widths. In em so it
+       scales with the fluid font-size instead of one fixed pixel value. */
+    max-width: 10.6em;
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .financing__copy {
+    max-width: 46ch;
+    margin-bottom: var(--space-6);
+  }
+
+  .financing__stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding-top: var(--space-7);
+    border-top: 1px solid var(--color-border-inverse);
+  }
+
+  /* Mobile only: tighten just the gap between the two stat blocks
+     (~18% less than the default var(--space-6)) without touching the
+     gap before the disclosure line, and without touching desktop, which
+     switches to a row layout at 900px. */
+  @media (max-width: 899px) {
+    .financing__stat:first-child {
+      margin-bottom: -6px;
+    }
+  }
+
+  .financing__stat-value {
+    font-family: var(--font-display);
+    font-weight: var(--weight-black);
+    font-stretch: var(--stretch-expanded);
+    font-size: clamp(2.5rem, 1.9rem + 2.4vw, 3.75rem);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: var(--color-gold);
+  }
+
+  /* 0% interest for 6 months is the strongest part of the offer — gets
+     more visual weight than $0 down, not just equal billing. */
+  .financing__stat--primary .financing__stat-value {
+    font-size: clamp(3.25rem, 2.3rem + 3.6vw, 5.25rem);
+  }
+
+  .financing__stat-label {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted-inverse);
+    margin-top: var(--space-1);
+  }
+
+  .financing__disclosure {
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted-inverse);
+    max-width: 44ch;
+  }
+
+  @media (min-width: 900px) {
+    .financing__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-9);
+    }
+
+    .financing__stats {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: var(--space-8);
+      padding-top: 0;
+      border-top: none;
+      border-left: 1px solid var(--color-border-inverse);
+      padding-left: var(--space-9);
+    }
+
+    .financing__stat {
+      flex: 1 1 auto;
+    }
+
+    .financing__disclosure {
+      flex-basis: 100%;
+    }
+  }
+</style>

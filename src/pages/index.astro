@@ -1,11 +1,14 @@
 ---
-// Phase 4A: hero + first 2 sections (trust, services). The rest of the
-// homepage is later phases.
+// Homepage sections built so far: Hero, Trust, Services, Process,
+// Financing. Remaining planned order: Brand/Craftsmanship, Featured Work,
+// Final CTA, Footer.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import TrustSection from "../components/TrustSection.astro";
 import ServicesSection from "../components/ServicesSection.astro";
+import ProcessSection from "../components/ProcessSection.astro";
+import FinancingSection from "../components/FinancingSection.astro";
 ---
 
 <BaseLayout
@@ -24,5 +27,7 @@ import ServicesSection from "../components/ServicesSection.astro";
     />
     <TrustSection />
     <ServicesSection />
+    <ProcessSection />
+    <FinancingSection />
   </main>
 </BaseLayout>
