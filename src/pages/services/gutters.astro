@@ -1,0 +1,137 @@
+---
+import InteriorLayout from "../../layouts/InteriorLayout.astro";
+import Container from "../../components/Container.astro";
+import PageHero from "../../components/PageHero.astro";
+import ServiceTriad from "../../components/ServiceTriad.astro";
+import ServiceProjectSpotlight from "../../components/ServiceProjectSpotlight.astro";
+import FinancingCallout from "../../components/FinancingCallout.astro";
+import FAQSection from "../../components/FAQSection.astro";
+import FinalCtaSection from "../../components/FinalCtaSection.astro";
+
+const SERVICES = [
+  {
+    name: "Gutter cleaning",
+    description:
+      "Clear leaves and debris so water can move through the gutters instead of backing up or spilling over.",
+  },
+  {
+    name: "Gutter repair",
+    description: "Address loose or sagging sections and leaks at seams or connections.",
+  },
+  {
+    name: "Gutter installation",
+    description: "New gutters when the existing system is damaged or beyond repair.",
+  },
+];
+
+// FAQ answers are limited to verified or already-established facts.
+// Cleaning frequency is deliberately non-numeric - no verified
+// Triple-R-specific recommendation exists. The licensing answer omits
+// the GAF/CertainTeed roofing credentials mentioned on the roofing
+// pages, since those are manufacturer programs specific to roofing
+// work, not gutters - BBB Accreditation is a general business
+// credential and applies here.
+const FAQS = [
+  {
+    question: "Do you install new gutters, or just clean and repair them?",
+    answer: "We do all three: cleaning, repair, and installation, depending on what your gutters need.",
+  },
+  {
+    question: "How often should gutters be cleaned?",
+    answer:
+      "It depends on your property, mainly how many trees are nearby and how much debris collects. We can tell you what your gutters need when we take a look.",
+  },
+  {
+    question: "Are you licensed and insured?",
+    answer: "Yes. We're licensed, bonded, and insured, and BBB Accredited.",
+  },
+  {
+    question: "Do you offer free estimates?",
+    answer: "Yes. Call or request one online and we'll schedule a time to come look at your gutters.",
+  },
+  {
+    question: "Is storm damage to gutters covered by insurance?",
+    answer:
+      "Often, but it depends on your policy. We offer insurance claim assistance and can help you through the process.",
+  },
+];
+---
+
+<InteriorLayout
+  title="Gutters | Triple R Roofing"
+  description="Gutter cleaning, repair, and installation in Sacramento, CA. Licensed, bonded, and insured, and BBB Accredited."
+>
+  <PageHero
+    title="Gutters"
+    description="Gutter cleaning, repairs, and new gutter installation in Sacramento."
+    image="/media/placeholder-page-hero-gutters.svg"
+    breadcrumbs={[
+      { label: "Home", href: "/" },
+      { label: "Services", href: "/#services" },
+      { label: "Gutters" },
+    ]}
+  />
+
+  <section class="overview">
+    <Container>
+      <div class="overview__content">
+        <p class="eyebrow">Gutters</p>
+        <h2 class="overview__headline">Water needs somewhere to go.</h2>
+        <p class="overview__body">
+          Gutters move water off your roof and away from your house. When
+          they're clogged, sagging, or leaking, water ends up somewhere it
+          shouldn't, like your foundation, siding, or landscaping.
+        </p>
+        <p class="overview__body">
+          Depending on what's going on, that might mean a cleaning, a repair,
+          or new gutters. We'll take a look and tell you what makes sense.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <ServiceTriad eyebrow="Gutter Services" headline="Three ways we can help." items={SERVICES} />
+
+  <ServiceProjectSpotlight
+    eyebrow="Recent work"
+    meta="Gutters · Location TBD"
+    image="/media/placeholder-project-gutters.svg"
+    imageAlt="Placeholder. A real completed gutter project photo will replace this image."
+    caption="Real project photo and details (type, location, materials) coming soon."
+  />
+
+  <FinancingCallout />
+
+  <FAQSection
+    eyebrow="Common Questions"
+    headline="Gutters, answered"
+    groupName="faq-gutters"
+    items={FAQS}
+  />
+
+  <FinalCtaSection
+    headline="Let's take a look at your gutters."
+    body="We'll tell you whether they need cleaning, a repair, or replacement."
+  />
+</InteriorLayout>
+
+<style>
+  .overview {
+    padding-block: var(--space-9);
+  }
+
+  .overview__content {
+    max-width: 720px;
+  }
+
+  .overview__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .overview__body {
+    font-size: var(--text-body-lg);
+    max-width: 62ch;
+  }
+</style>

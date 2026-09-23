@@ -255,6 +255,23 @@ generic image/text split.
   "Roof Repair · Location TBD" - do not fill in a real location,
   material, or scope before the client supplies them.
 
+### Gutters page media
+
+- **Page hero background:** `public/media/placeholder-page-hero-gutters.svg`
+  - flat `#1b1c1a` field. Same shared `PageHero.astro` spec as the other
+  service pages (full-bleed landscape, dark scrim, eager loading) - a
+  distinct placeholder file so this page doesn't visually match the
+  roofing pages' heroes once real photos exist.
+- **Recent Work project spotlight:** `public/media/placeholder-project-gutters.svg`
+  - flat `#1f201d` field, 16:9, same `ServiceProjectSpotlight.astro`
+  spec as the roofing pages (max-height 65vh on desktop). Metadata is
+  "Gutters · Location TBD" - deliberately not specifying cleaning,
+  repair, or installation as the eventual real project type until the
+  client supplies it, and no location, material, or scope should be
+  invented before then. No detail photo band was added to this page -
+  the Overview + Three Ways We Can Help stretch (~1031px combined) read
+  fine without one; revisit only if that changes.
+
 ---
 
 ## Not yet built
@@ -263,9 +280,14 @@ Trust section (`TrustSection.astro`) is text/stat-only by design - no
 media slot there currently. Homepage sections (Hero through Footer) are
 all built. The Materials & Certifications section on service pages is
 intentionally typography-only (no photo) by design, not a placeholder
-gap - see `CertificationsSection.astro`. The "What We Fix" coverage list
-on Roof Repair (`ServiceCoverageList.astro`) is also intentionally
-typography-only, same reasoning. Remaining service pages (Gutters, Tile
-Roofing, Solar Panel Cleaning, Moss Removal, Insurance Claim Assistance),
-About, Contact, Financing, and Projects will each get entries here as
-they're built.
+gap - see `CertificationsSection.astro` (not used on the Gutters page -
+see below). The "What We Fix" coverage list on Roof Repair
+(`ServiceCoverageList.astro`) and the "Three Ways We Can Help" list on
+Gutters (`ServiceTriad.astro`) are also intentionally typography-only,
+same reasoning. The Gutters page intentionally omits Materials &
+Certifications entirely - GAF/CertainTeed are roofing-manufacturer
+credentials that don't certify gutter work, and no substitute
+gutter-specific credential section was added without a verified fact to
+support it. Remaining service pages (Tile Roofing, Solar Panel Cleaning,
+Moss Removal, Insurance Claim Assistance), About, Contact, Financing,
+and Projects will each get entries here as they're built.

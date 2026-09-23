@@ -1,0 +1,108 @@
+---
+/**
+ * Exactly-three parallel service categories (not steps, not problems) -
+ * single-row three-column desktop grid with vertical rule dividers,
+ * echoing the homepage Process section's column-divider language rather
+ * than ServiceCoverageList's horizontal-rule/gold-mark rows, so a page
+ * that drops the numbered-list or coverage-list treatment still reads
+ * as part of the same system through a different established pattern.
+ */
+import Container from "./Container.astro";
+
+interface Item {
+  name: string;
+  description: string;
+}
+
+interface Props {
+  eyebrow: string;
+  headline: string;
+  items: Item[];
+}
+
+const { eyebrow, headline, items } = Astro.props;
+---
+
+<section class="triad">
+  <Container>
+    <div class="triad__intro">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 class="triad__headline">{headline}</h2>
+    </div>
+
+    <div class="triad__grid">
+      {items.map((item) => (
+        <div class="triad__item">
+          <h3 class="triad__name">{item.name}</h3>
+          <p class="triad__description">{item.description}</p>
+        </div>
+      ))}
+    </div>
+  </Container>
+</section>
+
+<style>
+  .triad {
+    padding-block: var(--space-9);
+  }
+
+  .triad__intro {
+    max-width: 640px;
+    margin-bottom: var(--space-8);
+  }
+
+  .triad__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+  }
+
+  .triad__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .triad__item {
+    padding-block: var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .triad__name {
+    font-size: var(--text-h6);
+    margin-bottom: var(--space-2);
+  }
+
+  .triad__description {
+    max-width: 40ch;
+  }
+
+  @media (min-width: 900px) {
+    /* Bottom padding only - the combined gap before Recent Work's own
+       top padding read as more generous than intended. Top padding and
+       mobile spacing are untouched. */
+    .triad {
+      padding-bottom: var(--space-7);
+    }
+
+    .triad__grid {
+      grid-template-columns: repeat(3, 1fr);
+      border-top: none;
+    }
+
+    .triad__item {
+      padding-block: 0;
+      padding-inline: var(--space-6);
+      border-bottom: none;
+      border-right: 1px solid var(--color-border);
+    }
+
+    .triad__item:first-child {
+      padding-left: 0;
+    }
+
+    .triad__item:last-child {
+      padding-right: 0;
+      border-right: none;
+    }
+  }
+</style>
