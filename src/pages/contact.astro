@@ -1,0 +1,330 @@
+---
+import InteriorLayout from "../layouts/InteriorLayout.astro";
+import Container from "../components/Container.astro";
+import Button from "../components/Button.astro";
+
+// Netlify Forms detects this form at deploy time from the static HTML
+// (data-netlify + the hidden form-name field) - no backend code needed
+// here. Honeypot field name matches netlify-honeypot below. Actual
+// submission notifications (who gets emailed) are configured in the
+// Netlify dashboard after deploy, not in code - see the note left for
+// the user in this session's reply.
+const SERVICE_OPTIONS = [
+  "Roof Replacement",
+  "Roof Repair",
+  "Tile Roofing",
+  "Gutters",
+  "Solar Panel Cleaning",
+  "Moss Removal",
+  "Insurance Claim Assistance",
+  "Other",
+];
+---
+
+<InteriorLayout
+  title="Contact | Triple R Roofing"
+  description="Request a free roofing or gutter estimate in Sacramento, CA. Call (916) 420-5635 or fill out the form to get started."
+  headerAlwaysSolid
+>
+  <section class="contact">
+    <Container>
+      <nav class="contact__breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Contact</span>
+      </nav>
+
+      <div class="contact__grid">
+        <div class="contact__main">
+          <p class="eyebrow">Contact</p>
+          <h1 class="contact__headline">Request a free estimate.</h1>
+          <p class="contact__lead">
+            Tell us what you need help with and we&rsquo;ll follow up to
+            schedule a time to take a look.
+          </p>
+          <p class="contact__call">
+            Prefer to call? <a href="tel:+19164205635">(916) 420-5635</a>
+          </p>
+
+          <form
+            name="contact"
+            method="POST"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+            action="/thank-you"
+            class="contact-form"
+          >
+            <input type="hidden" name="form-name" value="contact" />
+            <p class="contact-form__honeypot" aria-hidden="true">
+              <label>
+                Leave this field blank
+                <input name="bot-field" tabindex="-1" autocomplete="off" />
+              </label>
+            </p>
+
+            <div class="contact-form__field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+
+            <div class="contact-form__field">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required />
+            </div>
+
+            <div class="contact-form__field">
+              <label for="email">Email (optional)</label>
+              <input id="email" name="email" type="email" inputmode="email" autocomplete="email" />
+            </div>
+
+            <div class="contact-form__field">
+              <label for="address">Property Address</label>
+              <input
+                id="address"
+                name="address"
+                type="text"
+                autocomplete="street-address"
+                required
+              />
+            </div>
+
+            <div class="contact-form__field">
+              <label for="service">What do you need help with?</label>
+              <select id="service" name="service" required>
+                <option value="" disabled selected>Select one</option>
+                {SERVICE_OPTIONS.map((option) => <option value={option}>{option}</option>)}
+              </select>
+            </div>
+
+            <div class="contact-form__field">
+              <label for="details">Tell us what&rsquo;s going on (optional)</label>
+              <textarea id="details" name="details" rows="4"></textarea>
+            </div>
+
+            <Button variant="primary" type="submit" class="contact-form__submit">
+              Request a Free Estimate
+            </Button>
+          </form>
+        </div>
+
+        <div class="contact__divider" aria-hidden="true"></div>
+
+        <aside class="contact__aside">
+          <div class="contact__aside-phone-block">
+            <p class="contact__aside-label">Prefer to call?</p>
+            <a href="tel:+19164205635" class="contact__aside-phone">(916) 420-5635</a>
+          </div>
+
+          <p class="contact__aside-line contact__aside-line--first">Licensed, bonded &amp; insured</p>
+          <p class="contact__aside-line">Serving Sacramento and surrounding areas</p>
+        </aside>
+      </div>
+    </Container>
+  </section>
+</InteriorLayout>
+
+<style>
+  .contact {
+    padding-top: calc(var(--nav-height) + var(--space-7));
+    padding-bottom: var(--space-9);
+  }
+
+  .contact__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-7);
+  }
+
+  .contact__breadcrumb a {
+    color: var(--color-text-muted);
+  }
+
+  .contact__breadcrumb a:hover {
+    color: var(--color-accent-strong);
+  }
+
+  .contact__breadcrumb [aria-current] {
+    color: var(--color-accent-strong);
+  }
+
+  .contact__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .contact__divider {
+    display: none;
+  }
+
+  .contact__headline {
+    font-size: var(--text-h2);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .contact__lead {
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted);
+    max-width: 52ch;
+    margin-bottom: var(--space-5);
+  }
+
+  .contact__call {
+    margin-bottom: var(--space-8);
+  }
+
+  .contact__call a {
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .contact__call a:hover {
+    color: var(--color-accent-strong);
+    border-color: var(--color-accent-strong);
+  }
+
+  /* ---- Form ---- */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  /* Visible to bots, hidden from sighted users and skipped by
+     keyboard/AT - Netlify's spam-filtering convention. */
+  .contact-form__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .contact-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .contact-form__field label {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+
+  .contact-form__field input,
+  .contact-form__field select,
+  .contact-form__field textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-text);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--color-border);
+    border-radius: var(--radius-none);
+    padding-block: var(--space-3);
+    padding-inline: 0;
+    transition: border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .contact-form__field input:focus-visible,
+  .contact-form__field select:focus-visible,
+  .contact-form__field textarea:focus-visible {
+    border-bottom-color: var(--color-accent-strong);
+  }
+
+  .contact-form__field textarea {
+    resize: vertical;
+    min-height: 96px;
+  }
+
+  .contact-form__submit {
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--space-3);
+  }
+
+  /* ---- Aside ---- */
+  .contact__aside-label {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .contact__aside-phone {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-h5);
+    color: var(--color-text);
+  }
+
+  .contact__aside-phone:hover {
+    color: var(--color-accent-strong);
+  }
+
+  .contact__aside-line {
+    color: var(--color-text-muted);
+  }
+
+  /* On mobile the phone block is hidden (already shown pre-form and in
+     the footer - three instances on one short page was one too many),
+     so these two lines become the whole aside and don't need the gap
+     that used to separate them from the phone block above. */
+  .contact__aside-line--first {
+    margin-top: 0;
+  }
+
+  /* ---- Mobile-only: tighter form rhythm ---- */
+  @media (max-width: 1023px) {
+    .contact__aside-phone-block {
+      display: none;
+    }
+
+    .contact-form__field input,
+    .contact-form__field select,
+    .contact-form__field textarea {
+      padding-block: var(--space-2);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .contact__grid {
+      grid-template-columns: minmax(0, 600px) auto 1fr;
+      gap: var(--space-9);
+      align-items: start;
+    }
+
+    .contact__divider {
+      display: block;
+      width: 1px;
+      height: 100%;
+      background: var(--color-border);
+    }
+
+    /* Nudges the aside down so it aligns with the form's start rather
+       than pinning to the very top of the section next to the eyebrow -
+       reads as related to the primary content instead of a header bar
+       for its own column. */
+    .contact__aside {
+      margin-top: var(--space-9);
+    }
+
+    .contact__aside-line--first {
+      margin-top: var(--space-6);
+    }
+  }
+</style>

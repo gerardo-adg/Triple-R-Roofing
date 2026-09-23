@@ -1,0 +1,70 @@
+---
+import InteriorLayout from "../layouts/InteriorLayout.astro";
+import Container from "../components/Container.astro";
+import Button from "../components/Button.astro";
+---
+
+<InteriorLayout
+  title="Thank You | Triple R Roofing"
+  description="Thanks for requesting a free roofing or gutter estimate from Triple R Roofing."
+  headerAlwaysSolid
+  noindex
+>
+  <section class="thank-you">
+    <Container width="narrow">
+      <div class="thank-you__content">
+        <h1 class="thank-you__headline">Thanks. We got your request.</h1>
+        <p class="thank-you__body">We&rsquo;ll follow up to schedule a time to take a look.</p>
+        <p class="thank-you__body">
+          Need to reach us sooner? <a href="tel:+19164205635">(916) 420-5635</a>
+        </p>
+        <Button variant="text" href="/">Back to Home</Button>
+      </div>
+    </Container>
+  </section>
+</InteriorLayout>
+
+<style>
+  .thank-you {
+    padding-top: calc(var(--nav-height) + var(--space-9));
+    padding-bottom: var(--space-9);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Mobile only - the header-to-content gap read as more empty space
+     than the desktop version, which has more content around it to
+     justify the same padding. Desktop composition is untouched. */
+  @media (max-width: 899px) {
+    .thank-you {
+      padding-top: calc(var(--nav-height) + var(--space-9) - 35px);
+    }
+  }
+
+  .thank-you__content {
+    max-width: 520px;
+  }
+
+  .thank-you__headline {
+    font-size: var(--text-h2);
+    margin-bottom: var(--space-5);
+  }
+
+  .thank-you__body {
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .thank-you__body a {
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .thank-you__body a:hover {
+    color: var(--color-accent-strong);
+    border-color: var(--color-accent-strong);
+  }
+</style>

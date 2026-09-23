@@ -8,13 +8,15 @@ interface Props {
   description: string;
   canonical?: string;
   noindex?: boolean;
+  /** Pages without a dark hero directly under the header (e.g. Contact) need the header solid from load - it otherwise renders transparent-over-nothing, which is unreadable on a light page. */
+  headerAlwaysSolid?: boolean;
 }
 
-const { title, description, canonical, noindex } = Astro.props;
+const { title, description, canonical, noindex, headerAlwaysSolid = false } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical} noindex={noindex}>
-  <Header />
+  <Header alwaysSolid={headerAlwaysSolid} />
   <main id="main">
     <slot />
   </main>
