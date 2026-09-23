@@ -230,7 +230,30 @@ generic image/text split.
   - flat `#232220` field
 - **Reuse note:** This component is generic (`image`/`imageAlt` props
   only) and available to any interior page with the same long-text-
-  stretch issue, not just Roof Replacement.
+  stretch issue. Also used on Roof Repair (see below) - measured that
+  page's Overview + What We Fix stretch at ~1475px of continuous
+  text-only content with no break, longer than any single unbroken
+  stretch on Roof Replacement, so the band earned its place there too
+  rather than being added automatically.
+
+### Roof Repair page media
+
+- **Page hero background:** `public/media/placeholder-page-hero-repair.svg`
+  - flat `#1e1d1b` field. Same spec as the shared `PageHero.astro` entry
+  above (full-bleed landscape, dark scrim, eager loading) - a distinct
+  placeholder file so this page doesn't visually match Roof Replacement's
+  hero once real photos exist.
+- **Detail photo band:** `public/media/placeholder-detail-roof-repair.svg`
+  - flat `#252320` field, between Overview and What We Fix. Same spec as
+  Roof Replacement's band (mobile ~16:9, desktop `clamp(160px, 24vh,
+  280px)`); a repair-relevant detail/texture shot (a leak, damaged
+  shingle, or flashing close-up) suits this better than a wide
+  establishing shot.
+- **Recent Work project spotlight:** `public/media/placeholder-project-roof-repair.svg`
+  - flat `#211f1d` field, 16:9, same `ServiceProjectSpotlight.astro`
+  spec as Roof Replacement (max-height 65vh on desktop). Metadata is
+  "Roof Repair · Location TBD" - do not fill in a real location,
+  material, or scope before the client supplies them.
 
 ---
 
@@ -240,7 +263,9 @@ Trust section (`TrustSection.astro`) is text/stat-only by design - no
 media slot there currently. Homepage sections (Hero through Footer) are
 all built. The Materials & Certifications section on service pages is
 intentionally typography-only (no photo) by design, not a placeholder
-gap - see `CertificationsSection.astro`. Remaining service pages (Roof
-Repair, Gutters, Tile Roofing, Solar Panel Cleaning, Moss Removal,
-Insurance Claim Assistance), About, Contact, Financing, and Projects
-will each get entries here as they're built.
+gap - see `CertificationsSection.astro`. The "What We Fix" coverage list
+on Roof Repair (`ServiceCoverageList.astro`) is also intentionally
+typography-only, same reasoning. Remaining service pages (Gutters, Tile
+Roofing, Solar Panel Cleaning, Moss Removal, Insurance Claim Assistance),
+About, Contact, Financing, and Projects will each get entries here as
+they're built.

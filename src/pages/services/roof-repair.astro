@@ -1,0 +1,186 @@
+---
+import InteriorLayout from "../../layouts/InteriorLayout.astro";
+import Container from "../../components/Container.astro";
+import PageHero from "../../components/PageHero.astro";
+import PhotoBand from "../../components/PhotoBand.astro";
+import ServiceCoverageList from "../../components/ServiceCoverageList.astro";
+import ServiceProjectSpotlight from "../../components/ServiceProjectSpotlight.astro";
+import CertificationsSection from "../../components/CertificationsSection.astro";
+import FinancingCallout from "../../components/FinancingCallout.astro";
+import FAQSection from "../../components/FAQSection.astro";
+import FinalCtaSection from "../../components/FinalCtaSection.astro";
+
+// Problem descriptions are drafted generically (standard, widely-true
+// roofing knowledge) rather than sourced from the client - not yet
+// confirmed as matching how Triple R specifically describes these
+// issues. Flagged for confirmation before treated as final.
+const COVERAGE = [
+  {
+    name: "Roof leaks",
+    description:
+      "Water getting in around a specific point, usually where the roofing meets something else, like a vent, chimney, or valley.",
+  },
+  {
+    name: "Missing or damaged shingles",
+    description:
+      "Shingles that have come loose, cracked, or blown off, leaving the layer underneath exposed.",
+  },
+  {
+    name: "Flashing problems",
+    description:
+      "The metal or sealant around chimneys, vents, and roof edges failing or coming loose, a common source of leaks.",
+  },
+  {
+    name: "Storm damage",
+    description: "Wind, hail, or fallen debris affecting part of the roof rather than the whole thing.",
+  },
+  {
+    name: "Vent and pipe boot leaks",
+    description: "The rubber or metal seals around roof vents and pipes cracking or wearing out over time.",
+  },
+];
+
+// Verified (Trust section, Phase 1 audit / client-confirmed copy).
+const CREDENTIALS = [
+  {
+    name: "GAF Certified",
+    description: "Certified roofing contractor through GAF.",
+  },
+  {
+    name: "CertainTeed SELECT ShingleMaster",
+    description: "CertainTeed's SELECT ShingleMaster credential.",
+  },
+  {
+    name: "BBB Accredited",
+    description: "Accredited by the Better Business Bureau.",
+  },
+];
+
+// FAQ answers are limited to verified or already-established facts.
+// Response time wording below is client-confirmed for this page; do not
+// change it to a guaranteed "same-day" claim.
+const FAQS = [
+  {
+    question: "Is this a repair, or do I need a full replacement?",
+    answer:
+      "It depends on what we find. Isolated damage, like one damaged section or a single leak, is usually a repair. Widespread wear or damage across multiple areas may mean a replacement makes more sense. We inspect first and tell you which one applies before recommending anything.",
+  },
+  {
+    question: "Are you licensed and insured?",
+    answer:
+      "Yes. We're licensed, bonded, and insured, and a GAF Certified and CertainTeed SELECT ShingleMaster contractor.",
+  },
+  {
+    question: "Do you offer free estimates?",
+    answer: "Yes. Call or request one online and we'll schedule a time to come look at your roof.",
+  },
+  {
+    question: "Is storm damage covered by insurance?",
+    answer:
+      "Often, but it depends on your policy. We offer insurance claim assistance and can help you through the process.",
+  },
+  {
+    question: "How quickly can someone look at my roof?",
+    answer:
+      "Same-day service may be available if the schedule allows. Otherwise, we'll schedule the next available appointment.",
+  },
+];
+---
+
+<InteriorLayout
+  title="Roof Repair | Triple R Roofing"
+  description="Roof repair for leaks, damaged shingles, flashing problems, and storm damage in Sacramento. Licensed, bonded, and insured, GAF Certified and CertainTeed SELECT ShingleMaster."
+>
+  <PageHero
+    title="Roof Repair"
+    description="Leaks, damaged shingles, flashing issues, and other isolated roof problems, fixed without a full replacement."
+    image="/media/placeholder-page-hero-repair.svg"
+    breadcrumbs={[
+      { label: "Home", href: "/" },
+      { label: "Services", href: "/#services" },
+      { label: "Roof Repair" },
+    ]}
+  />
+
+  <section class="overview">
+    <Container>
+      <div class="overview__content">
+        <p class="eyebrow">Roof Repair</p>
+        <h2 class="overview__headline">
+          A leak doesn&rsquo;t always mean you need a new roof.
+        </h2>
+        <p class="overview__body">
+          Some roof problems are isolated: a cracked shingle, a failed seal
+          around a vent, storm damage to one section. Those can usually be
+          repaired without touching the rest of the roof.
+        </p>
+        <p class="overview__body">
+          Other problems are more widespread and may not make sense to keep
+          patching. We inspect the roof first and tell you what we find,
+          rather than assuming it needs to be replaced.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <PhotoBand
+    image="/media/placeholder-detail-roof-repair.svg"
+    imageAlt=""
+  />
+
+  <ServiceCoverageList
+    eyebrow="What we fix"
+    headline="Roof problems we repair."
+    items={COVERAGE}
+  />
+
+  <ServiceProjectSpotlight
+    eyebrow="Recent work"
+    meta="Roof Repair · Location TBD"
+    image="/media/placeholder-project-roof-repair.svg"
+    imageAlt="Placeholder. A real completed roof repair photo will replace this image."
+    caption="Real project photo and details (type, location, materials) coming soon."
+  />
+
+  <CertificationsSection
+    eyebrow="Materials & Certifications"
+    headline="Backed by the brands behind the roof."
+    intro="Triple R Roofing holds certifications from GAF and CertainTeed and is accredited by the Better Business Bureau."
+    credentials={CREDENTIALS}
+  />
+
+  <FinancingCallout />
+
+  <FAQSection
+    eyebrow="Common Questions"
+    headline="Roof repair, answered"
+    groupName="faq-roof-repair"
+    items={FAQS}
+  />
+
+  <FinalCtaSection
+    headline="Let's take a look at your roof."
+    body="We'll take a look at the problem and explain what we find."
+  />
+</InteriorLayout>
+
+<style>
+  .overview {
+    padding-block: var(--space-9);
+  }
+
+  .overview__content {
+    max-width: 720px;
+  }
+
+  .overview__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .overview__body {
+    font-size: var(--text-body-lg);
+    max-width: 62ch;
+  }
+</style>

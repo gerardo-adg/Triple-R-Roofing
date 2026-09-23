@@ -1,0 +1,106 @@
+---
+/**
+ * A coverage list (problem types handled), not a process. Deliberately
+ * distinct from ServiceIncludes' numbered rows - these aren't sequential
+ * steps, so no index numbers. A small square mark stands in for a
+ * bullet/icon (reusing the same rectangular motif as the site's own
+ * logotype) rather than a per-item icon or card.
+ */
+import Container from "./Container.astro";
+
+interface Item {
+  name: string;
+  description: string;
+}
+
+interface Props {
+  eyebrow: string;
+  headline: string;
+  items: Item[];
+}
+
+const { eyebrow, headline, items } = Astro.props;
+---
+
+<section class="coverage">
+  <Container>
+    <div class="coverage__intro">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 class="coverage__headline">{headline}</h2>
+    </div>
+
+    <div class="coverage__list">
+      {items.map((item) => (
+        <div class="coverage__row">
+          <span class="coverage__mark" aria-hidden="true"></span>
+          <div class="coverage__body">
+            <p class="coverage__name">{item.name}</p>
+            <p class="coverage__description">{item.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </Container>
+</section>
+
+<style>
+  .coverage {
+    padding-block: var(--space-9);
+  }
+
+  .coverage__intro {
+    max-width: 640px;
+    margin-bottom: var(--space-8);
+  }
+
+  .coverage__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+  }
+
+  .coverage__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  .coverage__row {
+    display: flex;
+    gap: var(--space-4);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .coverage__row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .coverage__mark {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    margin-top: 8px;
+    background: var(--color-gold);
+  }
+
+  .coverage__name {
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-h6);
+    margin-bottom: var(--space-2);
+  }
+
+  .coverage__description {
+    max-width: 56ch;
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 700px) {
+    .coverage__list {
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--space-8);
+      row-gap: var(--space-7);
+    }
+  }
+</style>
