@@ -1,0 +1,118 @@
+---
+/**
+ * Native <details> accordion - same zero-JS exclusive-group pattern as
+ * the homepage Services mobile accordion, reused here as the site-wide
+ * FAQ treatment for every interior page.
+ */
+import Container from "./Container.astro";
+
+interface Item {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  eyebrow: string;
+  headline: string;
+  items: Item[];
+  /** Unique per page so multiple FAQ accordions on the site don't share an exclusive group. */
+  groupName: string;
+}
+
+const { eyebrow, headline, items, groupName } = Astro.props;
+---
+
+<section class="faq">
+  <Container>
+    <div class="faq__inner">
+      <div class="faq__intro">
+        <p class="eyebrow">{eyebrow}</p>
+        <h2 class="faq__headline">{headline}</h2>
+      </div>
+
+      <div class="faq__list">
+        {items.map((item) => (
+          <details class="faq__item" name={groupName}>
+            <summary class="faq__question">
+              <span>{item.question}</span>
+              <span class="faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <p class="faq__answer">{item.answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .faq {
+    padding-block: var(--space-9);
+  }
+
+  /* Contained, not full-width - tested at the default 760px (matching
+     Container's "narrow" preset) and a slightly wider 860px; wider read
+     better for the answer text's line length, still clearly a
+     deliberately-contained column rather than stretching to the
+     section's full measure. */
+  .faq__inner {
+    max-width: 860px;
+  }
+
+  .faq__intro {
+    margin-bottom: var(--space-7);
+  }
+
+  .faq__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+  }
+
+  .faq__list {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .faq__question {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-block: var(--space-5);
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--text-body-lg);
+    font-weight: var(--weight-bold);
+  }
+
+  .faq__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__item[open] .faq__question {
+    color: var(--color-accent-strong);
+  }
+
+  .faq__chevron {
+    flex-shrink: 0;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid var(--color-accent-strong);
+    border-bottom: 2px solid var(--color-accent-strong);
+    transform: rotate(45deg);
+    margin-top: -4px;
+  }
+
+  .faq__item[open] .faq__chevron {
+    transform: rotate(-135deg);
+    margin-top: 4px;
+  }
+
+  .faq__answer {
+    max-width: 62ch;
+    padding-bottom: var(--space-6);
+  }
+</style>

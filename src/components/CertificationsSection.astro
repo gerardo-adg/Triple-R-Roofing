@@ -1,0 +1,97 @@
+---
+/**
+ * Credentials get typographic weight instead of three icon cards - large
+ * display-style lines with rule dividers (same divider language as
+ * Trust's column rule), so the section gets real visual presence without
+ * introducing the boxed/card pattern the brand direction rules out.
+ */
+import Container from "./Container.astro";
+
+interface Credential {
+  name: string;
+  description: string;
+}
+
+interface Props {
+  eyebrow: string;
+  headline: string;
+  intro: string;
+  credentials: Credential[];
+}
+
+const { eyebrow, headline, intro, credentials } = Astro.props;
+---
+
+<section class="certifications section--inverse">
+  <Container>
+    <div class="certifications__intro">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 class="certifications__headline">{headline}</h2>
+      <p class="certifications__lead">{intro}</p>
+    </div>
+
+    <div class="certifications__list">
+      {credentials.map((credential) => (
+        <div class="certifications__row">
+          <p class="certifications__name">{credential.name}</p>
+          <p class="certifications__description">{credential.description}</p>
+        </div>
+      ))}
+    </div>
+  </Container>
+</section>
+
+<style>
+  .certifications {
+    padding-block: var(--space-9);
+  }
+
+  .certifications__intro {
+    max-width: 640px;
+    margin-bottom: var(--space-8);
+  }
+
+  .certifications__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .certifications__lead {
+    color: var(--color-text-muted-inverse);
+  }
+
+  .certifications__list {
+    border-top: 1px solid var(--color-border-inverse);
+  }
+
+  .certifications__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+    padding-block: var(--space-6);
+    border-bottom: 1px solid var(--color-border-inverse);
+  }
+
+  .certifications__name {
+    font-family: var(--font-display);
+    font-weight: var(--weight-black);
+    font-stretch: var(--stretch-expanded);
+    letter-spacing: -0.01em;
+    font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+    color: var(--color-text-inverse);
+  }
+
+  .certifications__description {
+    max-width: 56ch;
+    color: var(--color-text-muted-inverse);
+  }
+
+  @media (min-width: 900px) {
+    .certifications__row {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--space-8);
+    }
+  }
+</style>

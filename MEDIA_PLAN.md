@@ -149,8 +149,98 @@ will be whatever the client provides.
 
 ---
 
+## Interior pages
+
+### Page hero background — `PageHero.astro` (shared across interior pages)
+
+- **Asset type:** Photo (static, full-bleed behind a dark scrim)
+- **Aspect ratio:** Full-bleed, landscape - crops via `object-fit: cover`
+  at any viewport, so no separate mobile crop is required the way the
+  homepage Hero's landscape asset needs one
+- **Recommended shot:** Ideally a distinct, contextually relevant photo
+  per page (e.g. a replacement/tear-off shot for the Roof Replacement
+  page, a repair close-up for Roof Repair) rather than one generic image
+  reused everywhere - not required for launch, but worth planning for
+  during the media pass
+- **Autoplay:** N/A (static photo, no video - interior heroes are
+  intentionally quieter than the homepage Hero)
+- **Loading priority:** Eager (`loading="eager"`, `fetchpriority="high"`)
+  - always the first thing visible on the page
+- **Current placeholder:** `public/media/placeholder-page-hero.svg` -
+  flat `#1c1c1c` field, shared by every interior page until real photos
+  exist per page
+
+### Project spotlight — `ServiceProjectSpotlight.astro` (Roof Replacement page)
+
+The single large real-project photo between "What's Included" and
+"Materials & Certifications" on the Roof Replacement page - explicitly
+not a repeat of the homepage's Featured Work carousel.
+
+- **Asset type:** Photo (static)
+- **Aspect ratio:** 16:9 landscape, full-bleed edge to edge - distinct
+  from Featured Work's 3:2 so the two sections don't read as the same
+  device reused. Capped at `max-height: 65vh` on desktop (≥900px) so it
+  stays a strong moment without reading as a second full-screen hero;
+  uncapped on mobile, where 16:9 was already a reasonable height.
+- **Recommended shot:** One strong, real finished (or in-progress) roof
+  replacement photo
+- **Autoplay:** N/A (static photo)
+- **Loading priority:** Lazy (not guaranteed to be in the initial
+  viewport)
+- **Current placeholder:** `public/media/placeholder-project-roof-replacement.svg`
+  - flat `#201f1c` field, 16:9
+- **Metadata content:** Two restrained slots, both still placeholders -
+  do not fill in with invented specifics before the client supplies them:
+  - `meta` - a short tag directly above the image, formatted
+    "TYPE · LOCATION" (e.g. eventually "Roof Replacement · Elk Grove,
+    CA"). Currently "Roof Replacement · Location TBD" - the type is
+    accurate (this is the Roof Replacement page), the location is not
+    yet known.
+  - `caption` - a fuller one-line description below the image, meant to
+    hold the real project's type, location, and material once supplied.
+    Currently "Real project photo and details (type, location,
+    materials) coming soon."
+  Each service page that gets this treatment will need its own real
+  photo and metadata; this pattern isn't meant to share one image across
+  services.
+
+### Detail photo band — `PhotoBand.astro` (Roof Replacement page, between Overview and What's Included)
+
+A quiet, caption-free full-bleed strip added to break up the long
+text-only stretch from the page hero through Overview and What's
+Included. Deliberately carries no eyebrow, caption, or copy of any kind
+- it's a visual pause, not a content section, so it doesn't turn into a
+generic image/text split.
+
+- **Asset type:** Photo (static)
+- **Aspect ratio:** Desktop (≥900px) height is viewport-driven
+  (`clamp(160px, 24vh, 280px)`) rather than a strict ratio, so any
+  landscape crop works there. Mobile (<900px) uses a fixed ~16:9 crop
+  (width-relative, not viewport-height-driven) so it reads as a genuine
+  photographic moment rather than a shallow sliver - a single wide crop
+  that reads reasonably at both should work, but the desktop
+  height/crop is intentionally left open to fine-tune once the real
+  photo exists.
+- **Recommended shot:** A detail or texture shot related to the service
+  - close-up, not a full job-site establishing shot (that role belongs to
+  the project spotlight below it)
+- **Autoplay:** N/A (static photo)
+- **Loading priority:** Lazy
+- **Current placeholder:** `public/media/placeholder-detail-roof-replacement.svg`
+  - flat `#232220` field
+- **Reuse note:** This component is generic (`image`/`imageAlt` props
+  only) and available to any interior page with the same long-text-
+  stretch issue, not just Roof Replacement.
+
+---
+
 ## Not yet built
 
 Trust section (`TrustSection.astro`) is text/stat-only by design - no
-media slot there currently. Final CTA and Footer aren't built yet; each
-will get an entry here as it's added.
+media slot there currently. Homepage sections (Hero through Footer) are
+all built. The Materials & Certifications section on service pages is
+intentionally typography-only (no photo) by design, not a placeholder
+gap - see `CertificationsSection.astro`. Remaining service pages (Roof
+Repair, Gutters, Tile Roofing, Solar Panel Cleaning, Moss Removal,
+Insurance Claim Assistance), About, Contact, Financing, and Projects
+will each get entries here as they're built.

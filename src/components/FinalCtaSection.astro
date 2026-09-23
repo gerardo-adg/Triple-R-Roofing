@@ -1,19 +1,38 @@
 ---
 import Container from "./Container.astro";
 import Button from "./Button.astro";
+
+interface CTA {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  headline?: string;
+  body?: string;
+  primaryCta?: CTA;
+  secondaryCta?: CTA;
+}
+
+// Defaults match the original homepage copy, so <FinalCtaSection /> with
+// no props keeps working exactly as before - interior pages override
+// with page-specific copy instead of duplicating this component.
+const {
+  headline = "Let’s talk about your roof.",
+  body = "Whether you need a repair, a replacement, or just want to know what condition your roof is in, we’ll come take a look.",
+  primaryCta = { label: "Get a Free Estimate", href: "/contact" },
+  secondaryCta = { label: "Call (916) 420-5635", href: "tel:+19164205635" },
+} = Astro.props;
 ---
 
 <section class="final-cta">
   <Container width="narrow">
     <div class="final-cta__content">
-      <h2 class="final-cta__headline">Let&rsquo;s talk about your roof.</h2>
-      <p class="final-cta__body">
-        Whether you need a repair, a replacement, or just want to know what
-        condition your roof is in, we&rsquo;ll come take a look.
-      </p>
+      <h2 class="final-cta__headline">{headline}</h2>
+      <p class="final-cta__body">{body}</p>
       <div class="final-cta__actions">
-        <Button variant="primary" href="/contact">Get a Free Estimate</Button>
-        <Button variant="secondary" href="tel:+19164205635">Call (916) 420-5635</Button>
+        <Button variant="primary" href={primaryCta.href}>{primaryCta.label}</Button>
+        <Button variant="secondary" href={secondaryCta.href}>{secondaryCta.label}</Button>
       </div>
     </div>
   </Container>

@@ -1,0 +1,95 @@
+---
+/**
+ * Numbered scope-of-work list for service pages. Shares Process's index-
+ * number typographic language (site-wide "numbered step" vocabulary) but
+ * as a single stacked column with rule dividers rather than Process's
+ * 4-column row, so it doesn't read as a literal reuse of that section.
+ */
+import Container from "./Container.astro";
+
+interface Item {
+  index: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  eyebrow: string;
+  headline: string;
+  items: Item[];
+}
+
+const { eyebrow, headline, items } = Astro.props;
+---
+
+<section class="includes">
+  <Container>
+    <div class="includes__intro">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 class="includes__headline">{headline}</h2>
+    </div>
+
+    <div class="includes__list">
+      {items.map((item) => (
+        <div class="includes__row">
+          <span class="includes__index">{item.index}</span>
+          <div class="includes__body">
+            <h3 class="includes__title">{item.title}</h3>
+            <p class="includes__description">{item.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </Container>
+</section>
+
+<style>
+  .includes {
+    padding-block: var(--space-9);
+  }
+
+  .includes__intro {
+    max-width: 640px;
+    margin-bottom: var(--space-8);
+  }
+
+  .includes__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+  }
+
+  .includes__list {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .includes__row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-5);
+    padding-block: var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .includes__index {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-accent-strong);
+  }
+
+  .includes__title {
+    font-size: var(--text-h6);
+    margin-bottom: var(--space-2);
+  }
+
+  .includes__description {
+    max-width: 56ch;
+  }
+
+  @media (min-width: 700px) {
+    .includes__row {
+      grid-template-columns: 120px 1fr;
+      align-items: baseline;
+    }
+  }
+</style>

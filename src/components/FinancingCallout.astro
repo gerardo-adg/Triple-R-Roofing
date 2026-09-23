@@ -1,0 +1,60 @@
+---
+/**
+ * Compact mid-page financing nudge for interior pages - a single ruled
+ * band, not a scaled-down copy of the homepage's large two-column
+ * Financing section (huge $0/0% stat typography stays a homepage-only
+ * moment).
+ */
+import Container from "./Container.astro";
+import Button from "./Button.astro";
+
+interface Props {
+  statement?: string;
+  href?: string;
+  label?: string;
+}
+
+const {
+  statement = "Financing available through Wisetack, including $0 down and 0% interest for 6 months for qualified borrowers.",
+  href = "/financing",
+  label = "Explore Financing",
+} = Astro.props;
+---
+
+<section class="financing-callout">
+  <Container>
+    <div class="financing-callout__row">
+      <p class="financing-callout__statement">{statement}</p>
+      <Button variant="secondary" href={href}>{label}</Button>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .financing-callout {
+    padding-block: var(--space-7);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .financing-callout__row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+
+  .financing-callout__statement {
+    max-width: 56ch;
+    font-size: var(--text-body-lg);
+  }
+
+  @media (min-width: 700px) {
+    .financing-callout__row {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-7);
+    }
+  }
+</style>
