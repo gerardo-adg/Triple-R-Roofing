@@ -303,8 +303,8 @@ section - the client does not believe Wisetack financing currently
 extends to gutter projects, so the callout (which implied it did by its
 placement) was removed rather than reworded. `FinancingCallout` remains
 in place on Roof Replacement and Roof Repair. Remaining service pages (Solar Panel Cleaning,
-Moss Removal, Insurance Claim Assistance) and Projects will each get
-entries here as they're built.
+Insurance Claim Assistance) and Projects will each get entries here as
+they're built.
 
 ---
 
@@ -353,3 +353,31 @@ entries here as they're built.
   the CertainTeed program's own name) and the client has confirmed no
   tile-specific manufacturer certification exists, so neither is
   presented as backing tile-roofing work anywhere on this page.
+
+---
+
+### Moss Removal page media
+
+- **Page hero background:** `public/media/placeholder-page-hero-moss.svg`
+  - flat `#1a1d19` field. Same shared `PageHero.astro` spec as the other
+  service pages (full-bleed landscape, dark scrim, eager loading) - a
+  distinct placeholder file so this page doesn't visually match the
+  other service pages' heroes once real photos exist.
+- **Before & After pair:** `public/media/placeholder-moss-before.svg` and
+  `public/media/placeholder-moss-after.svg`
+  - flat `#1f221c` / `#25281f` fields, 4:3, page-specific inline markup
+  (not a shared component yet - extract one only if a second page needs
+  the same before/after treatment). Each frame carries a small "Before"
+  / "After" label in the corner; keep those labels in place once real
+  photography replaces the placeholders. The client has confirmed real
+  completed moss-removal work exists and will provide photos later, but
+  no location, roof type, method, or scope should be invented before
+  then.
+- No Recent Work spotlight on this page - the Before & After pair serves
+  that role more directly for a removal/maintenance service than a
+  single project photo would.
+- No Financing section and no FAQ on this page - no evidence financing
+  applies to a service this size, and the only safe FAQ answers
+  (licensed/insured/BBB, free estimates) are already covered elsewhere
+  and didn't justify a thin accordion just for consistency with other
+  service pages.
