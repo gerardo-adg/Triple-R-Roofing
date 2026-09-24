@@ -1,0 +1,175 @@
+---
+import InteriorLayout from "../layouts/InteriorLayout.astro";
+import Container from "../components/Container.astro";
+import Button from "../components/Button.astro";
+import PageHero from "../components/PageHero.astro";
+import FAQSection from "../components/FAQSection.astro";
+import FinalCtaSection from "../components/FinalCtaSection.astro";
+
+// Confirmed facts only: financing is through Wisetack, $0 down / 0%
+// interest for 6 months for qualified borrowers, subject to
+// qualification/credit approval. No APR-after-promo, deferred-interest,
+// application-flow, credit-pull, or approval-speed claims - none of that
+// has been confirmed, so none of it appears here or in the FAQ below.
+const FAQS = [
+  {
+    question: "Who provides the financing?",
+    answer:
+      "Financing is provided through Wisetack. It isn't financing directly through Triple R Roofing.",
+  },
+  {
+    question: "What is the 0% interest offer?",
+    answer: "Qualified borrowers can get $0 down and 0% interest for 6 months through Wisetack.",
+  },
+  {
+    question: "Do I need to qualify?",
+    answer: "Yes. Financing through Wisetack is subject to qualification and credit approval.",
+  },
+  {
+    question: "How do I get started?",
+    answer:
+      "Request a free estimate and let us know you're interested in financing. We'll go over the financing option with you.",
+  },
+];
+---
+
+<InteriorLayout
+  title="Financing | Triple R Roofing"
+  description="Financing for roofing projects in Sacramento, CA, available through Wisetack, including $0 down and 0% interest for 6 months for qualified borrowers."
+>
+  <PageHero
+    title="Financing for your roofing project."
+    description="Financing is available through Wisetack, with $0 down and 0% interest for 6 months for qualified borrowers."
+    image="/media/placeholder-page-hero-financing.svg"
+    breadcrumbs={[{ label: "Home", href: "/" }, { label: "Financing" }]}
+  />
+
+  <section class="offer">
+    <Container>
+      <div class="offer__content">
+        <p class="eyebrow">Financing through Wisetack</p>
+
+        <div class="offer__lines">
+          <p class="offer__line">$0 DOWN.</p>
+          <p class="offer__line offer__line--accent">0% INTEREST.</p>
+          <p class="offer__line">FOR 6 MONTHS.</p>
+        </div>
+
+        <div class="offer__rule" aria-hidden="true"></div>
+
+        <!--
+          Official Wisetack-required disclosure language (if/when Triple R
+          confirms it) goes here, below the qualification line. Nothing
+          styled as legal/disclosure copy ships until that wording is
+          verified - the sentence below is plain confirmed fact, not a
+          placeholder standing in for a compliance disclosure.
+        -->
+        <p class="offer__copy">
+          Available to qualified borrowers through Wisetack. Financing is
+          subject to qualification and credit approval.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <section class="getting-started">
+    <Container>
+      <div class="getting-started__content">
+        <p class="eyebrow">Getting Started</p>
+        <h2 class="getting-started__headline">Interested in financing?</h2>
+        <p class="getting-started__copy">
+          Request a free estimate and let us know you're interested in
+          financing. We'll go over the financing option with you.
+        </p>
+        <Button variant="primary" href="/contact">Request a Free Estimate</Button>
+      </div>
+    </Container>
+  </section>
+
+  <FAQSection
+    eyebrow="Common Questions"
+    headline="Financing, answered"
+    groupName="faq-financing"
+    items={FAQS}
+  />
+
+  <FinalCtaSection
+    headline="Ready to talk about financing?"
+    body="Request a free estimate and let us know you're interested in financing."
+  />
+</InteriorLayout>
+
+<style>
+  /* ---- Offer ---- */
+  .offer {
+    padding-block: var(--space-10);
+  }
+
+  .offer__content {
+    max-width: 900px;
+  }
+
+  .offer__lines {
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .offer__line {
+    font-family: var(--font-display);
+    font-weight: var(--weight-black);
+    font-stretch: var(--stretch-expanded);
+    font-size: clamp(2rem, 0.5rem + 6.7vw, 6.5rem);
+    line-height: var(--leading-tight);
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+  }
+
+  .offer__line--accent {
+    color: var(--color-accent-strong);
+  }
+
+  .offer__rule {
+    width: 72px;
+    height: 2px;
+    background: var(--color-accent-strong);
+  }
+
+  .offer__copy {
+    margin-top: var(--space-6);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted);
+    max-width: 52ch;
+  }
+
+  /* Mobile only: less vertical padding around the offer block, and no
+     extra letter-tightening on the numeral lines - if the longest line
+     wraps at very narrow widths, tight leading keeps the wrap reading as
+     part of the same intentional stack rather than an accident. */
+  @media (max-width: 899px) {
+    .offer {
+      padding-block: var(--space-8);
+    }
+  }
+
+  /* ---- Getting Started ---- */
+  .getting-started {
+    padding-block: var(--space-9);
+  }
+
+  .getting-started__content {
+    max-width: 640px;
+  }
+
+  .getting-started__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .getting-started__copy {
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted);
+    max-width: 56ch;
+    margin-bottom: var(--space-7);
+  }
+</style>

@@ -272,6 +272,16 @@ generic image/text split.
   the Overview + Three Ways We Can Help stretch (~1031px combined) read
   fine without one; revisit only if that changes.
 
+### Financing page media
+
+- **Page hero background:** `public/media/placeholder-page-hero-financing.svg`
+  - flat `#20211d` field. Same shared `PageHero.astro` spec as the other
+  interior pages (full-bleed landscape, dark scrim, eager loading) - a
+  distinct placeholder file so this page doesn't visually match any
+  service page's hero once real photos exist. No other media on this
+  page by design - the large typographic offer treatment and the
+  Getting Started section are intentionally type-only, not gaps.
+
 ---
 
 ## Not yet built
@@ -288,6 +298,10 @@ same reasoning. The Gutters page intentionally omits Materials &
 Certifications entirely - GAF/CertainTeed are roofing-manufacturer
 credentials that don't certify gutter work, and no substitute
 gutter-specific credential section was added without a verified fact to
-support it. Remaining service pages (Tile Roofing, Solar Panel Cleaning,
-Moss Removal, Insurance Claim Assistance), About, Contact, Financing,
-and Projects will each get entries here as they're built.
+support it. The Gutters page also no longer includes the `FinancingCallout`
+section - the client does not believe Wisetack financing currently
+extends to gutter projects, so the callout (which implied it did by its
+placement) was removed rather than reworded. `FinancingCallout` remains
+in place on Roof Replacement and Roof Repair. Remaining service pages (Tile Roofing, Solar Panel Cleaning,
+Moss Removal, Insurance Claim Assistance), About, and Projects will each
+get entries here as they're built.
