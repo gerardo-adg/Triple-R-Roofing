@@ -1,0 +1,145 @@
+---
+import InteriorLayout from "../../layouts/InteriorLayout.astro";
+import Container from "../../components/Container.astro";
+import PageHero from "../../components/PageHero.astro";
+import ServiceTriad from "../../components/ServiceTriad.astro";
+import ServiceProjectSpotlight from "../../components/ServiceProjectSpotlight.astro";
+import FinancingCallout from "../../components/FinancingCallout.astro";
+import FAQSection from "../../components/FAQSection.astro";
+import FinalCtaSection from "../../components/FinalCtaSection.astro";
+
+// Confirmed directly by the client: Triple R does tile roof repair, tile
+// resets (lift and relay), and full tile roof replacement, for both
+// concrete and clay tile. No specific tile manufacturer certification
+// exists, so GAF/CertainTeed (both shingle-specific credentials - see
+// CertainTeed's own "SELECT ShingleMaster" name) are not presented as
+// tile-roofing credentials anywhere on this page. Only the general
+// licensed/bonded/insured + BBB Accredited facts are used, in the FAQ.
+const SERVICES = [
+  {
+    name: "Tile Roof Repair",
+    description: "Broken or slipped tiles, leaks, and other isolated problems.",
+  },
+  {
+    name: "Tile Reset / Lift & Relay",
+    description:
+      "We remove the existing tile, address the underlayment underneath, and reinstall the tile that can still be used.",
+  },
+  {
+    name: "Tile Roof Replacement",
+    description: "When the roof needs more than a repair or reset, we can replace the full tile roof.",
+  },
+];
+
+// FAQ answers are limited to verified or already-established facts. No
+// lifespan, warranty, installation-process, or manufacturer claims.
+const FAQS = [
+  {
+    question: "What's a tile reset or lift and relay?",
+    answer:
+      "We remove the existing tile, repair or replace the underlayment underneath it, and reinstall the tile that's still usable.",
+  },
+  {
+    question: "How do I know which service I need?",
+    answer:
+      "An inspection determines that. Depending on what we find, it might be a repair, a reset, or a full replacement.",
+  },
+  {
+    question: "Are you licensed and insured?",
+    answer: "Yes. We're licensed, bonded, and insured, and BBB Accredited.",
+  },
+  {
+    question: "Is financing available?",
+    answer:
+      "Yes, through Wisetack, including $0 down and 0% interest for 6 months for qualified borrowers.",
+  },
+  {
+    question: "Do you offer free estimates?",
+    answer: "Yes. Call or request one online and we'll schedule a time to come look at your roof.",
+  },
+];
+---
+
+<InteriorLayout
+  title="Tile Roofing | Triple R Roofing"
+  description="Tile roof repair, resets, and replacement for concrete and clay tile roofs in Sacramento, CA. Licensed, bonded, and insured, and BBB Accredited."
+>
+  <PageHero
+    title="Tile Roofing"
+    description="Tile roof repair, resets, and replacement in Sacramento."
+    image="/media/placeholder-page-hero-tile.svg"
+    breadcrumbs={[
+      { label: "Home", href: "/" },
+      { label: "Services", href: "/#services" },
+      { label: "Tile Roofing" },
+    ]}
+  />
+
+  <section class="overview">
+    <Container>
+      <div class="overview__content">
+        <p class="eyebrow">Tile Roofing</p>
+        <h2 class="overview__headline">The problem isn&rsquo;t always the tile.</h2>
+        <p class="overview__body">
+          The tile is what you see, but there&rsquo;s an underlayment and roof
+          system underneath it. When a tile roof leaks, the issue can be
+          coming from underneath the tile.
+        </p>
+        <p class="overview__body">
+          Depending on what we find, the roof may need an isolated repair, a
+          tile reset to address the underlayment, or a full replacement. We
+          inspect it first and figure out which one makes sense.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <ServiceTriad
+    eyebrow="Tile Roof Services"
+    headline="Three ways we can help with your tile roof."
+    items={SERVICES}
+  />
+
+  <ServiceProjectSpotlight
+    eyebrow="Recent work"
+    meta="Tile Roofing · Location TBD"
+    image="/media/placeholder-project-tile.svg"
+    imageAlt="Placeholder. A real completed tile roofing project photo will replace this image."
+    caption="Real project photo and details (type, location, scope) coming soon."
+  />
+
+  <FinancingCallout />
+
+  <FAQSection
+    eyebrow="Common Questions"
+    headline="Tile roofing, answered"
+    groupName="faq-tile-roofing"
+    items={FAQS}
+  />
+
+  <FinalCtaSection
+    headline="Let's take a look at your tile roof."
+    body="We'll inspect it and explain what we find."
+  />
+</InteriorLayout>
+
+<style>
+  .overview {
+    padding-block: var(--space-9);
+  }
+
+  .overview__content {
+    max-width: 720px;
+  }
+
+  .overview__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .overview__body {
+    font-size: var(--text-body-lg);
+    max-width: 62ch;
+  }
+</style>

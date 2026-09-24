@@ -302,7 +302,7 @@ support it. The Gutters page also no longer includes the `FinancingCallout`
 section - the client does not believe Wisetack financing currently
 extends to gutter projects, so the callout (which implied it did by its
 placement) was removed rather than reworded. `FinancingCallout` remains
-in place on Roof Replacement and Roof Repair. Remaining service pages (Tile Roofing, Solar Panel Cleaning,
+in place on Roof Replacement and Roof Repair. Remaining service pages (Solar Panel Cleaning,
 Moss Removal, Insurance Claim Assistance) and Projects will each get
 entries here as they're built.
 
@@ -331,3 +331,25 @@ entries here as they're built.
   - No other media added to this page - "What We Do" stays text-only by
   the client's choice, not a placeholder gap; revisit only if a real
   family/job-site photo becomes available.
+
+---
+
+### Tile Roofing page media
+
+- **Page hero background:** `public/media/placeholder-page-hero-tile.svg`
+  - flat `#1e1c19` field. Same shared `PageHero.astro` spec as the other
+  service pages (full-bleed landscape, dark scrim, eager loading) - a
+  distinct placeholder file so this page doesn't visually match the
+  other roofing pages' heroes once real photos exist.
+- **Recent Work project spotlight:** `public/media/placeholder-project-tile.svg`
+  - flat `#232019` field, 16:9, same `ServiceProjectSpotlight.astro` spec
+  as the other service pages (max-height 65vh on desktop). Metadata is
+  "Tile Roofing · Location TBD" - the client has confirmed real completed
+  tile projects exist and will provide photos/details later, but no
+  location, tile material, or scope (repair, reset, or replacement)
+  should be invented before then.
+- No Materials & Certifications section on this page - GAF and
+  CertainTeed SELECT ShingleMaster are shingle-specific credentials (see
+  the CertainTeed program's own name) and the client has confirmed no
+  tile-specific manufacturer certification exists, so neither is
+  presented as backing tile-roofing work anywhere on this page.
