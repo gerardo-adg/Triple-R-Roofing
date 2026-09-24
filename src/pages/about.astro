@@ -71,6 +71,7 @@ import FinalCtaSection from "../components/FinalCtaSection.astro";
     <Container>
       <div class="what-we-do__content">
         <p class="eyebrow">What We Do</p>
+        <h2 class="what-we-do__headline">Roofing services in Sacramento.</h2>
         <p class="what-we-do__body">
           Triple R Roofing serves homeowners throughout the Sacramento area
           with roof replacements, roof repairs, and gutter services. The
@@ -158,8 +159,20 @@ import FinalCtaSection from "../components/FinalCtaSection.astro";
 
   /* ---- The Family ---- */
   .family-story {
-    padding-block: var(--space-9);
+    padding-top: var(--space-9);
+    padding-bottom: var(--space-9);
     text-align: center;
+  }
+
+  /* Bottom padding only, desktop only - the combined gap before What We
+     Do's own top padding read as more generous than intended once the
+     video's own height was already providing plenty of visual weight and
+     closure. Top padding (the gap under the intro paragraph) and mobile
+     spacing are untouched. */
+  @media (min-width: 900px) {
+    .family-story {
+      padding-bottom: var(--space-6);
+    }
   }
 
   .family-story__intro {
@@ -180,14 +193,22 @@ import FinalCtaSection from "../components/FinalCtaSection.astro";
 
   .family-story__video {
     margin-top: var(--space-8);
+    /* Shared by the video frame and its caption below, so the caption is
+       bound to the exact same width/center axis as the frame rather than
+       just inheriting text-align: center across the much wider section -
+       that's what keeps it reading as directly attached to the video
+       instead of merely centered somewhere near it. */
+    --family-video-width: clamp(300px, 42vw, 480px);
   }
 
   .family-story__video :global(.playable-video) {
-    width: clamp(300px, 42vw, 440px);
+    width: var(--family-video-width);
     margin-inline: auto;
   }
 
   .family-story__caption {
+    width: var(--family-video-width);
+    margin-inline: auto;
     margin-top: var(--space-4);
     font-size: var(--text-body-sm);
     color: var(--color-text-muted);
@@ -202,10 +223,15 @@ import FinalCtaSection from "../components/FinalCtaSection.astro";
     max-width: 720px;
   }
 
+  .what-we-do__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
   .what-we-do__body {
     font-size: var(--text-body-lg);
     max-width: 62ch;
-    margin-top: var(--space-3);
     margin-bottom: var(--space-6);
   }
 

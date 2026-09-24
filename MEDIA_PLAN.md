@@ -317,8 +317,11 @@ entries here as they're built.
   yet, so the play control renders inert for layout review. This is the
   same single confirmed ~34s family/Triple-R clip already referenced in
   the homepage `FamilySection` media entry above, sized much larger here
-  (the page's visual centerpiece, `clamp(300px, 42vw, 440px)` wide) since
-  this is the story page it belongs to.
+  (the page's visual centerpiece, `clamp(300px, 42vw, 480px)` wide) since
+  this is the story page it belongs to. The caption directly below it
+  shares that same width/center via a `--family-video-width` custom
+  property, so it reads as attached to the frame rather than merely
+  centered somewhere near it.
   - **Poster:** per the client, use a still frame from the existing video
   for now (not a separate portrait) - still needs to be pulled from the
   actual footage once delivered.
