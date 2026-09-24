@@ -302,9 +302,8 @@ support it. The Gutters page also no longer includes the `FinancingCallout`
 section - the client does not believe Wisetack financing currently
 extends to gutter projects, so the callout (which implied it did by its
 placement) was removed rather than reworded. `FinancingCallout` remains
-in place on Roof Replacement and Roof Repair. Remaining service pages (Solar Panel Cleaning,
-Insurance Claim Assistance) and Projects will each get entries here as
-they're built.
+in place on Roof Replacement and Roof Repair. Remaining pages (Insurance Claim Assistance and
+Projects) will each get entries here as they're built.
 
 ---
 
@@ -381,3 +380,30 @@ they're built.
   (licensed/insured/BBB, free estimates) are already covered elsewhere
   and didn't justify a thin accordion just for consistency with other
   service pages.
+
+---
+
+### Solar Panel Cleaning page media
+
+- **Page hero background:** `public/media/placeholder-page-hero-solar.svg`
+  - flat `#191c1e` field. Same shared `PageHero.astro` spec as the other
+  service pages (full-bleed landscape, dark scrim, eager loading) - a
+  distinct placeholder file so this page doesn't visually match the
+  other service pages' heroes once real photos exist.
+- **Before & After pair:** `public/media/placeholder-solar-before.svg` and
+  `public/media/placeholder-solar-after.svg`
+  - flat `#1c1f21` / `#20262a` fields, 4:3, same page-specific before/after
+  markup as Moss Removal. Each frame carries a small "Before" / "After"
+  label in the corner; keep those labels in place once real photography
+  replaces the placeholders. The client has confirmed real completed
+  solar-panel-cleaning work exists and will provide photos later, but no
+  location, panel type, or scope should be invented before then.
+  - This is now the second page using the identical before/after
+  pattern (markup + styles) as Moss Removal - a candidate for extracting
+  into a shared component if a third page ever needs it, but not done
+  now since it wasn't asked for and each instance is still small.
+- No Recent Work spotlight, no Financing section, and no FAQ on this
+  page - same reasoning as Moss Removal: the before/after pair
+  demonstrates the service more directly than a single project photo,
+  nothing confirms financing applies to a service this size, and the
+  only safe FAQ answers are already covered elsewhere.
