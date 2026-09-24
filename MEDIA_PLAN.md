@@ -303,5 +303,28 @@ section - the client does not believe Wisetack financing currently
 extends to gutter projects, so the callout (which implied it did by its
 placement) was removed rather than reworded. `FinancingCallout` remains
 in place on Roof Replacement and Roof Repair. Remaining service pages (Tile Roofing, Solar Panel Cleaning,
-Moss Removal, Insurance Claim Assistance), About, and Projects will each
-get entries here as they're built.
+Moss Removal, Insurance Claim Assistance) and Projects will each get
+entries here as they're built.
+
+---
+
+### About page media
+
+- **Family video:** `public/media/placeholder-about-family-video.svg`
+  - flat `#1c1c19` field, 9:16, built with `PlayableVideo.astro` (same
+  component, same click-to-play/sound-on/no-autoplay behavior as the
+  homepage `FamilySection` instance) - no `src`/`muxPlaybackId` configured
+  yet, so the play control renders inert for layout review. This is the
+  same single confirmed ~34s family/Triple-R clip already referenced in
+  the homepage `FamilySection` media entry above, sized much larger here
+  (the page's visual centerpiece, `clamp(300px, 42vw, 440px)` wide) since
+  this is the story page it belongs to.
+  - **Poster:** per the client, use a still frame from the existing video
+  for now (not a separate portrait) - still needs to be pulled from the
+  actual footage once delivered.
+  - **Known caveat:** carries the same burned-in-captions caveat as the
+  homepage entry - using the existing export as-is for layout purposes
+  until a cleaner one is available.
+  - No other media added to this page - "What We Do" stays text-only by
+  the client's choice, not a placeholder gap; revisit only if a real
+  family/job-site photo becomes available.

@@ -1,0 +1,217 @@
+---
+import InteriorLayout from "../layouts/InteriorLayout.astro";
+import Container from "../components/Container.astro";
+import Button from "../components/Button.astro";
+import PlayableVideo from "../components/PlayableVideo.astro";
+import FinalCtaSection from "../components/FinalCtaSection.astro";
+
+// Confirmed facts only. Family is introduced collectively (not individual
+// bios) - we have full names for Rogelio, his father, and two brothers,
+// but no individual roles/anecdotes to justify separate profiles, and no
+// fake team cards. Uncles stay unnamed per the client. No founding year,
+// years-in-business, project counts, employee count, generations claim,
+// awards, or origin-story/values language - none of that has been
+// confirmed. The video referenced below is the single confirmed ~34s
+// family/Triple-R clip already used (in compact form) on the homepage
+// FamilySection - no other family videos are assumed here.
+---
+
+<InteriorLayout
+  title="About | Triple R Roofing"
+  description="Triple R Roofing is a family-owned roofing and gutter company in Sacramento, CA, run by Rogelio Ramirez and his family."
+>
+  <section class="name-reveal section--inverse">
+    <Container>
+      <nav class="name-reveal__breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">About</span>
+      </nav>
+
+      <p class="eyebrow">About Triple R</p>
+
+      <div class="name-reveal__lines">
+        <p class="name-reveal__line">Rogelio.</p>
+        <p class="name-reveal__line name-reveal__line--accent">Ramirez.</p>
+        <p class="name-reveal__line">Roofing.</p>
+      </div>
+
+      <p class="name-reveal__copy">
+        Triple R Roofing is a family-owned company named for its owner,
+        Rogelio Ramirez. Three words. Three R's.
+      </p>
+    </Container>
+  </section>
+
+  <section class="family-story">
+    <Container>
+      <div class="family-story__intro">
+        <p class="eyebrow">The family behind Triple R</p>
+        <h2 class="family-story__headline">The family</h2>
+        <p class="family-story__body">
+          Rogelio Ramirez runs Triple R Roofing alongside his family. His
+          father, also named Rogelio Ramirez, works with him, along with his
+          brothers David Rogelio Ramirez and Abraham Rogelio Ramirez and
+          their uncles.
+        </p>
+      </div>
+
+      <div class="family-story__video">
+        <PlayableVideo
+          poster="/media/placeholder-about-family-video.svg"
+          alt="Placeholder. A future video of Rogelio Ramirez explaining Triple R Roofing will replace this poster."
+          aspectRatio="9 / 16"
+        />
+        <p class="family-story__caption">Rogelio Ramirez explains Triple R.</p>
+      </div>
+    </Container>
+  </section>
+
+  <section class="what-we-do">
+    <Container>
+      <div class="what-we-do__content">
+        <p class="eyebrow">What We Do</p>
+        <p class="what-we-do__body">
+          Triple R Roofing serves homeowners throughout the Sacramento area
+          with roof replacements, roof repairs, and gutter services. The
+          company is licensed, bonded, and insured, and holds GAF Certified
+          and CertainTeed SELECT ShingleMaster certifications, with BBB
+          Accreditation.
+        </p>
+        <div class="what-we-do__links">
+          <Button variant="text" href="/services/roof-replacement">Roof Replacement</Button>
+          <Button variant="text" href="/services/roof-repair">Roof Repair</Button>
+          <Button variant="text" href="/services/gutters">Gutters</Button>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <FinalCtaSection
+    headline="Ready to work with Triple R?"
+    body="Reach out and we'll come take a look."
+  />
+</InteriorLayout>
+
+<style>
+  /* ---- The Name ---- */
+  .name-reveal {
+    padding-top: calc(var(--nav-height) + var(--space-8));
+    padding-bottom: var(--space-10);
+  }
+
+  .name-reveal__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted-inverse);
+    margin-bottom: var(--space-6);
+  }
+
+  .name-reveal__breadcrumb a {
+    color: var(--color-text-muted-inverse);
+  }
+
+  .name-reveal__breadcrumb a:hover {
+    color: var(--color-gold);
+  }
+
+  .name-reveal__breadcrumb [aria-current] {
+    color: var(--color-gold);
+  }
+
+  .name-reveal__lines {
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .name-reveal__line {
+    font-family: var(--font-display);
+    font-weight: var(--weight-black);
+    font-stretch: var(--stretch-expanded);
+    font-size: clamp(2.25rem, 0.75rem + 6.7vw, 6.5rem);
+    line-height: var(--leading-tight);
+    letter-spacing: -0.01em;
+    color: var(--color-text-inverse);
+  }
+
+  .name-reveal__line--accent {
+    color: var(--color-gold);
+  }
+
+  .name-reveal__copy {
+    max-width: 50ch;
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted-inverse);
+  }
+
+  @media (max-width: 899px) {
+    .name-reveal {
+      padding-top: calc(var(--nav-height) + var(--space-6));
+      padding-bottom: var(--space-8);
+    }
+  }
+
+  /* ---- The Family ---- */
+  .family-story {
+    padding-block: var(--space-9);
+    text-align: center;
+  }
+
+  .family-story__intro {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .family-story__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .family-story__body {
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted);
+  }
+
+  .family-story__video {
+    margin-top: var(--space-8);
+  }
+
+  .family-story__video :global(.playable-video) {
+    width: clamp(300px, 42vw, 440px);
+    margin-inline: auto;
+  }
+
+  .family-story__caption {
+    margin-top: var(--space-4);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* ---- What We Do ---- */
+  .what-we-do {
+    padding-block: var(--space-9);
+  }
+
+  .what-we-do__content {
+    max-width: 720px;
+  }
+
+  .what-we-do__body {
+    font-size: var(--text-body-lg);
+    max-width: 62ch;
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .what-we-do__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+  }
+</style>
