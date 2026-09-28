@@ -1,0 +1,232 @@
+---
+import InteriorLayout from "../../layouts/InteriorLayout.astro";
+import Container from "../../components/Container.astro";
+import PhotoBand from "../../components/PhotoBand.astro";
+import FAQSection from "../../components/FAQSection.astro";
+import FinalCtaSection from "../../components/FinalCtaSection.astro";
+
+// A combined offering, not a standard single service - shaped around the
+// homeowner scenario (needing a roof and considering solar at the same
+// time) rather than the usual PageHero -> overview -> list -> spotlight
+// template. Attribution is kept deliberately simple: Triple R Roofing
+// does the roofing, a solar partner does the solar, full stop - no
+// claims about contracts, referrals, bundled pricing, or who the
+// homeowner signs with, since none of that has been confirmed. The
+// partner isn't named ("our solar partner") until the client confirms
+// how that relationship should be represented publicly. No FinancingCallout
+// on this page - the site's only confirmed financing offer is for
+// roofing, and hasn't been confirmed to extend to a solar portion.
+const FAQS = [
+  {
+    question: "Who handles the solar installation?",
+    answer: "Triple R Roofing handles the roofing work. The solar portion is handled by our solar partner.",
+  },
+  {
+    question: "Can I plan my roof and solar at the same time?",
+    answer: "Yes. If you need roofing work and are considering solar, talk to us about both when you request your estimate.",
+  },
+  {
+    question: "Are there roofing + solar offers available?",
+    answer: "Ask us about current roofing + solar options when you request your estimate.",
+  },
+  {
+    question: "Are you licensed and insured?",
+    answer: "Yes. We're licensed, bonded, and insured, and BBB Accredited.",
+  },
+  {
+    question: "Do you offer free estimates?",
+    answer: "Yes. Call or request one online and we'll go over your roofing and solar options.",
+  },
+];
+---
+
+<InteriorLayout
+  title="Roofing + Solar | Triple R Roofing"
+  description="Need a new roof and considering solar? Triple R Roofing handles the roofing side and works with a solar partner for the solar portion."
+>
+  <section class="roofing-solar-hero section--inverse">
+    <Container>
+      <nav class="roofing-solar-hero__breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="/services">Services</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Roofing + Solar</span>
+      </nav>
+
+      <p class="eyebrow">Roofing + Solar</p>
+
+      <div class="roofing-solar-hero__grid">
+        <h1 class="roofing-solar-hero__headline">One project, not two.</h1>
+        <p class="roofing-solar-hero__body">
+          If you need a new roof and you're also considering solar, we can
+          help you explore doing both together. Triple R Roofing handles
+          the roofing side and works with a solar partner for the solar
+          portion.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <section class="roofing-solar-split">
+    <Container>
+      <div class="roofing-solar-split__intro" data-reveal>
+        <p class="eyebrow">Roofing + Solar</p>
+        <h2 class="roofing-solar-split__headline">Two parts, one project.</h2>
+      </div>
+
+      <div class="roofing-solar-split__grid" data-reveal>
+        <div class="roofing-solar-split__column">
+          <p class="roofing-solar-split__label">The roofing</p>
+          <p class="roofing-solar-split__body">
+            Triple R Roofing handles the roofing side, whether the project
+            calls for a roof replacement or other roofing work.
+          </p>
+        </div>
+        <div class="roofing-solar-split__column">
+          <p class="roofing-solar-split__label">The solar</p>
+          <p class="roofing-solar-split__body">
+            For the solar side, we work with a solar partner to help
+            coordinate the project.
+          </p>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <PhotoBand
+    image="/media/placeholder-detail-roofing-solar.svg"
+    imageAlt=""
+  />
+
+  <FAQSection
+    eyebrow="Common Questions"
+    headline="Roofing + solar, answered"
+    groupName="faq-roofing-solar"
+    items={FAQS}
+  />
+
+  <FinalCtaSection
+    headline="Talk to us about your roof and solar."
+    body="Request a free estimate and talk to us about your roof and solar."
+  />
+</InteriorLayout>
+
+<style>
+  /* ---- Statement hero (no PageHero - same bespoke dark-statement move
+     as Roof Maintenance, new copy) ---- */
+  .roofing-solar-hero {
+    padding-top: calc(var(--nav-height) + var(--space-8));
+    padding-bottom: var(--space-10);
+  }
+
+  .roofing-solar-hero__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted-inverse);
+    margin-bottom: var(--space-6);
+  }
+
+  .roofing-solar-hero__breadcrumb a {
+    color: var(--color-text-muted-inverse);
+  }
+
+  .roofing-solar-hero__breadcrumb a:hover {
+    color: var(--color-gold);
+  }
+
+  .roofing-solar-hero__breadcrumb [aria-current] {
+    color: var(--color-gold);
+  }
+
+  .roofing-solar-hero__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    margin-top: var(--space-4);
+  }
+
+  .roofing-solar-hero__headline {
+    font-family: var(--font-display);
+    font-weight: var(--weight-black);
+    font-stretch: var(--stretch-expanded);
+    font-size: clamp(2.25rem, 1.5rem + 3.4vw, 4.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    color: var(--color-text-inverse);
+  }
+
+  .roofing-solar-hero__body {
+    max-width: 46ch;
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted-inverse);
+  }
+
+  /* Desktop only: same tight asymmetric split as Roof Maintenance's
+     hero - headline left, paragraph offset right and aligned to its
+     bottom edge, close enough that it reads as one statement. */
+  @media (min-width: 900px) {
+    .roofing-solar-hero__grid {
+      grid-template-columns: 1.15fr 1fr;
+      align-items: end;
+      gap: var(--space-7);
+    }
+
+    .roofing-solar-hero__body {
+      max-width: 50ch;
+    }
+  }
+
+  /* ---- "Two parts, one project" - an explicit, editorial division of
+     responsibility, not cards. Two equal columns divided by a hairline
+     rule on desktop (same border-left/padding-left mechanism Financing's
+     stat columns already use), stacked on mobile. ---- */
+  .roofing-solar-split {
+    padding-block: var(--space-9);
+  }
+
+  .roofing-solar-split__intro {
+    max-width: 640px;
+    margin-bottom: var(--space-8);
+  }
+
+  .roofing-solar-split__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+  }
+
+  .roofing-solar-split__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+
+  .roofing-solar-split__label {
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-h5);
+    margin-bottom: var(--space-2);
+  }
+
+  .roofing-solar-split__body {
+    max-width: 46ch;
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 900px) {
+    .roofing-solar-split__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-9);
+    }
+
+    .roofing-solar-split__column:last-child {
+      border-left: 1px solid var(--color-border);
+      padding-left: var(--space-9);
+    }
+  }
+</style>

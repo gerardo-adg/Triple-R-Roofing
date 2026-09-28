@@ -681,3 +681,26 @@ has a subtle "View all projects" link to `/projects`, and the Footer's
   for this specific service - add one later (matching
   `ServiceProjectSpotlight`'s existing pattern) once real photos exist,
   rather than shipping a placeholder spotlight now.
+
+---
+
+## Roofing + Solar page media
+
+- **Detail photo:** `public/media/placeholder-detail-roofing-solar.svg`
+  - flat `#1c1d21` field, built with the shared `PhotoBand.astro`
+  component (same spec as its other uses: mobile fixed ~16:9 crop,
+  desktop `clamp(160px, 24vh, 280px)` viewport-driven height).
+- **Recommended shot:** A real photo of a **finished, completed** roof
+  with solar panels already installed - deliberately not a work-in-
+  progress or installation shot. A finished-result photo shows the
+  outcome without visually implying who performed which part of the
+  work, which matters here since Triple R Roofing does the roofing and
+  a separate solar partner handles the solar installation.
+- **No page hero image needed:** this page intentionally has no
+  `PageHero` - it opens with a text-only dark statement hero (same move
+  About's name-reveal and Roof Maintenance's hero already make).
+- **No Recent Work spotlight, no Financing section:** no real combined-
+  project photos are confirmed yet, and the site's only confirmed
+  financing offer (Wisetack, roofing only) hasn't been confirmed to
+  extend to a solar portion, so `FinancingCallout` is deliberately left
+  off this page.
