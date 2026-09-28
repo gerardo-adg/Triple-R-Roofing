@@ -2,12 +2,13 @@
 import Container from "./Container.astro";
 import Button from "./Button.astro";
 
-// Offer terms ($0 down / 0% interest for 6 months) confirmed by the client
-// directly as the current source of truth — supersedes the 3-month example
-// found on the older /financing page during the Phase 1 audit. Still
-// flagged: the disclosure line below is intentionally generic (not a
-// fabricated legal/compliance disclosure) and should be replaced with
-// Wisetack's/the lender's actual required wording before launch.
+// Offer terms ($0 down / 0% interest for 3 months) confirmed by the client
+// directly as the current source of truth. (The site briefly said 6
+// months - the client corrected this back to 3 months; updated
+// everywhere it appeared.) Still flagged: the disclosure line below is
+// intentionally generic (not a fabricated legal/compliance disclosure)
+// and should be replaced with Wisetack's/the lender's actual required
+// wording before launch.
 ---
 
 <section class="financing section--inverse">
@@ -18,7 +19,7 @@ import Button from "./Button.astro";
         <h2 class="financing__lead">Get the roof you need. Pay over time.</h2>
         <p class="financing__copy">
           Financing options available through Wisetack, including 0% interest
-          for 6 months for qualified borrowers.
+          for 3 months for qualified borrowers.
         </p>
         <Button variant="text" inverse href="/financing">
           Explore Financing
@@ -32,7 +33,7 @@ import Button from "./Button.astro";
         </div>
         <div class="financing__stat financing__stat--primary">
           <p class="financing__stat-value">0%</p>
-          <p class="financing__stat-label">Interest for 6 months*</p>
+          <p class="financing__stat-label">Interest for 3 months*</p>
         </div>
         <p class="financing__disclosure">
           *For qualified borrowers. Subject to credit approval. Terms
@@ -108,7 +109,7 @@ import Button from "./Button.astro";
     color: var(--color-gold);
   }
 
-  /* 0% interest for 6 months is the strongest part of the offer — gets
+  /* 0% interest for 3 months is the strongest part of the offer — gets
      more visual weight than $0 down, not just equal billing. */
   .financing__stat--primary .financing__stat-value {
     font-size: clamp(3.25rem, 2.3rem + 3.6vw, 5.25rem);

@@ -1,0 +1,251 @@
+---
+import InteriorLayout from "../../layouts/InteriorLayout.astro";
+import Container from "../../components/Container.astro";
+import PhotoBand from "../../components/PhotoBand.astro";
+import FinancingCallout from "../../components/FinancingCallout.astro";
+import FAQSection from "../../components/FAQSection.astro";
+import FinalCtaSection from "../../components/FinalCtaSection.astro";
+
+// Deliberately shorter and differently shaped than Roof Repair/Roof
+// Replacement - only three facts are confirmed for this service (it's
+// one offering, not two; the purpose is catching potential leak areas
+// before they become problems; the work can include repairs/upgrades to
+// roof metals and vents), so this page skips the sections that would
+// otherwise need invented content to fill them: no PageHero (a bespoke
+// dark statement hero instead, same move About's name-reveal already
+// makes), no ServiceTriad/ServiceCoverageList list section (replaced by
+// the editorial "areas" rows below, phrased so three examples don't read
+// as an exhaustive checklist), no CertificationsSection (GAF/CertainTeed
+// are tied to installed roofing material, not confirmed to apply here),
+// no Recent Work spotlight (no real project photos confirmed yet for
+// this specific service).
+const AREAS = [
+  {
+    label: "Potential leak areas",
+    description: "Areas of the roof where a leak could potentially develop.",
+  },
+  {
+    label: "Roof metals",
+    description: "Existing metal components may be repaired or upgraded as part of the service.",
+  },
+  {
+    label: "Vents",
+    description: "Areas around roof vents can also be addressed when needed.",
+  },
+];
+
+// FAQ answers are limited to verified or already-established facts. No
+// maintenance frequency or recurring-schedule claim - that hasn't been
+// confirmed, so "it depends on your roof" is as specific as this gets.
+const FAQS = [
+  {
+    question: "What's included in a maintenance visit?",
+    answer: "It depends on your roof. It can include repairs or upgrades to your roof metals and vents.",
+  },
+  {
+    question: "Are you licensed and insured?",
+    answer: "Yes. We're licensed, bonded, and insured, and BBB Accredited.",
+  },
+  {
+    question: "Is financing available?",
+    answer:
+      "Yes, through Wisetack, including $0 down and 0% interest for 3 months for qualified borrowers.",
+  },
+  {
+    question: "Do you offer free estimates?",
+    answer: "Yes. Call or request one online and we'll schedule a time to come look at your roof.",
+  },
+];
+---
+
+<InteriorLayout
+  title="Roof Maintenance & Leak Prevention | Triple R Roofing"
+  description="Roof maintenance and leak prevention in Sacramento, CA - addressing potential leak areas before they become a problem."
+>
+  <section class="maintenance-hero section--inverse">
+    <Container>
+      <nav class="maintenance-hero__breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="/services">Services</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Roof Maintenance &amp; Leak Prevention</span>
+      </nav>
+
+      <p class="eyebrow">Roof Maintenance &amp; Leak Prevention</p>
+
+      <div class="maintenance-hero__grid">
+        <h1 class="maintenance-hero__headline">Before it becomes a leak.</h1>
+        <p class="maintenance-hero__body">
+          Roof maintenance is about catching potential leak areas before
+          they become bigger problems. We look at areas that may need
+          attention, including roof metals and vents, and address repairs
+          or upgrades where needed.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <PhotoBand
+    image="/media/placeholder-detail-maintenance.svg"
+    imageAlt=""
+  />
+
+  <section class="maintenance-areas">
+    <Container>
+      <div class="maintenance-areas__intro" data-reveal>
+        <p class="eyebrow">Roof Maintenance</p>
+        <h2 class="maintenance-areas__headline">What a visit can involve.</h2>
+      </div>
+
+      <div class="maintenance-areas__list" data-reveal-group>
+        {AREAS.map((area, i) => (
+          <div class="maintenance-areas__row" data-reveal-item style={`--i: ${i}`}>
+            <p class="maintenance-areas__label">{area.label}</p>
+            <p class="maintenance-areas__description">{area.description}</p>
+          </div>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <FinancingCallout eyebrow="Financing Available" />
+
+  <FAQSection
+    eyebrow="Common Questions"
+    headline="Roof maintenance, answered"
+    groupName="faq-roof-maintenance"
+    items={FAQS}
+  />
+
+  <FinalCtaSection
+    headline="Let's take a look at your roof."
+    body="Request a free estimate and tell us what's going on with your roof."
+  />
+</InteriorLayout>
+
+<style>
+  /* ---- Statement hero (no PageHero - a text-only dark moment, the
+     same move About's name-reveal already makes) ---- */
+  .maintenance-hero {
+    padding-top: calc(var(--nav-height) + var(--space-8));
+    padding-bottom: var(--space-10);
+  }
+
+  .maintenance-hero__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted-inverse);
+    margin-bottom: var(--space-6);
+  }
+
+  .maintenance-hero__breadcrumb a {
+    color: var(--color-text-muted-inverse);
+  }
+
+  .maintenance-hero__breadcrumb a:hover {
+    color: var(--color-gold);
+  }
+
+  .maintenance-hero__breadcrumb [aria-current] {
+    color: var(--color-gold);
+  }
+
+  .maintenance-hero__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    margin-top: var(--space-4);
+  }
+
+  .maintenance-hero__headline {
+    font-family: var(--font-display);
+    font-weight: var(--weight-black);
+    font-stretch: var(--stretch-expanded);
+    font-size: clamp(2.25rem, 1.5rem + 3.4vw, 4.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    color: var(--color-text-inverse);
+  }
+
+  .maintenance-hero__body {
+    max-width: 46ch;
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted-inverse);
+  }
+
+  /* Desktop only: a two-column editorial split (headline left, paragraph
+     offset to the right, aligned to its bottom edge) rather than just a
+     wider single column - the same "distinct at desktop, not just
+     scaled up" move Financing's and FinalCta's own grids already make on
+     this site, applied here to the hero instead of a stats/actions row.
+     Gap is tighter than a typical two-column split (and the ratio less
+     extreme) so the paragraph reads as part of the same statement, not a
+     detached aside - a little more width lets it hold that weight. */
+  @media (min-width: 900px) {
+    .maintenance-hero__grid {
+      grid-template-columns: 1.15fr 1fr;
+      align-items: end;
+      gap: var(--space-7);
+    }
+
+    .maintenance-hero__body {
+      max-width: 50ch;
+    }
+  }
+
+  /* ---- Editorial "areas" list - label-left / description-right rows,
+     not cards or icons. A different shape from ServiceTriad's 3-column
+     grid and ServiceCoverageList's stacked rows elsewhere on the site. ---- */
+  .maintenance-areas {
+    padding-block: var(--space-9);
+  }
+
+  .maintenance-areas__intro {
+    max-width: 640px;
+    margin-bottom: var(--space-8);
+  }
+
+  .maintenance-areas__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+  }
+
+  .maintenance-areas__list {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .maintenance-areas__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+    padding-block: var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .maintenance-areas__label {
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-h5);
+  }
+
+  .maintenance-areas__description {
+    max-width: 52ch;
+    color: var(--color-text-muted);
+  }
+
+  /* Desktop only: label and description sit side by side in a fixed
+     narrow/wide split - mobile keeps the stacked single column above. */
+  @media (min-width: 900px) {
+    .maintenance-areas__row {
+      grid-template-columns: minmax(0, 280px) 1fr;
+      align-items: baseline;
+      gap: var(--space-8);
+    }
+  }
+</style>

@@ -7,10 +7,12 @@ import FAQSection from "../components/FAQSection.astro";
 import FinalCtaSection from "../components/FinalCtaSection.astro";
 
 // Confirmed facts only: financing is through Wisetack, $0 down / 0%
-// interest for 6 months for qualified borrowers, subject to
-// qualification/credit approval. No APR-after-promo, deferred-interest,
-// application-flow, credit-pull, or approval-speed claims - none of that
-// has been confirmed, so none of it appears here or in the FAQ below.
+// interest for 3 months for qualified borrowers, subject to
+// qualification/credit approval. (Previously 6 months - the client
+// corrected this to 3 months; updated everywhere it appeared.) No
+// APR-after-promo, deferred-interest, application-flow, credit-pull, or
+// approval-speed claims - none of that has been confirmed, so none of
+// it appears here or in the FAQ below.
 const FAQS = [
   {
     question: "Who provides the financing?",
@@ -19,7 +21,7 @@ const FAQS = [
   },
   {
     question: "What is the 0% interest offer?",
-    answer: "Qualified borrowers can get $0 down and 0% interest for 6 months through Wisetack.",
+    answer: "Qualified borrowers can get $0 down and 0% interest for 3 months through Wisetack.",
   },
   {
     question: "Do I need to qualify?",
@@ -35,11 +37,11 @@ const FAQS = [
 
 <InteriorLayout
   title="Financing | Triple R Roofing"
-  description="Financing for roofing projects in Sacramento, CA, available through Wisetack, including $0 down and 0% interest for 6 months for qualified borrowers."
+  description="Financing for roofing projects in Sacramento, CA, available through Wisetack, including $0 down and 0% interest for 3 months for qualified borrowers."
 >
   <PageHero
     title="Financing for your roofing project."
-    description="Financing is available through Wisetack, with $0 down and 0% interest for 6 months for qualified borrowers."
+    description="Financing is available through Wisetack, with $0 down and 0% interest for 3 months for qualified borrowers."
     image="/media/placeholder-page-hero-financing.svg"
     breadcrumbs={[{ label: "Home", href: "/" }, { label: "Financing" }]}
   />
@@ -52,7 +54,7 @@ const FAQS = [
         <div class="offer__lines">
           <p class="offer__line">$0 DOWN.</p>
           <p class="offer__line offer__line--accent">0% INTEREST.</p>
-          <p class="offer__line">FOR 6 MONTHS.</p>
+          <p class="offer__line">FOR 3 MONTHS.</p>
         </div>
 
         <div class="offer__rule" aria-hidden="true"></div>

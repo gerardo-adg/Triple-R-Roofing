@@ -9,13 +9,15 @@ import Container from "./Container.astro";
 import Button from "./Button.astro";
 
 interface Props {
+  eyebrow?: string;
   statement?: string;
   href?: string;
   label?: string;
 }
 
 const {
-  statement = "Financing available through Wisetack, including $0 down and 0% interest for 6 months for qualified borrowers.",
+  eyebrow,
+  statement = "Financing available through Wisetack, including $0 down and 0% interest for 3 months for qualified borrowers.",
   href = "/financing",
   label = "Explore Financing",
 } = Astro.props;
@@ -24,7 +26,10 @@ const {
 <section class="financing-callout">
   <Container>
     <div class="financing-callout__row" data-reveal>
-      <p class="financing-callout__statement">{statement}</p>
+      <div class="financing-callout__text">
+        {eyebrow && <p class="eyebrow financing-callout__eyebrow">{eyebrow}</p>}
+        <p class="financing-callout__statement">{statement}</p>
+      </div>
       <Button variant="secondary" href={href}>{label}</Button>
     </div>
   </Container>
@@ -42,6 +47,10 @@ const {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-5);
+  }
+
+  .financing-callout__eyebrow {
+    margin-bottom: var(--space-2);
   }
 
   .financing-callout__statement {

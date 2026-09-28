@@ -654,3 +654,30 @@ then, and simply becomes a link the moment `href` is set to a real
 has a subtle "View all projects" link to `/projects`, and the Footer's
 "Recent Projects" link now points to `/projects` instead of the old
 `/#featured-work` homepage anchor.
+
+---
+
+## Roof Maintenance & Leak Prevention page media
+
+- **Detail photo:** `public/media/placeholder-detail-maintenance.svg`
+  - flat `#1d201c` field, built with the shared `PhotoBand.astro`
+  component (same spec as its other uses: mobile fixed ~16:9 crop,
+  desktop `clamp(160px, 24vh, 280px)` viewport-driven height). This is
+  the page's only supporting image - it isn't filling a long-text-stretch
+  gap like `PhotoBand`'s other uses, it's the one real visual moment on a
+  deliberately short page, so it earns its place rather than being
+  decorative.
+- **Recommended shot:** A close/detail shot of maintenance work actually
+  in progress - ideally roof metals (flashing), a vent, or another
+  potential leak area being addressed, since that's the one confirmed
+  example of what this service can involve. Closer and more specific
+  than a wide establishing shot - this band is meant to read as "here's
+  the actual work," not a generic roof-from-a-distance photo.
+- **No page hero image needed:** this page intentionally has no
+  `PageHero` - it opens with a text-only dark statement hero (same move
+  About's name-reveal already makes), so it doesn't need a background
+  photo before launch.
+- **No Recent Work spotlight:** no real project photos are confirmed yet
+  for this specific service - add one later (matching
+  `ServiceProjectSpotlight`'s existing pattern) once real photos exist,
+  rather than shipping a placeholder spotlight now.
