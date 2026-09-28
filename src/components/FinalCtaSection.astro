@@ -25,29 +25,34 @@ const {
 } = Astro.props;
 ---
 
-<section class="final-cta">
-  <Container width="narrow">
-    <div class="final-cta__content">
-      <h2 class="final-cta__headline">{headline}</h2>
-      <p class="final-cta__body">{body}</p>
+<section class="final-cta section--inverse">
+  <Container>
+    <div class="final-cta__inner">
+      <div class="final-cta__content">
+        <h2 class="final-cta__headline">{headline}</h2>
+        <p class="final-cta__body">{body}</p>
+      </div>
       <div class="final-cta__actions">
-        <Button variant="primary" href={primaryCta.href}>{primaryCta.label}</Button>
-        <Button variant="secondary" href={secondaryCta.href}>{secondaryCta.label}</Button>
+        <Button variant="primary" inverse href={primaryCta.href}>{primaryCta.label}</Button>
+        <Button variant="secondary" inverse href={secondaryCta.href}>{secondaryCta.label}</Button>
       </div>
     </div>
   </Container>
 </section>
 
 <style>
-  /* Light/cream on purpose - Financing right before this is dark, and the
-     Footer right after is dark too. Keeping this section on the default
-     paper background is what keeps the page from reading as one large
-     dark block at the very end. */
+  /* Dark, but a shade lighter than the true-black Footer/Financing
+     sections (--color-charcoal-raised vs --color-charcoal) - reads as
+     the site's third and final dark band, not a merge with whatever
+     dark section preceded it or the Footer right after. The gold top
+     rule marks where the final conversion moment begins. */
   .final-cta {
     padding-block: var(--space-9);
+    background: var(--color-charcoal-raised);
+    border-top: 1px solid var(--color-border-gold);
   }
 
-  .final-cta__content {
+  .final-cta__inner {
     max-width: 640px;
     margin-inline: auto;
     text-align: center;
@@ -67,7 +72,7 @@ const {
     max-width: 46ch;
     margin-inline: auto;
     margin-top: var(--space-4);
-    color: var(--color-text-muted);
+    color: var(--color-text-muted-inverse);
   }
 
   .final-cta__actions {
@@ -77,5 +82,35 @@ const {
     justify-content: center;
     gap: var(--space-4);
     margin-top: var(--space-7);
+  }
+
+  /* Desktop: horizontal, not centered - copy left, actions right,
+     within a working measure narrower than the full container so the
+     row doesn't stretch edge-to-edge on wide viewports. Mobile keeps
+     the centered/stacked composition above untouched. */
+  @media (min-width: 900px) {
+    .final-cta__inner {
+      max-width: 1160px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-8);
+    }
+
+    .final-cta__content {
+      max-width: 560px;
+    }
+
+    .final-cta__body {
+      margin-inline: 0;
+    }
+
+    .final-cta__actions {
+      flex-shrink: 0;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      margin-top: 0;
+    }
   }
 </style>

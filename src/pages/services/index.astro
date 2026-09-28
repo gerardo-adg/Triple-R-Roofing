@@ -1,0 +1,196 @@
+---
+import InteriorLayout from "../../layouts/InteriorLayout.astro";
+import Container from "../../components/Container.astro";
+import PageHero from "../../components/PageHero.astro";
+import FinalCtaSection from "../../components/FinalCtaSection.astro";
+
+// Only confirmed, live services are listed - no tentative/"coming soon"
+// rows yet, per the client. Every description below is reused verbatim
+// from that service's own page (not paraphrased), so this list never
+// drifts from copy already approved elsewhere.
+//
+// Structured for growth without a redesign: add a new item to an
+// existing category, or a new { name, items } category object, and it
+// renders automatically in the same list/row treatment - no markup or
+// style changes needed. This is where the owner-confirmed services
+// (flat roof, roof maintenance plans, roof rejuvenation, solar
+// installation, etc.) will go once their copy is confirmed.
+const CATEGORIES = [
+  {
+    name: "Roofing",
+    items: [
+      {
+        name: "Roof Replacement",
+        description:
+          "Full tear-off and replacement for roofs that are past the point of repair.",
+        href: "/services/roof-replacement",
+      },
+      {
+        name: "Roof Repair",
+        description:
+          "Leaks, damaged shingles, flashing issues, and other isolated roof problems, fixed without a full replacement.",
+        href: "/services/roof-repair",
+      },
+      {
+        name: "Tile Roofing",
+        description: "Tile roof repair, resets, and replacement in Sacramento.",
+        href: "/services/tile-roofing",
+      },
+    ],
+  },
+  {
+    name: "Gutters",
+    items: [
+      {
+        name: "Gutters",
+        description: "Gutter cleaning, repairs, and new gutter installation in Sacramento.",
+        href: "/services/gutters",
+      },
+    ],
+  },
+  {
+    name: "Roof Care",
+    items: [
+      {
+        name: "Moss Removal",
+        description: "Moss removal for roofs in Sacramento.",
+        href: "/services/moss-removal",
+      },
+    ],
+  },
+  {
+    name: "Solar",
+    items: [
+      {
+        name: "Solar Panel Cleaning",
+        description: "Solar panel cleaning for homes in Sacramento.",
+        href: "/services/solar-panel-cleaning",
+      },
+    ],
+  },
+];
+---
+
+<InteriorLayout
+  title="Services | Triple R Roofing"
+  description="Roofing, gutters, and related services for homes in Sacramento, CA."
+>
+  <PageHero
+    title="Services"
+    description="Roofing, gutters, roof care, and solar panel cleaning in Sacramento."
+    image="/media/placeholder-page-hero-services.svg"
+    breadcrumbs={[{ label: "Home", href: "/" }, { label: "Services" }]}
+  />
+
+  <section class="categories">
+    <Container>
+      {CATEGORIES.map((category) => (
+        <div class="category">
+          <h2 class="category__label">{category.name}</h2>
+          <div class="category__list">
+            {category.items.map((item) => (
+              <a class="category__row" href={item.href}>
+                <span class="category__body">
+                  <span class="category__name">{item.name}</span>
+                  <span class="category__description">{item.description}</span>
+                </span>
+                <span class="category__arrow" aria-hidden="true">→</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </Container>
+  </section>
+
+  <FinalCtaSection
+    headline="Not sure what you need?"
+    body="Reach out and we'll help you figure out the right service."
+  />
+</InteriorLayout>
+
+<style>
+  .categories {
+    padding-block: var(--space-9);
+  }
+
+  .category {
+    margin-bottom: var(--space-9);
+  }
+
+  .category:last-child {
+    margin-bottom: 0;
+  }
+
+  .category__label {
+    font-size: var(--text-h5);
+    margin-bottom: var(--space-4);
+  }
+
+  .category__list {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .category__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+    transition: padding-left var(--duration-base) var(--ease-standard);
+  }
+
+  .category__row:hover,
+  .category__row:focus-visible {
+    padding-left: var(--space-3);
+  }
+
+  .category__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .category__name {
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-h6);
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  .category__row:hover .category__name,
+  .category__row:focus-visible .category__name {
+    color: var(--color-accent-strong);
+  }
+
+  .category__description {
+    max-width: 52ch;
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  .category__arrow {
+    flex-shrink: 0;
+    font-size: var(--text-h6);
+    color: var(--color-accent-strong);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity var(--duration-base) var(--ease-standard),
+      transform var(--duration-base) var(--ease-standard);
+  }
+
+  .category__row:hover .category__arrow,
+  .category__row:focus-visible .category__arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @media (min-width: 700px) {
+    .category__description {
+      font-size: var(--text-body);
+    }
+  }
+</style>
