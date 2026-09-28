@@ -547,3 +547,110 @@ at all - it's part of a long list, covered by the category-level
   replacing placeholders, not against SVG placeholders.
 - `navigator.connection`/`saveData`-aware autoplay skip for the Hero
   video - add once real Hero video exists.
+
+---
+
+## Projects page media
+
+Highly visual by design - unlike the service pages, real project media
+is meant to carry most of this page. Only the featured project exists
+right now - no additional projects have been provided, so `PROJECTS`
+holds a single entry (no invented name, location, roof type, material,
+or scope). Uses the tiered Recent Work system above rather than forcing
+every project into one template.
+
+**Empty-state behavior:** the grid section (everything after the
+featured project) only renders when there's at least one non-featured
+project; with zero, it contributes no markup and no height, and the
+featured project's existing bottom padding lands directly against the
+Final CTA's own padding, so the page never shows a reserved-but-empty
+gap. As soon as a second project is added to `PROJECTS`, the grid
+section and the pair/pair/spotlight rhythm appear on their own.
+
+### Data shape (`src/pages/projects/index.astro`)
+
+Each project stores `serviceType`, `location`, `description`,
+`materialType`, `completedDate`, `featured`, `media`, and `href` - but
+**only `serviceType`, `location`, and (for the featured project only)
+`description` are ever rendered**. `materialType` and `completedDate`
+are stored for later and deliberately not displayed yet; don't wire
+them into the template just because the field exists - only once the
+client asks for them to be visible.
+
+### Featured project
+
+- **Asset type:** Any tier (photo/video/before-after) - whichever is
+  strongest for the project you want leading the page.
+- **Desktop:** 16:9, full width of the container (not the viewport -
+  this isn't a `ServiceProjectSpotlight`-style 100vw bleed), capped at
+  `max-height: 75vh` - the single largest, most dominant image on the
+  page, no border/shadow/card treatment.
+- **Mobile:** same 16:9 source via `object-fit: cover`, no separate
+  crop needed.
+- **Current placeholder:** `public/media/placeholder-project-featured.svg`,
+  flat `#1e1c19` field.
+
+### Grid tiles (pair / pair / spotlight rhythm)
+
+- **Pair-row tiles:** 4:3, side by side on desktop (≥700px), stacked on
+  mobile.
+- **Spotlight-row tiles:** 16:9, full width of the container, capped at
+  `max-height: 65vh` on desktop (same cap `ServiceProjectSpotlight`
+  uses).
+- **Current placeholder:** `public/media/placeholder-project-grid.svg`,
+  flat `#232019` field, reused across all grid tiles regardless of
+  pair/spotlight slot (`object-fit: cover` handles the different
+  container aspect ratios from one source) - these are anonymous "TBD"
+  projects, not distinct named pages, so a shared placeholder is
+  appropriate here unlike other pages.
+- **The rhythm is purely position-based** (two pair-rows, then one
+  full-width spotlight row, repeating - scales to any project count
+  without redesign). A before/after or gallery-tier project needs the
+  full-width room a spotlight slot gives it - **place such a project at
+  a position where the rhythm lands on a spotlight row** rather than
+  expecting the layout to auto-detect and reassign it; the loop doesn't
+  do type-aware repositioning.
+- **Gallery tier (3+ real photos for one project):** shows one cover
+  photo plus a quiet "+N more photos" note in the corner - the rest of
+  that project's photos aren't otherwise accessible until it gets an
+  individual project page (see below). Supported at both pair and
+  spotlight tile sizes, since a single cover photo plus a small text
+  overlay reads fine even at the narrower pair width - unlike
+  before-after, it doesn't need the full-width room to make sense.
+- A before-after project that lands in a pair slot (an authoring
+  mistake, not something the rhythm auto-corrects) degrades safely: the
+  tile shows no image, but its caption still renders and nothing
+  breaks. Reposition it in `PROJECTS` so the rhythm lands it on a
+  spotlight row instead of adding special-case layout for it.
+
+### Before & After
+
+Only ever use the "before-after" tier for a genuine matched pair from
+one real job - never a staged or generic pairing. Now built as a shared
+component (`BeforeAfter.astro`, extracted from the identical inline
+version on Moss Removal/Solar Panel Cleaning once a third use case hit
+- those two pages keep their existing inline versions untouched).
+
+### Video
+
+Click-to-play via `PlayableVideo`, same as everywhere else - never
+autoplay on this page. (The only page-level autoplay exception sitewide
+remains the homepage Hero.)
+
+### Individual project pages
+
+Not built yet. Recommended eventually for select standout
+projects only (not every project) - particularly ones with enough
+real photos to justify a case-study page (the natural home for a
+gallery-tier project's full photo set). The hub is already structured
+for this without a rebuild: a project's `href` is `undefined` until a
+detail page exists; the tile is a plain non-interactive block until
+then, and simply becomes a link the moment `href` is set to a real
+`/projects/<slug>` path.
+
+### Homepage cross-link
+
+`FeaturedWorkSection` (the homepage's "Recent projects." teaser) now
+has a subtle "View all projects" link to `/projects`, and the Footer's
+"Recent Projects" link now points to `/projects` instead of the old
+`/#featured-work` homepage anchor.

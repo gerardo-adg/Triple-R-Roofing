@@ -1,0 +1,415 @@
+---
+import InteriorLayout from "../../layouts/InteriorLayout.astro";
+import Container from "../../components/Container.astro";
+import PlayableVideo from "../../components/PlayableVideo.astro";
+import BeforeAfter from "../../components/BeforeAfter.astro";
+import FinalCtaSection from "../../components/FinalCtaSection.astro";
+
+// No real projects have been provided yet. Every entry below is a
+// clearly-labeled placeholder - no invented name, location, roof type,
+// material, or scope. All placeholders use the "photo" media tier
+// since that's the only one we can honestly claim exists right now;
+// the rendering logic below already supports "video", "before-after",
+// and "gallery" for when real projects specify them (see MEDIA_PLAN.md
+// for the full tier system).
+//
+// Visible metadata is deliberately restrained to service type and
+// location - materialType and completedDate exist in the data shape
+// for later, but are never rendered just because they're present.
+interface ProjectMedia {
+  type: "photo" | "video" | "before-after" | "gallery";
+  image?: string;
+  imageAlt?: string;
+  poster?: string;
+  videoAlt?: string;
+  before?: { image: string; alt: string };
+  after?: { image: string; alt: string };
+  additionalCount?: number;
+}
+
+interface Project {
+  serviceType: string;
+  location: string;
+  description?: string;
+  materialType?: string;
+  completedDate?: string;
+  featured?: boolean;
+  media: ProjectMedia;
+  href?: string;
+}
+
+// Only the featured project exists right now - no additional projects
+// have been provided. The grid below is written to render nothing (and
+// take up no space) when gridProjects is empty; as real projects are
+// added here, the pair/pair/spotlight rhythm appears on its own. New
+// grid-tile placeholders should reuse /media/placeholder-project-grid.svg
+// as their media.image, same as the featured entry's own placeholder.
+const PROJECTS: Project[] = [
+  {
+    serviceType: "Project Type TBD",
+    location: "Location TBD",
+    description: "Real project photo and details (type, location, scope) coming soon.",
+    featured: true,
+    media: {
+      type: "photo",
+      image: "/media/placeholder-project-featured.svg",
+      imageAlt: "Placeholder. A real featured project photo will replace this image.",
+    },
+  },
+];
+
+const featured = PROJECTS.find((p) => p.featured) ?? PROJECTS[0];
+const gridProjects = PROJECTS.filter((p) => p !== featured);
+
+// Rhythm: pair row, pair row, full-width spotlight row, repeating -
+// purely position-based, so it scales to any count without redesign.
+// A before-after/gallery project is wide enough that it needs a
+// spotlight slot - that's a content-authoring choice (place it where
+// the rhythm lands on a spotlight row), not something this loop
+// auto-detects or reassigns.
+type Row =
+  | { type: "pair"; items: Project[] }
+  | { type: "spotlight"; items: [Project] };
+
+const rows: Row[] = [];
+{
+  let i = 0;
+  let cycle = 0;
+  while (i < gridProjects.length) {
+    const slot = cycle % 3;
+    if (slot === 2) {
+      rows.push({ type: "spotlight", items: [gridProjects[i]] });
+      i += 1;
+    } else {
+      const pair = gridProjects.slice(i, i + 2);
+      if (pair.length === 2) {
+        rows.push({ type: "pair", items: pair });
+        i += 2;
+      } else {
+        rows.push({ type: "spotlight", items: [pair[0]] });
+        i += 1;
+      }
+    }
+    cycle += 1;
+  }
+}
+---
+
+<InteriorLayout
+  title="Projects | Triple R Roofing"
+  description="Recent roofing and gutter work from around the Sacramento area."
+  headerAlwaysSolid
+>
+  <section class="projects-header">
+    <Container>
+      <nav class="projects-header__breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Projects</span>
+      </nav>
+      <h1 class="projects-header__title">Projects</h1>
+      <p class="projects-header__description">
+        Recent roofing and gutter work from around the Sacramento area.
+      </p>
+    </Container>
+  </section>
+
+  <section class="featured-project">
+    <Container>
+      <div class="featured-project__media" data-reveal-media>
+        {featured.media.type === "photo" && (
+          <img src={featured.media.image} alt={featured.media.imageAlt} loading="eager" />
+        )}
+        {featured.media.type === "video" && (
+          <PlayableVideo
+            poster={featured.media.poster ?? ""}
+            alt={featured.media.videoAlt ?? ""}
+            aspectRatio="16 / 9"
+          />
+        )}
+        {featured.media.type === "before-after" && featured.media.before && featured.media.after && (
+          <BeforeAfter
+            beforeImage={featured.media.before.image}
+            beforeAlt={featured.media.before.alt}
+            afterImage={featured.media.after.image}
+            afterAlt={featured.media.after.alt}
+          />
+        )}
+      </div>
+
+      <div class="featured-project__meta" data-reveal>
+        <p class="eyebrow">Featured Project</p>
+        <p class="featured-project__tag">{featured.serviceType} &middot; {featured.location}</p>
+        {featured.description && (
+          <p class="featured-project__caption">{featured.description}</p>
+        )}
+      </div>
+    </Container>
+  </section>
+
+  {rows.length > 0 && (
+  <section class="project-grid">
+    <Container>
+      {rows.map((row) => (
+        row.type === "pair" ? (
+          <div class="project-grid__row project-grid__row--pair">
+            {row.items.map((project) => {
+              const Tag = project.href ? "a" : "div";
+              return (
+                <Tag class="project-tile project-tile--pair" {...(project.href ? { href: project.href } : {})}>
+                  <div class="project-tile__media" data-reveal-media>
+                    {project.media.type === "photo" && (
+                      <img src={project.media.image} alt={project.media.imageAlt} loading="lazy" />
+                    )}
+                    {project.media.type === "video" && (
+                      <PlayableVideo
+                        poster={project.media.poster ?? ""}
+                        alt={project.media.videoAlt ?? ""}
+                        aspectRatio="4 / 3"
+                      />
+                    )}
+                    {project.media.type === "gallery" && (
+                      <>
+                        <img src={project.media.image} alt={project.media.imageAlt} loading="lazy" />
+                        {project.media.additionalCount && (
+                          <span class="project-tile__more">
+                            +{project.media.additionalCount} more photos
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  <p class="project-tile__tag" data-reveal>{project.serviceType} &middot; {project.location}</p>
+                </Tag>
+              );
+            })}
+          </div>
+        ) : (
+          <div class="project-grid__row project-grid__row--spotlight">
+            {row.items.map((project) => {
+              const Tag = project.href ? "a" : "div";
+              return (
+                <Tag class="project-tile project-tile--spotlight" {...(project.href ? { href: project.href } : {})}>
+                  <div class="project-tile__media" data-reveal-media>
+                    {project.media.type === "photo" && (
+                      <img src={project.media.image} alt={project.media.imageAlt} loading="lazy" />
+                    )}
+                    {project.media.type === "video" && (
+                      <PlayableVideo
+                        poster={project.media.poster ?? ""}
+                        alt={project.media.videoAlt ?? ""}
+                        aspectRatio="16 / 9"
+                      />
+                    )}
+                    {project.media.type === "before-after" && project.media.before && project.media.after && (
+                      <BeforeAfter
+                        beforeImage={project.media.before.image}
+                        beforeAlt={project.media.before.alt}
+                        afterImage={project.media.after.image}
+                        afterAlt={project.media.after.alt}
+                      />
+                    )}
+                    {project.media.type === "gallery" && (
+                      <>
+                        <img src={project.media.image} alt={project.media.imageAlt} loading="lazy" />
+                        {project.media.additionalCount && (
+                          <span class="project-tile__more">
+                            +{project.media.additionalCount} more photos
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  <p class="project-tile__tag" data-reveal>{project.serviceType} &middot; {project.location}</p>
+                </Tag>
+              );
+            })}
+          </div>
+        )
+      ))}
+    </Container>
+  </section>
+  )}
+
+  <FinalCtaSection
+    headline="Thinking about a project?"
+    body="Request a free estimate and we'll come take a look."
+  />
+</InteriorLayout>
+
+<style>
+  /* ---- Header (no PageHero - a quiet, gallery-first opener) ---- */
+  .projects-header {
+    padding-top: calc(var(--nav-height) + var(--space-7));
+    padding-bottom: var(--space-8);
+  }
+
+  .projects-header__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+
+  .projects-header__breadcrumb a {
+    color: var(--color-text-muted);
+  }
+
+  .projects-header__breadcrumb a:hover {
+    color: var(--color-accent-strong);
+  }
+
+  .projects-header__breadcrumb [aria-current] {
+    color: var(--color-accent-strong);
+  }
+
+  .projects-header__title {
+    font-size: var(--text-h2);
+    margin-bottom: var(--space-4);
+  }
+
+  .projects-header__description {
+    max-width: 52ch;
+    font-size: var(--text-body-lg);
+  }
+
+  /* ---- Featured project - dominant, full width of the container,
+     no card treatment (no border, shadow, or inset) ---- */
+  .featured-project {
+    padding-bottom: var(--space-9);
+  }
+
+  .featured-project__media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--color-charcoal-raised);
+  }
+
+  .featured-project__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 900px) {
+    .featured-project__media {
+      max-height: 75vh;
+    }
+  }
+
+  .featured-project__meta {
+    margin-top: var(--space-5);
+  }
+
+  .featured-project__tag {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin-top: var(--space-3);
+  }
+
+  .featured-project__caption {
+    max-width: 62ch;
+    margin-top: var(--space-3);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Editorial grid: pair / pair / spotlight rhythm ---- */
+  .project-grid {
+    padding-bottom: var(--space-9);
+  }
+
+  .project-grid__row {
+    margin-bottom: var(--space-8);
+  }
+
+  .project-grid__row:last-child {
+    margin-bottom: 0;
+  }
+
+  .project-grid__row--pair {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  /* Plain block until a project gets a real detail page (see href in
+     the data shape) - then it renders as this same tile, now a link. */
+  .project-tile {
+    display: block;
+    color: inherit;
+  }
+
+  a.project-tile:hover .project-tile__tag,
+  a.project-tile:focus-visible .project-tile__tag {
+    color: var(--color-accent-strong);
+  }
+
+  a.project-tile:focus-visible {
+    outline: 2px solid var(--color-accent-strong);
+    outline-offset: 4px;
+  }
+
+  .project-tile__media {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: var(--color-charcoal-raised);
+  }
+
+  .project-tile__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .project-tile--pair .project-tile__media {
+    aspect-ratio: 4 / 3;
+  }
+
+  .project-tile--spotlight .project-tile__media {
+    aspect-ratio: 16 / 9;
+  }
+
+  .project-tile__more {
+    position: absolute;
+    bottom: var(--space-3);
+    right: var(--space-3);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-inverse);
+    background: rgb(10 10 10 / 55%);
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .project-tile__tag {
+    margin-top: var(--space-3);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 700px) {
+    .project-grid__row--pair {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .project-tile--spotlight .project-tile__media {
+      max-height: 65vh;
+    }
+  }
+</style>
