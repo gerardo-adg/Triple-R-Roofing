@@ -25,14 +25,14 @@ const { eyebrow, headline, items, groupName } = Astro.props;
 <section class="faq">
   <Container>
     <div class="faq__inner">
-      <div class="faq__intro">
+      <div class="faq__intro" data-reveal>
         <p class="eyebrow">{eyebrow}</p>
         <h2 class="faq__headline">{headline}</h2>
       </div>
 
-      <div class="faq__list">
-        {items.map((item) => (
-          <details class="faq__item" name={groupName}>
+      <div class="faq__list" data-reveal-group>
+        {items.map((item, i) => (
+          <details class="faq__item" name={groupName} data-reveal-item style={`--i: ${i}`}>
             <summary class="faq__question">
               <span>{item.question}</span>
               <span class="faq__chevron" aria-hidden="true"></span>

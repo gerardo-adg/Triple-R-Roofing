@@ -27,12 +27,14 @@ const { eyebrow, meta, image, imageAlt, caption } = Astro.props;
 
 <section class="project-spotlight">
   <Container>
-    <p class="eyebrow project-spotlight__eyebrow">{eyebrow}</p>
-    <p class="project-spotlight__meta">{meta}</p>
+    <div data-reveal>
+      <p class="eyebrow project-spotlight__eyebrow">{eyebrow}</p>
+      <p class="project-spotlight__meta">{meta}</p>
+    </div>
   </Container>
 
   <div class="project-spotlight__frame">
-    <img src={image} alt={imageAlt} loading="lazy" />
+    <img src={image} alt={imageAlt} loading="lazy" data-reveal-media />
   </div>
 
   <Container>

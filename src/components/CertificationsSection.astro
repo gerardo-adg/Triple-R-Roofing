@@ -24,13 +24,13 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
 
 <section class="certifications section--inverse">
   <Container>
-    <div class="certifications__intro">
+    <div class="certifications__intro" data-reveal>
       <p class="eyebrow">{eyebrow}</p>
       <h2 class="certifications__headline">{headline}</h2>
       <p class="certifications__lead">{intro}</p>
     </div>
 
-    <div class="certifications__list">
+    <div class="certifications__list" data-reveal>
       {credentials.map((credential) => (
         <div class="certifications__row">
           <p class="certifications__name">{credential.name}</p>

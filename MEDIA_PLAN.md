@@ -407,3 +407,143 @@ Projects) will each get entries here as they're built.
   demonstrates the service more directly than a single project photo,
   nothing confirms financing applies to a service this size, and the
   only safe FAQ answers are already covered elsewhere.
+
+---
+
+## Site-wide media & motion system
+
+Approved system design (media/motion audit) - governs how real media
+gets slotted in and how the scroll-reveal system behaves, going
+forward. Doesn't replace the per-page entries above; read this first,
+then the specific page for its exact crop/placeholder details.
+
+### Recent Work / large media-placeholder tiers
+
+Applies to every "Recent Work"-shaped slot (`ServiceProjectSpotlight` on
+Roof Replacement, Roof Repair, Gutters, Tile Roofing; the Before & After
+pairs on Moss Removal and Solar Panel Cleaning). The treatment is
+decided by how much real content actually exists for that page - never
+build a gallery from insufficient content.
+
+| Real content available | Treatment | Component |
+|---|---|---|
+| One good photo | Single large spotlight (current default) | `ServiceProjectSpotlight` |
+| One short clip (~15-30s) instead of a photo | Same frame/aspect, swapped to video | `PlayableVideo`, click-to-play, no autoplay |
+| A genuine matched before/after pair for one job | Two-frame comparison | The existing Before & After pattern (Moss Removal / Solar Panel Cleaning) |
+| 3+ real, good photos for one service | Small gallery | Extract `FeaturedWorkSection`'s scroll-snap pattern into a shared, parameterized component rather than inventing a second gallery |
+
+A gallery with only 1-2 photos reads as thin - stay on the spotlight
+tier until there are genuinely 3+.
+
+### Crop / aspect-ratio guidance
+
+- **Homepage Hero**: full-bleed, wide landscape (~16:9-2:1), subject
+  centered. Same source can serve both breakpoints via `object-fit:
+  cover`, but request a crop-tolerant (centered-subject) shot from the
+  client - only shoot a dedicated mobile crop if the real footage turns
+  out to have an off-center subject.
+- **Every interior `PageHero`**: full-bleed landscape, dark scrim. No
+  separate mobile crop needed - the hero is short (max ~460px) at both
+  breakpoints, so a wide centered-subject photo crops fine at both.
+- **`ServiceProjectSpotlight` / Before & After frames**: 16:9 and 4:3
+  respectively, as already built. Object-fit: cover handles reasonable
+  source variation; ask for landscape-oriented submissions for
+  `FeaturedWorkSection` specifically (see below).
+- **`FeaturedWorkSection` (homepage gallery)**: fixed 3:2 at both
+  breakpoints. Flag: if real photos come in portrait-shot, cover-cropping
+  to 3:2 will lose context - prefer landscape-oriented submissions for
+  this section.
+- **About's family video**: native 9:16, same source at every
+  breakpoint, no separate crop needed (portrait video scales cleanly).
+
+### Where NOT to add media (confirmed still correct)
+
+Trust, Process, homepage Financing, Financing page's Offer section,
+`ServiceIncludes` / `ServiceCoverageList` / `ServiceTriad` everywhere
+they appear, `CertificationsSection`, About's name-reveal, About's What
+We Do, Contact, Thank You, Services hub. Adding photos/icons to any of
+these turns a restrained typographic section into a generic
+icon-card/badge layout - don't.
+
+### Autoplay rules
+
+- At most **one** autoplaying video per page, and only when it's a true
+  above-the-fold hero (currently: the homepage Hero only).
+- Every other video (About/homepage Family, and any future Recent Work
+  video upgrade) is click-to-play via `PlayableVideo` - sound-on,
+  never autoplay.
+- `prefers-reduced-motion: reduce` skips video entirely on the Hero;
+  the poster is the whole experience for those users.
+- Mobile keeps the same rule; `playsinline` is already set for iOS
+  inline autoplay. A `navigator.connection`/`saveData` check to skip
+  Hero autoplay on slow/metered connections is a good later addition,
+  not yet implemented - see "Deferred" below.
+
+### Poster requirements
+
+Every video needs a real frame from that actual clip as its poster
+(never a generic stand-in still), cropped to the exact aspect ratio of
+the video so playback start never causes a layout jump.
+
+### Scroll-reveal motion system (implemented)
+
+A progressive-enhancement reveal system now runs site-wide via three
+data attributes and one shared observer (`BaseLayout.astro` + the
+"Scroll reveal" block in `base.css`):
+
+- `data-reveal` - the default: fade + `translateY(16px→0)`, `600ms`,
+  `var(--ease-out)`. Used for below-the-fold section intros/content
+  blocks everywhere (Overview blocks, FAQ intros, Financing callouts,
+  Trust, About sections except the name-reveal, Services hub category
+  blocks, etc).
+- `data-reveal-group` + `data-reveal-item` (with `style="--i: N"` per
+  item) - the same fade/translate, staggered `+60ms` per item (reusing
+  Header's own nav-stagger value). **Only for small, clearly-grouped
+  sets (3-5 items)**: `ServiceTriad`'s 3 items, `ServiceIncludes`'/
+  `ServiceCoverageList`'s rows, `ProcessSection`'s 4 steps, `FAQSection`'s
+  items, the homepage Services list/accordion. Longer lists (e.g. the
+  Services hub's row lists) get a single `data-reveal` on the category
+  as one block, never a per-row stagger.
+- `data-reveal-media` - fade + `scale(1.03→1)`, `750ms`, reusing Hero's
+  own `hero-media-in` gesture. Used on `ServiceProjectSpotlight`'s image,
+  `PhotoBand`'s image, Before & After frames, `FeaturedWorkSection`'s
+  frames, and About's family video wrapper. **Must go on an element
+  whose parent (not itself) owns `overflow: hidden`** - putting the
+  scale transform on a full-bleed frame that also owns its own
+  `overflow: hidden` lets the transform bleed past the viewport edge
+  and cause horizontal scroll (hit this once on `ServiceProjectSpotlight`
+  and `PhotoBand`, fixed by moving the attribute to the inner `<img>`).
+
+**Fails safe by design**: the default CSS state (no `.js-motion` class
+on `<html>`) is fully visible. A synchronous inline script in
+`BaseLayout.astro`'s `<head>` only adds `.js-motion` when
+`prefers-reduced-motion` isn't set; a second, deferred script attaches
+one shared `IntersectionObserver` (`rootMargin: "0px 0px 200px 0px"`,
+so reveals start ~200px before an element reaches the viewport - this
+is what keeps fast scrolling from feeling like it's waiting on the
+page). If JS never loads, or reduced-motion is set, nothing in this
+system ever applies - content is visible from the first paint either
+way. `reset.css`'s existing global `prefers-reduced-motion` kill-switch
+is a second, independent safety net underneath this one.
+
+**Watch for when adding new `data-reveal*` attributes**: if the target
+element already has its own `transition:` declaration (e.g. a hover
+effect, like `.services__row`'s `padding-left` or the Services hub's
+`.category__row`), don't rely on the global attribute selector's
+transition alone - merge the reveal's `opacity`/`transform` timing
+into that component's own `transition:` shorthand, or the two rules can
+fight over the cascade and silently drop one animation. (Services hub's
+`.category__row` avoided this entirely by not getting a reveal attribute
+at all - it's part of a long list, covered by the category-level
+`data-reveal` instead.)
+
+### Deferred (explicitly not done in this pass)
+
+- Accordion open/close height-smoothing for native `<details>` (FAQ,
+  mobile Services accordion) - kept as instant native toggle. Revisit
+  during final polish.
+- Migrating placeholder media to `astro:assets` for responsive
+  `srcset`/format generation - do this once real photos/video start
+  replacing placeholders, not against SVG placeholders.
+- `navigator.connection`/`saveData`-aware autoplay skip for the Hero
+  video - add once real Hero video exists.

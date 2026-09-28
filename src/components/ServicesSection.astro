@@ -34,7 +34,7 @@ const SERVICES = [
 
 <section id="services" class="services section--inverse">
   <Container>
-    <div class="services__intro">
+    <div class="services__intro" data-reveal>
       <h2 class="services__lead">
         Three core services, done to the same standard on every job.
       </h2>
@@ -44,13 +44,15 @@ const SERVICES = [
     <!-- Desktop: list (left) + one shared media viewport (right), the
          viewport swapping per row on hover/focus. -->
     <div class="services__desktop">
-      <div class="services__list">
+      <div class="services__list" data-reveal-group>
         {SERVICES.map((service, i) => (
           <a
             class="services__row"
             href={service.href}
             data-service-trigger
             data-index={i}
+            data-reveal-item
+            style={`--i: ${i}`}
           >
             <span class="services__index">{service.index}</span>
             <span class="services__body">
@@ -79,9 +81,15 @@ const SERVICES = [
 
     <!-- Mobile: native exclusive accordion (details[name]) — one open at a
          time, no JS required for the core interaction. -->
-    <div class="services__accordion">
+    <div class="services__accordion" data-reveal-group>
       {SERVICES.map((service, i) => (
-        <details class="services__panel" name="services-mobile" open={i === 0}>
+        <details
+          class="services__panel"
+          name="services-mobile"
+          open={i === 0}
+          data-reveal-item
+          style={`--i: ${i}`}
+        >
           <summary class="services__panel-summary">
             <span class="services__index">{service.index}</span>
             <span class="services__panel-name">{service.name}</span>
@@ -196,7 +204,16 @@ const SERVICES = [
       gap: var(--space-5);
       padding-block: var(--space-6);
       border-bottom: 1px solid var(--color-border-inverse);
-      transition: padding-left var(--duration-base) var(--ease-standard);
+      /* padding-left is this element's own hover transition; opacity and
+         transform are the scroll-reveal transition (see base.css) -
+         merged into one shorthand here on purpose, since a second
+         `transition` rule from base.css targeting this same element via
+         [data-reveal-item] would otherwise just overwrite this one
+         instead of combining with it. */
+      transition:
+        padding-left var(--duration-base) var(--ease-standard),
+        opacity var(--duration-slow) var(--ease-out),
+        transform var(--duration-slow) var(--ease-out);
     }
 
     .services__row:hover,

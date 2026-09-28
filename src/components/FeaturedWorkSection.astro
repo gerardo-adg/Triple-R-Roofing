@@ -15,7 +15,7 @@ const total = String(PROJECTS.length).padStart(2, "0");
 
 <section id="featured-work" class="featured-work section--inverse">
   <Container>
-    <div class="featured-work__intro">
+    <div class="featured-work__intro" data-reveal>
       <div>
         <p class="eyebrow">Featured work</p>
         <h2 class="featured-work__headline">Recent projects.</h2>
@@ -50,7 +50,7 @@ const total = String(PROJECTS.length).padStart(2, "0");
   <div class="featured-work__track" data-featured-track>
     {PROJECTS.map((project) => (
       <figure class="featured-work__item" data-featured-item>
-        <div class="featured-work__frame">
+        <div class="featured-work__frame" data-reveal-media>
           <img
             src={project.image}
             alt="Placeholder. Real project photography will replace this image."

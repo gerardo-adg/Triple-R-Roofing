@@ -178,3 +178,55 @@ a:not([class]):hover {
 .skip-link:focus {
   top: var(--space-4);
 }
+
+/* ---- Scroll reveal ----
+   Progressive enhancement only - see BaseLayout.astro for the two
+   scripts this depends on. Every rule here is scoped under .js-motion,
+   which is only ever added by a synchronous script that also checks
+   prefers-reduced-motion, so:
+   - JS disabled -> .js-motion never added -> everything below simply
+     doesn't apply -> content is visible by default, full stop.
+   - prefers-reduced-motion: reduce -> same result.
+   - reset.css's own reduced-motion media query is a second, independent
+     safety net underneath this one.
+   Nothing here should ever be the only reason content becomes visible. */
+.js-motion [data-reveal],
+.js-motion [data-reveal-group],
+.js-motion [data-reveal-item] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+}
+
+/* Stagger for small related groups (3-5 items - see MEDIA_PLAN.md) -
+   the delay comes from a --i custom property set per item at author
+   time, the same pattern Header.astro already uses for its nav items. */
+.js-motion [data-reveal-item] {
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.js-motion [data-reveal].is-visible,
+.js-motion [data-reveal-group].is-visible,
+.js-motion [data-reveal-group].is-visible [data-reveal-item] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Media frames get a slower fade + slight scale instead of the
+   translateY used everywhere else - the same gesture Hero.astro's own
+   media entrance already uses (see hero-media-in), so "media arriving"
+   reads as one consistent move site-wide rather than a second style. */
+.js-motion [data-reveal-media] {
+  opacity: 0;
+  transform: scale(1.03);
+  transition:
+    opacity 750ms var(--ease-out),
+    transform 750ms var(--ease-out);
+}
+
+.js-motion [data-reveal-media].is-visible {
+  opacity: 1;
+  transform: scale(1);
+}

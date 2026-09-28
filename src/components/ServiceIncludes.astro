@@ -24,14 +24,14 @@ const { eyebrow, headline, items } = Astro.props;
 
 <section class="includes">
   <Container>
-    <div class="includes__intro">
+    <div class="includes__intro" data-reveal>
       <p class="eyebrow">{eyebrow}</p>
       <h2 class="includes__headline">{headline}</h2>
     </div>
 
-    <div class="includes__list">
-      {items.map((item) => (
-        <div class="includes__row">
+    <div class="includes__list" data-reveal-group>
+      {items.map((item, i) => (
+        <div class="includes__row" data-reveal-item style={`--i: ${i}`}>
           <span class="includes__index">{item.index}</span>
           <div class="includes__body">
             <h3 class="includes__title">{item.title}</h3>

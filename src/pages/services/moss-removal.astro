@@ -36,7 +36,7 @@ import FinalCtaSection from "../../components/FinalCtaSection.astro";
 
   <section class="overview">
     <Container>
-      <div class="overview__content">
+      <div class="overview__content" data-reveal>
         <p class="eyebrow">Moss Removal</p>
         <h2 class="overview__headline">Moss holds moisture against the roof.</h2>
         <p class="overview__body">
@@ -50,10 +50,10 @@ import FinalCtaSection from "../../components/FinalCtaSection.astro";
 
   <section class="before-after">
     <Container>
-      <p class="eyebrow">Before &amp; After</p>
+      <p class="eyebrow" data-reveal>Before &amp; After</p>
 
       <div class="before-after__grid">
-        <figure class="before-after__frame">
+        <figure class="before-after__frame" data-reveal-media>
           <span class="before-after__label">Before</span>
           <img
             src="/media/placeholder-moss-before.svg"
@@ -65,7 +65,7 @@ import FinalCtaSection from "../../components/FinalCtaSection.astro";
 
         <div class="before-after__divider" aria-hidden="true"></div>
 
-        <figure class="before-after__frame">
+        <figure class="before-after__frame" data-reveal-media>
           <span class="before-after__label">After</span>
           <img
             src="/media/placeholder-moss-after.svg"

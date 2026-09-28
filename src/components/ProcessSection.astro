@@ -37,14 +37,14 @@ const STEPS = [
 
 <section class="process">
   <Container>
-    <div class="process__intro">
+    <div class="process__intro" data-reveal>
       <p class="eyebrow">How we work</p>
       <h2 class="process__lead">From first call to final walkthrough.</h2>
     </div>
 
-    <div class="process__grid">
-      {STEPS.map((step) => (
-        <div class="process__step">
+    <div class="process__grid" data-reveal-group>
+      {STEPS.map((step, i) => (
+        <div class="process__step" data-reveal-item style={`--i: ${i}`}>
           <span class="process__index">{step.index}</span>
           <h3 class="process__title">{step.title}</h3>
           <p class="process__description">{step.description}</p>

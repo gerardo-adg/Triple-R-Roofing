@@ -25,14 +25,14 @@ const { eyebrow, headline, items } = Astro.props;
 
 <section class="triad">
   <Container>
-    <div class="triad__intro">
+    <div class="triad__intro" data-reveal>
       <p class="eyebrow">{eyebrow}</p>
       <h2 class="triad__headline">{headline}</h2>
     </div>
 
-    <div class="triad__grid">
-      {items.map((item) => (
-        <div class="triad__item">
+    <div class="triad__grid" data-reveal-group>
+      {items.map((item, i) => (
+        <div class="triad__item" data-reveal-item style={`--i: ${i}`}>
           <h3 class="triad__name">{item.name}</h3>
           <p class="triad__description">{item.description}</p>
         </div>
