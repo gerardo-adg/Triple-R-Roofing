@@ -5,25 +5,36 @@ import PageHero from "../../components/PageHero.astro";
 import PhotoBand from "../../components/PhotoBand.astro";
 import PlayableVideo from "../../components/PlayableVideo.astro";
 import ServiceIncludes from "../../components/ServiceIncludes.astro";
-import ServiceProjectSpotlight from "../../components/ServiceProjectSpotlight.astro";
 import CertificationsSection from "../../components/CertificationsSection.astro";
 import FinancingCallout from "../../components/FinancingCallout.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
 import detailImage from "../../assets/media/placeholder-detail-roof-replacement.svg";
-import projectImage from "../../assets/media/placeholder-project-roof-replacement.svg";
 
 // Real jobsite footage: Rogelio explains where dry rot commonly shows
 // up, then walks through a real project where the crew found
 // significant dry rot that had to be repaired before the new roofing
 // materials went down. Strengthens the existing "Deck inspection &
 // repair" line in INCLUDES below with real proof, rather than being a
-// new, unrelated section. Kept separate from the "Recent work"
-// ServiceProjectSpotlight below, which serves a different purpose
-// (general completed-job proof, still pending its own real photo).
-// Client-confirmed poster frame.
+// new, unrelated section. Kept separate from the "Recent work" video
+// below, which serves a different purpose (general completed-job
+// proof). Client-confirmed poster frame.
 const DECK_VIDEO_MUX_ID = "8gPC01BeUjsDOFpe02PUFxM00nlTYn6EKmJL3YUz01QjMMM";
 const DECK_VIDEO_POSTER = `https://image.mux.com/${DECK_VIDEO_MUX_ID}/thumbnail.jpg?time=1`;
+
+// Real drone footage of a completed roof replacement in North
+// Highlands, CA - the same asset used on the Projects page's featured
+// slot. Fills the "Recent work" slot this page already reserved for
+// real completed-job proof, previously a placeholder photo via
+// ServiceProjectSpotlight. That shared component is built for
+// full-bleed 16:9 photos and is also used by Gutters and Tile Roofing;
+// this landscape video actually matches its aspect ratio, but a
+// page-local block (visually identical to ServiceProjectSpotlight)
+// still avoids adding video support to the shared component itself,
+// same approach as the Roof Repair page. Only confirmed facts used:
+// no material, scope, or completion date.
+const NORTH_HIGHLANDS_MUX_ID = "SIxuv00ORrX01aVsQ8ntmwUAh02rrTGufPkFHLdr7z02O02g";
+const NORTH_HIGHLANDS_POSTER = `https://image.mux.com/${NORTH_HIGHLANDS_MUX_ID}/thumbnail.jpg?time=24`;
 
 // Scope-of-work items below: only the last one ("final walkthrough,
 // cleanup") is verified against the client's existing site (Phase 1
@@ -177,13 +188,30 @@ const FAQS = [
     </Container>
   </section>
 
-  <ServiceProjectSpotlight
-    eyebrow="Recent work"
-    meta="Roof Replacement · Location TBD"
-    image={projectImage}
-    imageAlt="Placeholder. A real completed roof replacement photo will replace this image."
-    caption="Real project photo and details (type, location, materials) coming soon."
-  />
+  <section class="replacement-spotlight">
+    <Container>
+      <div data-reveal>
+        <p class="eyebrow replacement-spotlight__eyebrow">Recent work</p>
+        <p class="replacement-spotlight__meta">Roof Replacement &middot; North Highlands, CA</p>
+      </div>
+    </Container>
+
+    <div class="replacement-spotlight__frame">
+      <PlayableVideo
+        poster={NORTH_HIGHLANDS_POSTER}
+        alt="Drone footage of a completed roof replacement in North Highlands, California."
+        aspectRatio="16 / 9"
+        muxPlaybackId={NORTH_HIGHLANDS_MUX_ID}
+        data-reveal-media
+      />
+    </div>
+
+    <Container>
+      <p class="replacement-spotlight__caption">
+        A completed roof replacement in North Highlands, shown from the air.
+      </p>
+    </Container>
+  </section>
 
   <CertificationsSection
     eyebrow="Materials & Certifications"
@@ -266,6 +294,48 @@ const FAQS = [
 
     .deck-video__frame {
       max-width: clamp(380px, 30vw, 430px);
+    }
+  }
+
+  /* ---- Recent work (video) - visually identical to
+     ServiceProjectSpotlight's full-bleed 16:9 treatment (same padding,
+     same max-height cap, same eyebrow/meta/caption placement), but kept
+     as page-local markup so the shared component - still used by
+     Gutters and Tile Roofing - never has to know about video. ---- */
+  .replacement-spotlight {
+    padding-block: var(--space-9);
+  }
+
+  .replacement-spotlight__eyebrow {
+    margin-bottom: var(--space-3);
+  }
+
+  .replacement-spotlight__meta {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+  }
+
+  .replacement-spotlight__frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--color-charcoal-raised);
+  }
+
+  .replacement-spotlight__caption {
+    max-width: 62ch;
+    margin-top: var(--space-4);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 900px) {
+    .replacement-spotlight__frame {
+      max-height: 65vh;
     }
   }
 </style>

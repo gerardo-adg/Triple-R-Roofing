@@ -23,8 +23,9 @@ interface ProjectMedia {
   type: "photo" | "video" | "before-after" | "gallery";
   image?: ImageMetadata;
   imageAlt?: string;
-  poster?: ImageMetadata;
+  poster?: ImageMetadata | string;
   videoAlt?: string;
+  muxPlaybackId?: string;
   before?: { image: ImageMetadata; alt: string };
   after?: { image: ImageMetadata; alt: string };
   additionalCount?: number;
@@ -41,23 +42,28 @@ interface Project {
   href?: string;
 }
 
-// Only the featured project exists right now - no additional projects
-// have been provided. The grid below is written to render nothing (and
-// take up no space) when gridProjects is empty; as real projects are
-// added here, the pair/pair/spotlight rhythm appears on its own. New
-// grid-tile placeholders should import and reuse
-// src/assets/media/placeholder-project-grid.svg as their media.image,
-// same as the featured entry's own placeholder.
+// First real project: drone footage of a completed roof replacement in
+// North Highlands, CA. Only confirmed facts are used - no material,
+// scope, or completion date, since none of that has been provided.
+// The grid below is written to render nothing (and take up no space)
+// when gridProjects is empty; as real projects are added here, the
+// pair/pair/spotlight rhythm appears on its own. New grid-tile
+// placeholders should import and reuse
+// src/assets/media/placeholder-project-grid.svg as their media.image.
+const NORTH_HIGHLANDS_MUX_ID = "SIxuv00ORrX01aVsQ8ntmwUAh02rrTGufPkFHLdr7z02O02g";
+const NORTH_HIGHLANDS_POSTER = `https://image.mux.com/${NORTH_HIGHLANDS_MUX_ID}/thumbnail.jpg?time=24`;
+
 const PROJECTS: Project[] = [
   {
-    serviceType: "Project Type TBD",
-    location: "Location TBD",
-    description: "Real project photo and details (type, location, scope) coming soon.",
+    serviceType: "Roof Replacement",
+    location: "North Highlands, CA",
+    description: "A completed roof replacement in North Highlands, shown from the air.",
     featured: true,
     media: {
-      type: "photo",
-      image: featuredPlaceholder,
-      imageAlt: "Placeholder. A real featured project photo will replace this image.",
+      type: "video",
+      poster: NORTH_HIGHLANDS_POSTER,
+      videoAlt: "Drone footage of a completed roof replacement in North Highlands, California.",
+      muxPlaybackId: NORTH_HIGHLANDS_MUX_ID,
     },
   },
 ];
@@ -135,6 +141,7 @@ const rows: Row[] = [];
             poster={featured.media.poster ?? featuredPlaceholder}
             alt={featured.media.videoAlt ?? ""}
             aspectRatio="16 / 9"
+            muxPlaybackId={featured.media.muxPlaybackId}
           />
         )}
         {featured.media.type === "before-after" && featured.media.before && featured.media.after && (
@@ -182,6 +189,7 @@ const rows: Row[] = [];
                         poster={project.media.poster ?? featuredPlaceholder}
                         alt={project.media.videoAlt ?? ""}
                         aspectRatio="4 / 3"
+                        muxPlaybackId={project.media.muxPlaybackId}
                       />
                     )}
                     {project.media.type === "gallery" && project.media.image && (
@@ -227,6 +235,7 @@ const rows: Row[] = [];
                         poster={project.media.poster ?? featuredPlaceholder}
                         alt={project.media.videoAlt ?? ""}
                         aspectRatio="16 / 9"
+                        muxPlaybackId={project.media.muxPlaybackId}
                       />
                     )}
                     {project.media.type === "before-after" && project.media.before && project.media.after && (
