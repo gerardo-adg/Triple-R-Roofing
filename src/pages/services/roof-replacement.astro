@@ -3,6 +3,7 @@ import InteriorLayout from "../../layouts/InteriorLayout.astro";
 import Container from "../../components/Container.astro";
 import PageHero from "../../components/PageHero.astro";
 import PhotoBand from "../../components/PhotoBand.astro";
+import PlayableVideo from "../../components/PlayableVideo.astro";
 import ServiceIncludes from "../../components/ServiceIncludes.astro";
 import ServiceProjectSpotlight from "../../components/ServiceProjectSpotlight.astro";
 import CertificationsSection from "../../components/CertificationsSection.astro";
@@ -11,6 +12,18 @@ import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
 import detailImage from "../../assets/media/placeholder-detail-roof-replacement.svg";
 import projectImage from "../../assets/media/placeholder-project-roof-replacement.svg";
+
+// Real jobsite footage: Rogelio explains where dry rot commonly shows
+// up, then walks through a real project where the crew found
+// significant dry rot that had to be repaired before the new roofing
+// materials went down. Strengthens the existing "Deck inspection &
+// repair" line in INCLUDES below with real proof, rather than being a
+// new, unrelated section. Kept separate from the "Recent work"
+// ServiceProjectSpotlight below, which serves a different purpose
+// (general completed-job proof, still pending its own real photo).
+// Client-confirmed poster frame.
+const DECK_VIDEO_MUX_ID = "8gPC01BeUjsDOFpe02PUFxM00nlTYn6EKmJL3YUz01QjMMM";
+const DECK_VIDEO_POSTER = `https://image.mux.com/${DECK_VIDEO_MUX_ID}/thumbnail.jpg?time=1`;
 
 // Scope-of-work items below: only the last one ("final walkthrough,
 // cleanup") is verified against the client's existing site (Phase 1
@@ -141,6 +154,29 @@ const FAQS = [
     items={INCLUDES}
   />
 
+  <section class="deck-video">
+    <Container>
+      <div class="deck-video__intro" data-reveal>
+        <p class="eyebrow">Deck Inspection &amp; Repair</p>
+        <h2 class="deck-video__headline">What happens when we find dry rot.</h2>
+        <p class="deck-video__body">
+          Rogelio explains where dry rot commonly shows up and shows a
+          real project where damaged wood had to be repaired before the
+          new roofing materials went down.
+        </p>
+      </div>
+
+      <div class="deck-video__frame" data-reveal-media>
+        <PlayableVideo
+          poster={DECK_VIDEO_POSTER}
+          alt="Rogelio explains dry rot found and repaired on a real roof replacement job."
+          aspectRatio="9 / 16"
+          muxPlaybackId={DECK_VIDEO_MUX_ID}
+        />
+      </div>
+    </Container>
+  </section>
+
   <ServiceProjectSpotlight
     eyebrow="Recent work"
     meta="Roof Replacement · Location TBD"
@@ -189,5 +225,47 @@ const FAQS = [
   .overview__body {
     font-size: var(--text-body-lg);
     max-width: 62ch;
+  }
+
+  /* ---- Deck inspection & repair video - a contained (not full-bleed)
+     9:16 frame, same established pattern and sizing as the Roof Repair
+     and Roof Maintenance video sections, kept separate from the
+     "Recent work" ServiceProjectSpotlight below it. ---- */
+  .deck-video {
+    padding-block: var(--space-9);
+    text-align: center;
+  }
+
+  .deck-video__intro {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .deck-video__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .deck-video__body {
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted);
+  }
+
+  .deck-video__frame {
+    margin-top: var(--space-8);
+    width: 100%;
+    max-width: 300px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 900px) {
+    .deck-video {
+      padding-block: var(--space-8);
+    }
+
+    .deck-video__frame {
+      max-width: clamp(380px, 30vw, 430px);
+    }
   }
 </style>
