@@ -11,14 +11,12 @@ import PlayableVideo from "./PlayableVideo.astro";
 // clip used (in compact form) on the About page. Related videos (how he
 // got into roofing, starting from zero, meeting the team) are reserved
 // for the About page, not this section.
-const FAMILY_VIDEO_MUX_ID = "SD1osly2CMfZzT9PsdLPNsg57WzoMrDYstt9STKI02Fk";
+const FAMILY_VIDEO_MUX_ID = "SD1osly2CMfZzT9PsdLPNsg57WzoMrDYstt9STKl02Fk";
 // A frame pulled from the video itself via Mux's thumbnail API, not a
-// separately-uploaded photo. `time=14` is a provisional pick (roughly a
-// third of the way into the 34s clip, past a likely opening fade) - not
-// visually verified against the actual footage, since this environment
-// can't reach image.mux.com to preview it. Swap the `time` value once
-// the real poster has been previewed and confirmed.
-const FAMILY_VIDEO_POSTER = `https://image.mux.com/${FAMILY_VIDEO_MUX_ID}/thumbnail.jpg?time=14`;
+// separately-uploaded photo. `time=1` (1 second in) was chosen and
+// visually confirmed by the client - Rogelio clearly visible, not the
+// opening logo/black frame.
+const FAMILY_VIDEO_POSTER = `https://image.mux.com/${FAMILY_VIDEO_MUX_ID}/thumbnail.jpg?time=1`;
 ---
 
 <section class="family">

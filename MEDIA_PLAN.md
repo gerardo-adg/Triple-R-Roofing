@@ -92,7 +92,7 @@ wired in on both the homepage `FamilySection` and the About page
 
 - **Asset type:** Video (watchable/sound-on, not decorative loop - built
   with `PlayableVideo`, not `LazyVideo`)
-- **Mux playback ID:** `SD1osly2CMfZzT9PsdLPNsg57WzoMrDYstt9STKI02Fk`
+- **Mux playback ID:** `SD1osly2CMfZzT9PsdLPNsg57WzoMrDYstt9STKl02Fk`
   (source: 9:16, 2160p, 60fps, 34s)
 - **Aspect ratio (desktop and mobile, same asset):** 9:16 portrait - the
   source is natively vertical, so no separate crop is needed the way the
@@ -104,17 +104,15 @@ wired in on both the homepage `FamilySection` and the About page
 - **Loading priority:** Lazy - poster only until the visitor clicks; the
   `@mux/mux-player` library and the video itself only load once clicked.
 - **Poster:** A real frame pulled from the video itself via Mux's
-  thumbnail image API (`https://image.mux.com/<id>/thumbnail.jpg?time=14`),
-  not a separately-shot photo. **The `time=14` value is a provisional
-  pick, not yet visually confirmed** - the environment that wired this up
-  couldn't reach `image.mux.com` to preview candidate frames, so this
-  needs a human check (does the frame look intentional/flattering, not
-  mid-blink or mid-word) and the `time` value adjusted in
-  `FamilySection.astro` / `about.astro` if not.
+  thumbnail image API (`https://image.mux.com/<id>/thumbnail.jpg?time=1`),
+  not a separately-shot photo. `time=1` (1 second in) was chosen and
+  visually confirmed by the client - Rogelio clearly visible, not the
+  opening logo/black frame.
 - **Known caveat:** if the delivered export has burned-in captions
   baked into the video image itself, that will show up in playback and
-  in any Mux-generated thumbnail frame - worth confirming when the poster
-  frame above gets its visual check.
+  in the poster frame above - the client's own Mux dashboard preview at
+  this same timestamp does show a caption overlay ("WHAT DOES TRIPLE R
+  STAND FOR?"), so this is expected, not a bug.
 
 ---
 
@@ -311,8 +309,8 @@ Projects) will each get entries here as they're built.
 ### About page media
 
 - **Family video:** **LIVE** - same Mux playback ID as the homepage
-  `FamilySection` entry above (`SD1osly2CMfZzT9PsdLPNsg57WzoMrDYstt9STKI02Fk`),
-  same provisional `time=14` poster frame, same
+  `FamilySection` entry above (`SD1osly2CMfZzT9PsdLPNsg57WzoMrDYstt9STKl02Fk`),
+  same client-confirmed `time=1` poster frame, same
   click-to-play/sound-on/no-autoplay behavior via `PlayableVideo.astro`.
   This is the same single confirmed ~34s family/Triple-R clip referenced
   in the homepage `FamilySection` media entry above, sized much larger
