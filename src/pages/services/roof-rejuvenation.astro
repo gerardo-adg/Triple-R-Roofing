@@ -1,0 +1,342 @@
+---
+import InteriorLayout from "../../layouts/InteriorLayout.astro";
+import Container from "../../components/Container.astro";
+import ServiceTriad from "../../components/ServiceTriad.astro";
+import PhotoBand from "../../components/PhotoBand.astro";
+import FAQSection from "../../components/FAQSection.astro";
+import FinalCtaSection from "../../components/FinalCtaSection.astro";
+
+// Roof Maxx facts below are manufacturer claims (verified against Roof
+// Maxx's own website/warranty by the client), not facts independently
+// established by Triple R - attributed as "Roof Maxx says" / "according
+// to Roof Maxx" wherever a specific claim appears (life-extension
+// figures, qualification examples, coating/sealant distinction, warranty
+// scope). "Up to" is preserved on every extension figure. No financing,
+// no pricing, and no "Certified/Authorized Roof Maxx Dealer" language
+// anywhere on this page - none of that is confirmed. ServiceTriad is
+// deliberately secondary (after the main narrative, not before it) and
+// framed as parallel options, not a staged progression.
+const OPTIONS = [
+  {
+    name: "Repair",
+    description: "Addresses an isolated problem, like a leak or damaged shingles.",
+  },
+  {
+    name: "Roof Rejuvenation with Roof Maxx",
+    description: "A treatment Triple R offers for aging asphalt shingle roofs, using Roof Maxx.",
+  },
+  {
+    name: "Roof Replacement",
+    description: "A full tear-off and replacement of the existing roof.",
+  },
+];
+
+const FAQS = [
+  {
+    question: "What is Roof Maxx?",
+    answer:
+      "Roof Maxx is a roof rejuvenation treatment for asphalt shingles. It's designed to penetrate the shingle and replenish oils that diminish as shingles age and weather.",
+  },
+  {
+    question: "How much longer can Roof Maxx extend the life of a roof?",
+    answer:
+      "According to Roof Maxx, one treatment can extend the life of qualifying asphalt shingles by up to five years. Some qualifying roofs may be eligible for additional treatments at five-year intervals, for up to 15 additional years total.",
+  },
+  {
+    question: "Does every asphalt shingle roof qualify?",
+    answer:
+      "No. Roof Maxx says roof condition has to be assessed first. Significant structural or water damage, advanced rot, sagging, holes, or large sections of missing or damaged shingles may need repair or replacement instead. We'll take a look at your roof to see where it stands.",
+  },
+  {
+    question: "Is Roof Maxx a coating or sealant?",
+    answer:
+      "No. Roof Maxx says the treatment penetrates into the asphalt layer rather than creating a coating over the shingles.",
+  },
+  {
+    question: "What does the 5-year warranty cover?",
+    answer:
+      "Roof Maxx's treatments include a 5-year flexibility warranty, covering treated shingles remaining flexible and serviceable. It isn't a general roof or leak warranty, and it doesn't cover things like leaks, granule loss, faulty installation, or weather damage.",
+  },
+];
+---
+
+<InteriorLayout
+  title="Roof Rejuvenation with Roof Maxx | Triple R Roofing"
+  description="Roof Maxx roof rejuvenation for aging asphalt shingle roofs in Sacramento, CA - designed to restore flexibility to shingles that qualify."
+>
+  <section class="rejuv-hero section--inverse">
+    <Container>
+      <nav class="rejuv-hero__breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="/services">Services</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Roof Rejuvenation</span>
+      </nav>
+
+      <p class="eyebrow">Roof Rejuvenation with Roof Maxx</p>
+
+      <div class="rejuv-hero__grid">
+        <h1 class="rejuv-hero__headline">Give aging shingles their flexibility back.</h1>
+        <p class="rejuv-hero__body">
+          As shingles age, they lose the oils that kept them flexible.
+          Roof Maxx is a treatment designed to help restore that
+          flexibility. We'll take a look at your roof first to see if
+          it's a good fit.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <section class="how-it-works">
+    <Container>
+      <p class="eyebrow">How Roof Maxx Works</p>
+      <h2 class="visually-hidden">How Roof Maxx Works</h2>
+
+      <div class="how-it-works__sequence" data-reveal-group>
+        {[
+          "Asphalt shingles contain oils that keep them flexible.",
+          "Over time, weather and age wear those oils away.",
+          "That's part of why older shingles get brittle.",
+          "Roof Maxx penetrates the shingle to replenish those oils.",
+        ].map((line, i) => (
+          <div class="how-it-works__row" data-reveal-item style={`--i: ${i}`}>
+            <span class="how-it-works__index">{String(i + 1).padStart(2, "0")}</span>
+            <p class="how-it-works__line">{line}</p>
+          </div>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <section class="qualification">
+    <Container>
+      <div class="qualification__content" data-reveal>
+        <p class="eyebrow">Before Treatment</p>
+        <h2 class="qualification__headline">First, we look at the roof.</h2>
+        <p class="qualification__body">
+          Roof Maxx is intended for asphalt shingle roofs in suitable
+          condition. Roof Maxx says significant structural or water
+          damage, advanced rot, sagging, holes, or large sections of
+          missing or damaged shingles may need repair or replacement
+          first. We'll take a look at your roof to see where it stands.
+        </p>
+
+        <div class="qualification__callout">
+          <p>Roof Maxx treatments include a 5-year flexibility warranty from Roof Maxx.</p>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <div class="rejuv-options">
+    <ServiceTriad
+      eyebrow="Other Options"
+      headline="Roof Maxx is one of a few options."
+      items={OPTIONS}
+    />
+  </div>
+
+  <PhotoBand
+    image="/media/placeholder-detail-rejuvenation.svg"
+    imageAlt="Placeholder. A real photo of a Triple R Roof Maxx job will replace this image."
+  />
+
+  <FAQSection
+    eyebrow="Common Questions"
+    headline="Roof rejuvenation, answered"
+    groupName="faq-roof-rejuvenation"
+    items={FAQS}
+  />
+
+  <FinalCtaSection
+    headline="Let's take a look at your roof."
+    body="Request a free estimate and we'll go over whether Roof Maxx makes sense for your roof."
+  />
+</InteriorLayout>
+
+<style>
+  /* ---- Statement hero (no PageHero - same bespoke dark-statement move
+     as Roof Maintenance/Roofing + Solar) ---- */
+  .rejuv-hero {
+    padding-top: calc(var(--nav-height) + var(--space-8));
+    padding-bottom: var(--space-10);
+  }
+
+  .rejuv-hero__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted-inverse);
+    margin-bottom: var(--space-6);
+  }
+
+  .rejuv-hero__breadcrumb a {
+    color: var(--color-text-muted-inverse);
+  }
+
+  .rejuv-hero__breadcrumb a:hover {
+    color: var(--color-gold);
+  }
+
+  .rejuv-hero__breadcrumb [aria-current] {
+    color: var(--color-gold);
+  }
+
+  .rejuv-hero__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    margin-top: var(--space-4);
+  }
+
+  .rejuv-hero__headline {
+    font-family: var(--font-display);
+    font-weight: var(--weight-black);
+    font-stretch: var(--stretch-expanded);
+    font-size: clamp(2.25rem, 1.5rem + 3.4vw, 4.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    color: var(--color-text-inverse);
+  }
+
+  .rejuv-hero__body {
+    max-width: 46ch;
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted-inverse);
+  }
+
+  @media (min-width: 900px) {
+    .rejuv-hero__grid {
+      grid-template-columns: 1.15fr 1fr;
+      align-items: end;
+      gap: var(--space-7);
+    }
+
+    .rejuv-hero__body {
+      max-width: 50ch;
+    }
+  }
+
+  /* ---- How Roof Maxx Works - a short editorial sequence, not cards,
+     icons, or a diagram. A shared gold "spine" down the left edge plus
+     numbered markers and a slight cascading indent per row make the
+     four statements read as one progression rather than four floating
+     paragraphs - the same left-border-accent language already used for
+     the qualification callout below, extended into a stepped sequence.
+     Narrower than the full container at desktop so it reads as a short
+     passage meant to be read in order, not a stat block. */
+  .how-it-works {
+    padding-top: var(--space-9);
+    padding-bottom: var(--space-8);
+  }
+
+  .how-it-works__sequence {
+    max-width: 640px;
+    margin-top: var(--space-7);
+    padding-left: var(--space-6);
+    border-left: 2px solid var(--color-accent-strong);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .how-it-works__row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: var(--space-4);
+    /* A slight cascading indent per row - restrained, not a staircase
+       diagram - reusing the same --i value the reveal stagger already
+       sets per item, so the two effects come from one shared number. */
+    margin-left: calc(var(--i, 0) * var(--space-3));
+  }
+
+  .how-it-works__index {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-accent-strong);
+  }
+
+  .how-it-works__line {
+    font-size: var(--text-h6);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+
+  @media (min-width: 700px) {
+    .how-it-works__row {
+      margin-left: calc(var(--i, 0) * var(--space-5));
+    }
+  }
+
+  /* ---- "First, we look at the roof" - qualification + a precise,
+     restrained warranty callout (same bordered-note treatment as Roof
+     Certifications' qualification callout). ---- */
+  .qualification {
+    padding-top: var(--space-9);
+    padding-bottom: var(--space-8);
+  }
+
+  .qualification__content {
+    max-width: 640px;
+  }
+
+  .qualification__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .qualification__body {
+    font-size: var(--text-body-lg);
+    font-weight: var(--weight-medium);
+    max-width: 62ch;
+  }
+
+  .qualification__callout {
+    max-width: 56ch;
+    margin-top: var(--space-6);
+    padding-left: var(--space-5);
+    border-left: 2px solid var(--color-accent-strong);
+  }
+
+  .qualification__callout p {
+    font-size: var(--text-body-lg);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 899px) {
+    .qualification__callout {
+      margin-top: var(--space-7);
+      padding-left: var(--space-6);
+    }
+  }
+
+  /* ---- Other Options (ServiceTriad) - scoped override, this page only.
+     ServiceTriad is shared with Gutters/Tile Roofing, so its own file
+     stays untouched; :global() here only reaches instances nested under
+     .rejuv-options, which is this page's own scoped wrapper. Descriptions
+     bumped to match the stronger supporting-text treatment used
+     elsewhere on this page - they read undersized otherwise against how
+     much whitespace surrounds this now-secondary section. */
+  .rejuv-options :global(.triad__description) {
+    font-size: var(--text-body-lg);
+    font-weight: var(--weight-medium);
+  }
+
+  /* Mobile only: a bit more room between the three stacked rows - the
+     divider treatment is unchanged, just more air around each entry. */
+  @media (max-width: 899px) {
+    .rejuv-options :global(.triad__item) {
+      padding-block: var(--space-7);
+    }
+  }
+</style>

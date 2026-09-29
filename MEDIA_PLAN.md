@@ -727,3 +727,27 @@ has a subtle "View all projects" link to `/projects`, and the Footer's
 - **No Recent Work spotlight, no Financing section:** no real
   certification-project photos are confirmed yet, and no financing
   offer has been confirmed for this service.
+
+---
+
+## Roof Rejuvenation (Roof Maxx) page media
+
+- **Detail photo:** `public/media/placeholder-detail-rejuvenation.svg`
+  - flat `#201e1a` field, built with the shared `PhotoBand.astro`
+  component (same spec as its other uses: mobile fixed ~16:9 crop,
+  desktop `clamp(160px, 24vh, 280px)` viewport-driven height).
+- **Recommended shot:** A real photo of an actual Triple R Roof Maxx
+  job - **must be a genuine Triple R job, not stock or manufacturer
+  marketing imagery.** Preferably the treatment being applied, or a
+  clear shot of the asphalt shingle roof being treated.
+- **No page hero image needed:** this page intentionally has no
+  `PageHero` - it opens with a text-only dark statement hero (same move
+  About's name-reveal, Roof Maintenance's, and Roofing + Solar's heroes
+  already make).
+- **No Recent Work spotlight, no Financing section:** no real
+  Roof-Maxx-project photos are confirmed yet, and financing hasn't been
+  confirmed to apply to this service. The client is also independently
+  reconfirming the site's current Wisetack promotional term - not
+  specific to this page, but worth noting here since it's the reason
+  `FinancingCallout` stays off this page rather than being added later
+  with an assumed figure.
