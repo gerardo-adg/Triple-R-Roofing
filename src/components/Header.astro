@@ -257,10 +257,18 @@ const PHONE_HREF = "tel:+19164205635";
 
   /* Icon-only mark below 481px — the wordmark plus a CTA and toggle
      doesn't fit comfortably in one row at phone widths. The link still
-     carries its aria-label for assistive tech. */
+     carries its aria-label for assistive tech. Since the mark is the
+     only visible brand element at this width (no adjacent wordmark),
+     it's sized up rather than kept at the same size used alongside
+     text. */
   @media (max-width: 480px) {
     .header__wordmark {
       display: none;
+    }
+
+    .header__mark {
+      width: 52px;
+      height: 45px;
     }
   }
 

@@ -12,6 +12,10 @@ interface CTA {
 interface Props {
   /** Headline authored as short, stacked lines — brand/message first, per the required hierarchy (media -> message -> location -> action). */
   lines: string[];
+  /** Optional mobile-only override, for when the mobile headline needs
+   * different wording/line breaks than desktop (not just a reflow of the
+   * same text) - falls back to `lines` when not provided. */
+  mobileLines?: string[];
   /** Secondary, smaller — should never compete with the headline. */
   subheadline: string;
   primaryCta: CTA;
@@ -22,8 +26,17 @@ interface Props {
   videoSrc?: string;
 }
 
-const { lines, subheadline, primaryCta, secondaryCta, poster, alt, muxPlaybackId, videoSrc } =
-  Astro.props;
+const {
+  lines,
+  mobileLines = lines,
+  subheadline,
+  primaryCta,
+  secondaryCta,
+  poster,
+  alt,
+  muxPlaybackId,
+  videoSrc,
+} = Astro.props;
 ---
 
 <section class="hero" data-hero>
@@ -45,13 +58,24 @@ const { lines, subheadline, primaryCta, secondaryCta, poster, alt, muxPlaybackId
   <Container>
   <div class="hero__content">
     <h1 class="hero__headline">
-      {lines.map((line, i) => (
-        <span class="hero__line-mask">
-          <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
-            {line}
+      <div class="hero__headline-set hero__headline-set--mobile">
+        {mobileLines.map((line, i) => (
+          <span class="hero__line-mask">
+            <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
+              {line}
+            </span>
           </span>
-        </span>
-      ))}
+        ))}
+      </div>
+      <div class="hero__headline-set hero__headline-set--desktop">
+        {lines.map((line, i) => (
+          <span class="hero__line-mask">
+            <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
+              {line}
+            </span>
+          </span>
+        ))}
+      </div>
     </h1>
 
     <p class="hero__subheadline">{subheadline}</p>
@@ -152,6 +176,25 @@ const { lines, subheadline, primaryCta, secondaryCta, poster, alt, muxPlaybackId
     letter-spacing: -0.005em;
     text-transform: uppercase;
     margin-bottom: var(--space-5);
+  }
+
+  /* Two headline variants (mobile can carry different wording/line
+     breaks than desktop, not just a reflow of the same text) - only one
+     is ever visible at a time, toggled by breakpoint, same "separate
+     DOM, not reflowed" approach the header already uses for its
+     mobile/desktop nav. */
+  .hero__headline-set--desktop {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .hero__headline-set--mobile {
+      display: none;
+    }
+
+    .hero__headline-set--desktop {
+      display: block;
+    }
   }
 
   .hero__line-mask {
