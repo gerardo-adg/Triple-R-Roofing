@@ -6,6 +6,8 @@ import ServiceTriad from "../../components/ServiceTriad.astro";
 import ServiceProjectSpotlight from "../../components/ServiceProjectSpotlight.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
+import pageHeroImage from "../../assets/media/placeholder-page-hero-gutters.svg";
+import projectImage from "../../assets/media/placeholder-project-gutters.svg";
 
 const SERVICES = [
   {
@@ -58,7 +60,7 @@ const FAQS = [
   <PageHero
     title="Gutters"
     description="Gutter cleaning, repairs, and new gutter installation in Sacramento."
-    image="/media/placeholder-page-hero-gutters.svg"
+    image={pageHeroImage}
     breadcrumbs={[
       { label: "Home", href: "/" },
       { label: "Services", href: "/services" },
@@ -89,7 +91,7 @@ const FAQS = [
   <ServiceProjectSpotlight
     eyebrow="Recent work"
     meta="Gutters · Location TBD"
-    image="/media/placeholder-project-gutters.svg"
+    image={projectImage}
     imageAlt="Placeholder. A real completed gutter project photo will replace this image."
     caption="Real project photo and details (type, location, materials) coming soon."
   />

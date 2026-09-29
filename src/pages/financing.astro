@@ -3,6 +3,7 @@ import InteriorLayout from "../layouts/InteriorLayout.astro";
 import Container from "../components/Container.astro";
 import Button from "../components/Button.astro";
 import PageHero from "../components/PageHero.astro";
+import pageHeroImage from "../assets/media/placeholder-page-hero-financing.svg";
 import FAQSection from "../components/FAQSection.astro";
 import FinalCtaSection from "../components/FinalCtaSection.astro";
 
@@ -42,7 +43,7 @@ const FAQS = [
   <PageHero
     title="Financing for your roofing project."
     description="Financing is available through Wisetack, with $0 down and 0% interest for 3 months for qualified borrowers."
-    image="/media/placeholder-page-hero-financing.svg"
+    image={pageHeroImage}
     breadcrumbs={[{ label: "Home", href: "/" }, { label: "Financing" }]}
   />
 

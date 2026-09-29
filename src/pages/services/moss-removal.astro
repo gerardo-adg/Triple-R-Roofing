@@ -3,6 +3,10 @@ import InteriorLayout from "../../layouts/InteriorLayout.astro";
 import Container from "../../components/Container.astro";
 import PageHero from "../../components/PageHero.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
+import ResponsiveImage from "../../components/ResponsiveImage.astro";
+import pageHeroImage from "../../assets/media/placeholder-page-hero-moss.svg";
+import beforeImage from "../../assets/media/placeholder-moss-before.svg";
+import afterImage from "../../assets/media/placeholder-moss-after.svg";
 
 // Confirmed directly by the client: Triple R removes moss from roofs.
 // Everything else about the service - method (physical removal,
@@ -26,7 +30,7 @@ import FinalCtaSection from "../../components/FinalCtaSection.astro";
   <PageHero
     title="Moss Removal"
     description="Moss removal for roofs in Sacramento."
-    image="/media/placeholder-page-hero-moss.svg"
+    image={pageHeroImage}
     breadcrumbs={[
       { label: "Home", href: "/" },
       { label: "Services", href: "/services" },
@@ -55,9 +59,11 @@ import FinalCtaSection from "../../components/FinalCtaSection.astro";
       <div class="before-after__grid">
         <figure class="before-after__frame" data-reveal-media>
           <span class="before-after__label">Before</span>
-          <img
-            src="/media/placeholder-moss-before.svg"
+          <ResponsiveImage
+            src={beforeImage}
             alt="Placeholder. A real before photo from a completed moss removal job will replace this image."
+            widths={[480, 640, 960]}
+            sizes="(min-width: 700px) 50vw, 100vw"
             loading="lazy"
             decoding="async"
           />
@@ -67,9 +73,11 @@ import FinalCtaSection from "../../components/FinalCtaSection.astro";
 
         <figure class="before-after__frame" data-reveal-media>
           <span class="before-after__label">After</span>
-          <img
-            src="/media/placeholder-moss-after.svg"
+          <ResponsiveImage
+            src={afterImage}
             alt="Placeholder. A real after photo from a completed moss removal job will replace this image."
+            widths={[480, 640, 960]}
+            sizes="(min-width: 700px) 50vw, 100vw"
             loading="lazy"
             decoding="async"
           />
@@ -128,6 +136,7 @@ import FinalCtaSection from "../../components/FinalCtaSection.astro";
   .before-after__frame img {
     display: block;
     width: 100%;
+    height: auto;
     aspect-ratio: 4 / 3;
     object-fit: cover;
   }

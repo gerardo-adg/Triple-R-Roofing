@@ -11,6 +11,9 @@
  * volumes, not two unrelated header styles.
  */
 import Container from "./Container.astro";
+import ResponsiveImage from "./ResponsiveImage.astro";
+import defaultImage from "../assets/media/placeholder-page-hero.svg";
+import type { ImageMetadata } from "astro";
 
 interface Crumb {
   label: string;
@@ -21,7 +24,7 @@ interface Props {
   title: string;
   description?: string;
   breadcrumbs: Crumb[];
-  image?: string;
+  image?: ImageMetadata;
   imageAlt?: string;
 }
 
@@ -29,14 +32,21 @@ const {
   title,
   description,
   breadcrumbs,
-  image = "/media/placeholder-page-hero.svg",
+  image = defaultImage,
   imageAlt = "",
 } = Astro.props;
 ---
 
 <section class="page-hero">
   <div class="page-hero__media" aria-hidden="true">
-    <img src={image} alt={imageAlt} loading="eager" fetchpriority="high" />
+    <ResponsiveImage
+      src={image}
+      alt={imageAlt}
+      widths={[640, 960, 1280, 1600, 1920]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
   </div>
   <div class="page-hero__scrim" aria-hidden="true"></div>
 

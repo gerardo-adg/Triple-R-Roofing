@@ -8,10 +8,13 @@
  * Only ever use this for a genuine matched before/after pair for one
  * project - never a staged or generic pairing.
  */
+import ResponsiveImage from "./ResponsiveImage.astro";
+import type { ImageMetadata } from "astro";
+
 interface Props {
-  beforeImage: string;
+  beforeImage: ImageMetadata;
   beforeAlt: string;
-  afterImage: string;
+  afterImage: ImageMetadata;
   afterAlt: string;
 }
 
@@ -21,14 +24,30 @@ const { beforeImage, beforeAlt, afterImage, afterAlt } = Astro.props;
 <div class="before-after__grid">
   <figure class="before-after__frame">
     <span class="before-after__label">Before</span>
-    <img src={beforeImage} alt={beforeAlt} loading="lazy" decoding="async" data-reveal-media />
+    <ResponsiveImage
+      src={beforeImage}
+      alt={beforeAlt}
+      widths={[480, 640, 960]}
+      sizes="(min-width: 700px) 50vw, 100vw"
+      loading="lazy"
+      decoding="async"
+      data-reveal-media
+    />
   </figure>
 
   <div class="before-after__divider" aria-hidden="true"></div>
 
   <figure class="before-after__frame">
     <span class="before-after__label">After</span>
-    <img src={afterImage} alt={afterAlt} loading="lazy" decoding="async" data-reveal-media />
+    <ResponsiveImage
+      src={afterImage}
+      alt={afterAlt}
+      widths={[480, 640, 960]}
+      sizes="(min-width: 700px) 50vw, 100vw"
+      loading="lazy"
+      decoding="async"
+      data-reveal-media
+    />
   </figure>
 </div>
 
@@ -48,6 +67,7 @@ const { beforeImage, beforeAlt, afterImage, afterAlt } = Astro.props;
   .before-after__frame img {
     display: block;
     width: 100%;
+    height: auto;
     aspect-ratio: 4 / 3;
     object-fit: cover;
   }

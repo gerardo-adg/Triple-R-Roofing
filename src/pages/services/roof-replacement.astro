@@ -9,6 +9,8 @@ import CertificationsSection from "../../components/CertificationsSection.astro"
 import FinancingCallout from "../../components/FinancingCallout.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
+import detailImage from "../../assets/media/placeholder-detail-roof-replacement.svg";
+import projectImage from "../../assets/media/placeholder-project-roof-replacement.svg";
 
 // Scope-of-work items below: only the last one ("final walkthrough,
 // cleanup") is verified against the client's existing site (Phase 1
@@ -129,7 +131,7 @@ const FAQS = [
   </section>
 
   <PhotoBand
-    image="/media/placeholder-detail-roof-replacement.svg"
+    image={detailImage}
     imageAlt=""
   />
 
@@ -142,7 +144,7 @@ const FAQS = [
   <ServiceProjectSpotlight
     eyebrow="Recent work"
     meta="Roof Replacement · Location TBD"
-    image="/media/placeholder-project-roof-replacement.svg"
+    image={projectImage}
     imageAlt="Placeholder. A real completed roof replacement photo will replace this image."
     caption="Real project photo and details (type, location, materials) coming soon."
   />

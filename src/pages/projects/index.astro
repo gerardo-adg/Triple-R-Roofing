@@ -4,6 +4,9 @@ import Container from "../../components/Container.astro";
 import PlayableVideo from "../../components/PlayableVideo.astro";
 import BeforeAfter from "../../components/BeforeAfter.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
+import ResponsiveImage from "../../components/ResponsiveImage.astro";
+import featuredPlaceholder from "../../assets/media/placeholder-project-featured.svg";
+import type { ImageMetadata } from "astro";
 
 // No real projects have been provided yet. Every entry below is a
 // clearly-labeled placeholder - no invented name, location, roof type,
@@ -18,12 +21,12 @@ import FinalCtaSection from "../../components/FinalCtaSection.astro";
 // for later, but are never rendered just because they're present.
 interface ProjectMedia {
   type: "photo" | "video" | "before-after" | "gallery";
-  image?: string;
+  image?: ImageMetadata;
   imageAlt?: string;
-  poster?: string;
+  poster?: ImageMetadata;
   videoAlt?: string;
-  before?: { image: string; alt: string };
-  after?: { image: string; alt: string };
+  before?: { image: ImageMetadata; alt: string };
+  after?: { image: ImageMetadata; alt: string };
   additionalCount?: number;
 }
 
@@ -42,8 +45,9 @@ interface Project {
 // have been provided. The grid below is written to render nothing (and
 // take up no space) when gridProjects is empty; as real projects are
 // added here, the pair/pair/spotlight rhythm appears on its own. New
-// grid-tile placeholders should reuse /media/placeholder-project-grid.svg
-// as their media.image, same as the featured entry's own placeholder.
+// grid-tile placeholders should import and reuse
+// src/assets/media/placeholder-project-grid.svg as their media.image,
+// same as the featured entry's own placeholder.
 const PROJECTS: Project[] = [
   {
     serviceType: "Project Type TBD",
@@ -52,7 +56,7 @@ const PROJECTS: Project[] = [
     featured: true,
     media: {
       type: "photo",
-      image: "/media/placeholder-project-featured.svg",
+      image: featuredPlaceholder,
       imageAlt: "Placeholder. A real featured project photo will replace this image.",
     },
   },
@@ -118,11 +122,17 @@ const rows: Row[] = [];
     <Container>
       <div class="featured-project__media" data-reveal-media>
         {featured.media.type === "photo" && (
-          <img src={featured.media.image} alt={featured.media.imageAlt} loading="eager" />
+          <ResponsiveImage
+            src={featured.media.image ?? featuredPlaceholder}
+            alt={featured.media.imageAlt ?? ""}
+            widths={[768, 1024, 1440, 1920]}
+            sizes="100vw"
+            loading="eager"
+          />
         )}
         {featured.media.type === "video" && (
           <PlayableVideo
-            poster={featured.media.poster ?? ""}
+            poster={featured.media.poster ?? featuredPlaceholder}
             alt={featured.media.videoAlt ?? ""}
             aspectRatio="16 / 9"
           />
@@ -158,19 +168,31 @@ const rows: Row[] = [];
               return (
                 <Tag class="project-tile project-tile--pair" {...(project.href ? { href: project.href } : {})}>
                   <div class="project-tile__media" data-reveal-media>
-                    {project.media.type === "photo" && (
-                      <img src={project.media.image} alt={project.media.imageAlt} loading="lazy" />
+                    {project.media.type === "photo" && project.media.image && (
+                      <ResponsiveImage
+                        src={project.media.image}
+                        alt={project.media.imageAlt ?? ""}
+                        widths={[480, 640, 960]}
+                        sizes="(min-width: 700px) 50vw, 100vw"
+                        loading="lazy"
+                      />
                     )}
                     {project.media.type === "video" && (
                       <PlayableVideo
-                        poster={project.media.poster ?? ""}
+                        poster={project.media.poster ?? featuredPlaceholder}
                         alt={project.media.videoAlt ?? ""}
                         aspectRatio="4 / 3"
                       />
                     )}
-                    {project.media.type === "gallery" && (
+                    {project.media.type === "gallery" && project.media.image && (
                       <>
-                        <img src={project.media.image} alt={project.media.imageAlt} loading="lazy" />
+                        <ResponsiveImage
+                          src={project.media.image}
+                          alt={project.media.imageAlt ?? ""}
+                          widths={[480, 640, 960]}
+                          sizes="(min-width: 700px) 50vw, 100vw"
+                          loading="lazy"
+                        />
                         {project.media.additionalCount && (
                           <span class="project-tile__more">
                             +{project.media.additionalCount} more photos
@@ -191,12 +213,18 @@ const rows: Row[] = [];
               return (
                 <Tag class="project-tile project-tile--spotlight" {...(project.href ? { href: project.href } : {})}>
                   <div class="project-tile__media" data-reveal-media>
-                    {project.media.type === "photo" && (
-                      <img src={project.media.image} alt={project.media.imageAlt} loading="lazy" />
+                    {project.media.type === "photo" && project.media.image && (
+                      <ResponsiveImage
+                        src={project.media.image}
+                        alt={project.media.imageAlt ?? ""}
+                        widths={[768, 1024, 1440]}
+                        sizes="100vw"
+                        loading="lazy"
+                      />
                     )}
                     {project.media.type === "video" && (
                       <PlayableVideo
-                        poster={project.media.poster ?? ""}
+                        poster={project.media.poster ?? featuredPlaceholder}
                         alt={project.media.videoAlt ?? ""}
                         aspectRatio="16 / 9"
                       />
@@ -209,9 +237,15 @@ const rows: Row[] = [];
                         afterAlt={project.media.after.alt}
                       />
                     )}
-                    {project.media.type === "gallery" && (
+                    {project.media.type === "gallery" && project.media.image && (
                       <>
-                        <img src={project.media.image} alt={project.media.imageAlt} loading="lazy" />
+                        <ResponsiveImage
+                          src={project.media.image}
+                          alt={project.media.imageAlt ?? ""}
+                          widths={[768, 1024, 1440]}
+                          sizes="100vw"
+                          loading="lazy"
+                        />
                         {project.media.additionalCount && (
                           <span class="project-tile__more">
                             +{project.media.additionalCount} more photos

@@ -13,6 +13,7 @@ import ProcessSection from "../components/ProcessSection.astro";
 import FinancingSection from "../components/FinancingSection.astro";
 import FinalCtaSection from "../components/FinalCtaSection.astro";
 import Footer from "../components/Footer.astro";
+import heroPoster from "../assets/media/placeholder-poster.svg";
 ---
 
 <BaseLayout
@@ -26,7 +27,7 @@ import Footer from "../components/Footer.astro";
       subheadline="Sacramento's choice for quality roof replacements, fast leak repairs, and custom gutter installations. Licensed and insured."
       primaryCta={{ label: "Get a Free Estimate", href: "/contact" }}
       secondaryCta={{ label: "Call (916) 420-5635", href: "tel:+19164205635" }}
-      poster="/media/placeholder-poster.svg"
+      poster={heroPoster}
       alt="Placeholder image. Cinematic drone or installation footage will replace this poster once final media is delivered."
     />
     <TrustSection />

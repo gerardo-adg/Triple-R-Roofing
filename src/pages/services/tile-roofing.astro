@@ -7,6 +7,8 @@ import ServiceProjectSpotlight from "../../components/ServiceProjectSpotlight.as
 import FinancingCallout from "../../components/FinancingCallout.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
+import pageHeroImage from "../../assets/media/placeholder-page-hero-tile.svg";
+import projectImage from "../../assets/media/placeholder-project-tile.svg";
 
 // Confirmed directly by the client: Triple R does tile roof repair, tile
 // resets (lift and relay), and full tile roof replacement, for both
@@ -67,7 +69,7 @@ const FAQS = [
   <PageHero
     title="Tile Roofing"
     description="Tile roof repair, resets, and replacement in Sacramento."
-    image="/media/placeholder-page-hero-tile.svg"
+    image={pageHeroImage}
     breadcrumbs={[
       { label: "Home", href: "/" },
       { label: "Services", href: "/services" },
@@ -103,7 +105,7 @@ const FAQS = [
   <ServiceProjectSpotlight
     eyebrow="Recent work"
     meta="Tile Roofing · Location TBD"
-    image="/media/placeholder-project-tile.svg"
+    image={projectImage}
     imageAlt="Placeholder. A real completed tile roofing project photo will replace this image."
     caption="Real project photo and details (type, location, scope) coming soon."
   />

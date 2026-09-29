@@ -5,6 +5,8 @@ import PageHero from "../../components/PageHero.astro";
 import PhotoBand from "../../components/PhotoBand.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
+import pageHeroImage from "../../assets/media/placeholder-page-hero-certifications.svg";
+import detailImage from "../../assets/media/placeholder-detail-certifications.svg";
 
 // A short, situational page (selling a home), not a repair/replacement
 // scope - so it deliberately skips the usual list/spotlight/certifications-
@@ -54,7 +56,7 @@ const FAQS = [
   <PageHero
     title="Roof Certifications"
     description="2-year roof certifications for homeowners selling their home."
-    image="/media/placeholder-page-hero-certifications.svg"
+    image={pageHeroImage}
     breadcrumbs={[
       { label: "Home", href: "/" },
       { label: "Services", href: "/services" },
@@ -85,7 +87,7 @@ const FAQS = [
   </section>
 
   <PhotoBand
-    image="/media/placeholder-detail-certifications.svg"
+    image={detailImage}
     imageAlt="Placeholder. A real photo of a Triple R roof inspection will replace this image."
   />
 

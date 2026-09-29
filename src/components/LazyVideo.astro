@@ -14,8 +14,11 @@
  *   direct progressive-mp4 fallback. Neither is required yet — the poster
  *   alone is a valid, complete state.
  */
+import ResponsiveImage from "./ResponsiveImage.astro";
+import type { ImageMetadata } from "astro";
+
 interface Props {
-  poster: string;
+  poster: ImageMetadata;
   alt: string;
   src?: string;
   muxPlaybackId?: string;
@@ -47,10 +50,12 @@ const videoSrc = muxPlaybackId
   data-lazy-video
   data-hero={hero ? "true" : undefined}
 >
-  <img
+  <ResponsiveImage
     class="lazy-video__poster"
     src={poster}
     alt={alt}
+    widths={[640, 960, 1280, 1600, 1920]}
+    sizes="100vw"
     loading={hero ? "eager" : "lazy"}
     fetchpriority={hero ? "high" : "auto"}
     decoding="async"

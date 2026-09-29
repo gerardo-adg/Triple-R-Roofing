@@ -1,5 +1,9 @@
 ---
 import Container from "./Container.astro";
+import ResponsiveImage from "./ResponsiveImage.astro";
+import serviceImage1 from "../assets/media/placeholder-service-1.svg";
+import serviceImage2 from "../assets/media/placeholder-service-2.svg";
+import serviceImage3 from "../assets/media/placeholder-service-3.svg";
 
 // Descriptions carried over verbatim from the client's existing site
 // (confirmed during the Phase 1 audit) rather than rewritten from
@@ -11,7 +15,7 @@ const SERVICES = [
     description:
       "Full roof replacements using durable, weather-tested materials, installed with precision to protect your home for years to come.",
     href: "/services/roof-replacement",
-    image: "/media/placeholder-service-1.svg",
+    image: serviceImage1,
   },
   {
     index: "02",
@@ -19,7 +23,7 @@ const SERVICES = [
     description:
       "Fast, reliable repairs for leaks, missing shingles, and storm damage, keeping small problems from becoming big ones.",
     href: "/services/roof-repair",
-    image: "/media/placeholder-service-2.svg",
+    image: serviceImage2,
   },
   {
     index: "03",
@@ -27,7 +31,7 @@ const SERVICES = [
     description:
       "Cleaning, repair, and maintenance to keep your gutters flowing freely and protecting your home from water damage year-round.",
     href: "/services/gutters",
-    image: "/media/placeholder-service-3.svg",
+    image: serviceImage3,
   },
 ];
 ---
@@ -66,9 +70,11 @@ const SERVICES = [
 
       <div class="services__viewport" data-service-viewport aria-hidden="true">
         {SERVICES.map((service, i) => (
-          <img
+          <ResponsiveImage
             src={service.image}
             alt=""
+            widths={[400, 600, 800, 1000]}
+            sizes="(min-width: 900px) 40vw, 100vw"
             loading={i === 0 ? "eager" : "lazy"}
             class="services__viewport-image"
             class:list={{ "is-active": i === 0 }}
@@ -97,7 +103,13 @@ const SERVICES = [
           </summary>
           <div class="services__panel-content">
             <div class="services__panel-media">
-              <img src={service.image} alt="" loading="lazy" />
+              <ResponsiveImage
+                src={service.image}
+                alt=""
+                widths={[480, 640, 900]}
+                sizes="100vw"
+                loading="lazy"
+              />
             </div>
             <p class="services__description">{service.description}</p>
             <a href={service.href} class="services__panel-link">

@@ -1,14 +1,19 @@
 ---
 import Container from "./Container.astro";
+import ResponsiveImage from "./ResponsiveImage.astro";
+import projectImage1 from "../assets/media/placeholder-project-1.svg";
+import projectImage2 from "../assets/media/placeholder-project-2.svg";
+import projectImage3 from "../assets/media/placeholder-project-3.svg";
+import projectImage4 from "../assets/media/placeholder-project-4.svg";
 
 // Real project photography and captions (type, location) will replace
 // these once the client provides them. Placeholder count (4) and images
 // are provisional - not meant to imply how many projects will ship.
 const PROJECTS = [
-  { index: "01", image: "/media/placeholder-project-1.svg" },
-  { index: "02", image: "/media/placeholder-project-2.svg" },
-  { index: "03", image: "/media/placeholder-project-3.svg" },
-  { index: "04", image: "/media/placeholder-project-4.svg" },
+  { index: "01", image: projectImage1 },
+  { index: "02", image: projectImage2 },
+  { index: "03", image: projectImage3 },
+  { index: "04", image: projectImage4 },
 ];
 const total = String(PROJECTS.length).padStart(2, "0");
 ---
@@ -52,9 +57,11 @@ const total = String(PROJECTS.length).padStart(2, "0");
     {PROJECTS.map((project) => (
       <figure class="featured-work__item" data-featured-item>
         <div class="featured-work__frame" data-reveal-media>
-          <img
+          <ResponsiveImage
             src={project.image}
             alt="Placeholder. Real project photography will replace this image."
+            widths={[600, 900, 1200, 1600]}
+            sizes="(min-width: 900px) 80vw, 90vw"
             loading="lazy"
           />
         </div>

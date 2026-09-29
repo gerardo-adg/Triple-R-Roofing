@@ -13,11 +13,13 @@
  * supplies them.
  */
 import Container from "./Container.astro";
+import ResponsiveImage from "./ResponsiveImage.astro";
+import type { ImageMetadata } from "astro";
 
 interface Props {
   eyebrow: string;
   meta: string;
-  image: string;
+  image: ImageMetadata;
   imageAlt: string;
   caption: string;
 }
@@ -34,7 +36,14 @@ const { eyebrow, meta, image, imageAlt, caption } = Astro.props;
   </Container>
 
   <div class="project-spotlight__frame">
-    <img src={image} alt={imageAlt} loading="lazy" data-reveal-media />
+    <ResponsiveImage
+      src={image}
+      alt={imageAlt}
+      widths={[768, 1024, 1440, 1920]}
+      sizes="100vw"
+      loading="lazy"
+      data-reveal-media
+    />
   </div>
 
   <Container>

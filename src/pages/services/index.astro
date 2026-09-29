@@ -3,6 +3,7 @@ import InteriorLayout from "../../layouts/InteriorLayout.astro";
 import Container from "../../components/Container.astro";
 import PageHero from "../../components/PageHero.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
+import pageHeroImage from "../../assets/media/placeholder-page-hero-services.svg";
 
 // Only confirmed, live services are listed - no tentative/"coming soon"
 // rows yet, per the client. Every description below is reused verbatim
@@ -107,7 +108,7 @@ const CATEGORIES = [
   <PageHero
     title="Services"
     description="Roofing, gutters, roof care, and solar services in Sacramento."
-    image="/media/placeholder-page-hero-services.svg"
+    image={pageHeroImage}
     breadcrumbs={[{ label: "Home", href: "/" }, { label: "Services" }]}
   />
 

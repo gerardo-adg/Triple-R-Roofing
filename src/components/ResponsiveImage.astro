@@ -1,0 +1,83 @@
+---
+/**
+ * Shared image-optimization primitive. Every component that renders a real
+ * (or placeholder) photo should go through this instead of a raw <img> or a
+ * direct astro:assets <Image>/<Picture> call, so the SVG-passthrough guard
+ * below only has to exist once.
+ *
+ * astro:assets can't rasterize SVG (sharp has SVG processing disabled by
+ * default, and `Picture`'s `formats` array unconditionally tries to convert
+ * to every listed format) - asking for `formats={["avif","webp"]}` against
+ * an SVG source throws and fails the build. Every current media placement
+ * is still an SVG placeholder, so this component checks the actual
+ * imported file's format at build time and only requests avif/webp
+ * conversion for real raster photos. Once a placeholder is replaced with a
+ * real JPEG/PNG, this same component automatically starts emitting
+ * responsive AVIF/WebP + fallback for it - no per-page code change needed.
+ *
+ * Layout intentionally stays out of Astro's hands (`layout` left unset,
+ * the library default of "none"): every consuming component already
+ * controls sizing via its own CSS (aspect-ratio + object-fit: cover,
+ * absolute positioning). This component only supplies optimized bytes at
+ * the right widths/formats for the box that CSS already defines - it
+ * doesn't take over the box.
+ *
+ * Anything not explicitly named below (alt, class, loading, fetchpriority,
+ * decoding, data-reveal-media, etc.) passes straight through to the
+ * rendered <img> via the `...rest` spread, same as it would on a plain
+ * <img> tag - so every consuming component keeps its exact existing
+ * attributes without this component needing to know about all of them.
+ */
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  widths: number[];
+  sizes: string;
+  [key: string]: unknown;
+}
+
+const { src, widths, sizes, ...rest } = Astro.props as Props;
+
+const isSvg = (src as ImageMetadata).format === "svg";
+const formats: ("svg" | "avif" | "webp")[] = isSvg ? ["svg"] : ["avif", "webp"];
+---
+
+<Picture
+  pictureAttributes={{ class: "responsive-image-picture" }}
+  src={src}
+  formats={formats}
+  widths={isSvg ? undefined : widths}
+  sizes={isSvg ? undefined : sizes}
+  {...rest}
+/>
+
+<style>
+  /*
+   * <picture> is a plain inline non-replaced box with no CSS of its own
+   * in any consuming component (every component's CSS was written
+   * targeting a bare <img>). Two real layout bugs show up if it's left
+   * as a normal box:
+   *
+   * 1. Percentage `height` on the inner <img> (e.g. `height: 100%`) can
+   *    fail to resolve through the intervening <picture>, since percent
+   *    heights only resolve against an ancestor with a *definite* height
+   *    - an unstyled <picture> has an auto (content-derived) height, so
+   *    the percentage computes as "auto" instead.
+   * 2. When that happens (or when a component relies on `aspect-ratio`
+   *    instead of an explicit height), the <img>'s own auto-sizing falls
+   *    back to the intrinsic ratio Astro derives from the source file
+   *    and writes out as literal width/height attributes - which can
+   *    silently override the intended CSS-driven box.
+   *
+   * `display: contents` removes <picture> from the box tree entirely, so
+   * the <img> behaves exactly as if it were a direct child of whatever
+   * element the consuming component's CSS already targets - reproducing
+   * the pre-migration bare-<img> layout with no per-component CSS changes.
+   */
+  :global(picture.responsive-image-picture) {
+    display: contents;
+  }
+</style>

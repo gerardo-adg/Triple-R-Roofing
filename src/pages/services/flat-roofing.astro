@@ -8,6 +8,8 @@ import PhotoBand from "../../components/PhotoBand.astro";
 import FinancingCallout from "../../components/FinancingCallout.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
+import pageHeroImage from "../../assets/media/placeholder-page-hero-flat-roofing.svg";
+import detailImage from "../../assets/media/placeholder-detail-flat-roofing.svg";
 
 // Confirmed directly by the client: Triple R works on TPO flat/low-slope
 // roofs, performs repair/full replacement/silicone restoration, and
@@ -94,7 +96,7 @@ const FAQS = [
   <PageHero
     title="Flat Roofing"
     description="TPO repair, replacement, and silicone restoration for residential and commercial flat roofs."
-    image="/media/placeholder-page-hero-flat-roofing.svg"
+    image={pageHeroImage}
     breadcrumbs={[
       { label: "Home", href: "/" },
       { label: "Services", href: "/services" },
@@ -155,7 +157,7 @@ const FAQS = [
   </section>
 
   <PhotoBand
-    image="/media/placeholder-detail-flat-roofing.svg"
+    image={detailImage}
     imageAlt="Placeholder. A real photo of a Triple R TPO or silicone restoration job will replace this image."
   />
 

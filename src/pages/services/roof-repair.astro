@@ -9,6 +9,9 @@ import CertificationsSection from "../../components/CertificationsSection.astro"
 import FinancingCallout from "../../components/FinancingCallout.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
+import pageHeroImage from "../../assets/media/placeholder-page-hero-repair.svg";
+import detailImage from "../../assets/media/placeholder-detail-roof-repair.svg";
+import projectImage from "../../assets/media/placeholder-project-roof-repair.svg";
 
 // Problem descriptions are drafted generically (standard, widely-true
 // roofing knowledge) rather than sourced from the client - not yet
@@ -89,7 +92,7 @@ const FAQS = [
   <PageHero
     title="Roof Repair"
     description="Leaks, damaged shingles, flashing issues, and other isolated roof problems, fixed without a full replacement."
-    image="/media/placeholder-page-hero-repair.svg"
+    image={pageHeroImage}
     breadcrumbs={[
       { label: "Home", href: "/" },
       { label: "Services", href: "/services" },
@@ -119,7 +122,7 @@ const FAQS = [
   </section>
 
   <PhotoBand
-    image="/media/placeholder-detail-roof-repair.svg"
+    image={detailImage}
     imageAlt=""
   />
 
@@ -132,7 +135,7 @@ const FAQS = [
   <ServiceProjectSpotlight
     eyebrow="Recent work"
     meta="Roof Repair · Location TBD"
-    image="/media/placeholder-project-roof-repair.svg"
+    image={projectImage}
     imageAlt="Placeholder. A real completed roof repair photo will replace this image."
     caption="Real project photo and details (type, location, materials) coming soon."
   />
