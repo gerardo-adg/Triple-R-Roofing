@@ -19,6 +19,14 @@ const FAMILY_VIDEO_MUX_ID = "SD1osly2CMfZzT9PsdLPNsg57WzoMrDYstt9STKl02Fk";
 // Same client-confirmed frame choice as FamilySection.astro - see the
 // comment there.
 const FAMILY_VIDEO_POSTER = `https://image.mux.com/${FAMILY_VIDEO_MUX_ID}/thumbnail.jpg?time=1`;
+
+// A second, separate Mux video: ~1:55, vertical, Rogelio on an active
+// Triple R job site introducing the crew - a company/team trust-building
+// piece, deliberately distinct in content from the name-origin clip
+// above (not a duplicate message). Same burned-in-captions caveat as
+// the family video.
+const TEAM_VIDEO_MUX_ID = "H7UV01an86XuL28BGZeLY7X0101WzhdWbX5YyetOcItpdc";
+const TEAM_VIDEO_POSTER = `https://image.mux.com/${TEAM_VIDEO_MUX_ID}/thumbnail.jpg?time=2`;
 ---
 
 <InteriorLayout
@@ -69,6 +77,31 @@ const FAMILY_VIDEO_POSTER = `https://image.mux.com/${FAMILY_VIDEO_MUX_ID}/thumbn
           muxPlaybackId={FAMILY_VIDEO_MUX_ID}
         />
         <p class="family-story__caption">Rogelio Ramirez explains Triple R.</p>
+      </div>
+    </Container>
+  </section>
+
+  <section class="meet-team section--inverse">
+    <Container>
+      <div class="meet-team__grid">
+        <div class="meet-team__content" data-reveal>
+          <p class="eyebrow">Meet the Team</p>
+          <h2 class="meet-team__headline">On the job.</h2>
+          <p class="meet-team__body">
+            Rogelio introduces the crew behind Triple R on an active job
+            site. These are the people who actually show up to do the
+            work.
+          </p>
+        </div>
+
+        <div class="meet-team__video" data-reveal-media>
+          <PlayableVideo
+            poster={TEAM_VIDEO_POSTER}
+            alt="Rogelio introduces the Triple R team on a job site."
+            aspectRatio="9 / 16"
+            muxPlaybackId={TEAM_VIDEO_MUX_ID}
+          />
+        </div>
       </div>
     </Container>
   </section>
@@ -218,6 +251,73 @@ const FAMILY_VIDEO_POSTER = `https://image.mux.com/${FAMILY_VIDEO_MUX_ID}/thumbn
     margin-top: var(--space-4);
     font-size: var(--text-body-sm);
     color: var(--color-text-muted);
+  }
+
+  /* ---- Meet the Team ----
+     Deliberately distinct from "The family" above it: dark
+     (section--inverse) instead of light, a side-by-side grid instead of
+     centered/stacked, and text leading instead of the video leading -
+     three differences at once so two 9:16 videos on the same page don't
+     read as a repeated pattern. */
+  .meet-team {
+    padding-block: var(--space-9);
+  }
+
+  .meet-team__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+
+  .meet-team__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .meet-team__body {
+    font-size: var(--text-body-lg);
+    max-width: 46ch;
+  }
+
+  .meet-team__video {
+    /* Explicit width, not just max-width: PlayableVideo's own contents
+       are all absolutely positioned, so it has no in-flow content to
+       give this grid item an intrinsic size - without a definite width
+       here, `margin-inline: auto` (a grid item alignment instruction,
+       not classic block auto-margin centering) has nothing to center
+       and collapses the box to 0. */
+    width: 100%;
+    /* ~87% of the frame's earlier 320px width - narrower on purpose,
+       since "The family" video above already fills the same width the
+       page up above; giving this one a bit more surrounding breathing
+       room keeps the two from feeling like the same frame repeated. */
+    max-width: 280px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 900px) {
+    /* Text leads, video trails - the reverse of the homepage FamilySection's
+       video-first order, and no `order` override here (DOM order stays
+       visual order), since this isn't the page's first human moment the
+       way that section is.
+
+       The text column is a bounded track (not `1fr`) so it only takes
+       the width the copy actually needs, rather than stretching the
+       whole way to the video and leaving a dead gap between them; any
+       leftover row width lands outside the two-column block instead,
+       which `justify-content: center` then balances within the section. */
+    .meet-team__grid {
+      grid-template-columns: minmax(0, 480px) clamp(320px, 34vw, 420px);
+      justify-content: center;
+      align-items: center;
+      gap: var(--space-7);
+    }
+
+    .meet-team__video {
+      max-width: none;
+      margin-inline: 0;
+    }
   }
 
   /* ---- What We Do ---- */
