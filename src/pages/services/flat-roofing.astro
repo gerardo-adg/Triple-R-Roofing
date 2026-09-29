@@ -1,0 +1,258 @@
+---
+import InteriorLayout from "../../layouts/InteriorLayout.astro";
+import Container from "../../components/Container.astro";
+import PageHero from "../../components/PageHero.astro";
+import ServiceTriad from "../../components/ServiceTriad.astro";
+import ServiceCoverageList from "../../components/ServiceCoverageList.astro";
+import PhotoBand from "../../components/PhotoBand.astro";
+import FinancingCallout from "../../components/FinancingCallout.astro";
+import FAQSection from "../../components/FAQSection.astro";
+import FinalCtaSection from "../../components/FinalCtaSection.astro";
+
+// Confirmed directly by the client: Triple R works on TPO flat/low-slope
+// roofs, performs repair/full replacement/silicone restoration, and
+// serves both residential and commercial. No silicone brand is named, no
+// dealer/authorized-applicator status is claimed, and no warranty
+// length/coverage is stated - the exact product/system hasn't been
+// confirmed. The six-step restoration sequence below describes general,
+// widely-documented practice for this kind of work (inspect/qualify,
+// address damage, clean/prepare, test adhesion + prime, detail seams and
+// penetrations, apply coating) - not asserted as Triple R's own
+// proprietary process. Financing uses a page-specific statement override
+// with no promotional duration/rate/$0-down figure, since the site's
+// current Wisetack terms are being reverified separately - the shared
+// FinancingCallout component itself is untouched.
+const OPTIONS = [
+  {
+    name: "Repair",
+    description: "Addresses an isolated problem, like a leak, a puncture, or a failed seam.",
+  },
+  {
+    name: "Silicone Restoration",
+    description: "Restores and protects a qualifying TPO roof, without a full tear-off.",
+  },
+  {
+    name: "Full Replacement",
+    description: "A full tear-off and replacement of the existing roof.",
+  },
+];
+
+const ISSUES = [
+  {
+    name: "Leaks",
+    description:
+      "Water finding its way in, often at a seam, penetration, or detail rather than across the whole roof.",
+  },
+  {
+    name: "Seam and detail failures",
+    description: "Seams, edges, and other roof details that have opened up or failed over time.",
+  },
+  {
+    name: "Punctures or membrane damage",
+    description: "Cuts, tears, or other damage to the TPO membrane itself.",
+  },
+  {
+    name: "Flashing and penetration issues",
+    description: "The material around vents, drains, and equipment failing or coming loose.",
+  },
+  {
+    name: "Ponding water",
+    description: "Water that doesn't drain properly and sits on the roof.",
+  },
+];
+
+const FAQS = [
+  {
+    question: "Do you work on residential and commercial flat roofs?",
+    answer: "Yes. We work on TPO flat and low-slope roofs for both residential and commercial properties.",
+  },
+  {
+    question: "How do I know if I need a repair, restoration, or replacement?",
+    answer: "It depends on the roof. We inspect it first and tell you which option makes sense.",
+  },
+  {
+    question: "What is silicone roof restoration?",
+    answer:
+      "A coating applied over an existing TPO roof to restore it, when the roof is a good candidate. We inspect and test the roof before recommending it.",
+  },
+  {
+    question: "Is silicone restoration always better than replacement?",
+    answer:
+      "Not necessarily. It depends on the condition of the existing roof. We'll inspect the roof first and explain which options apply.",
+  },
+  {
+    question: "Are you licensed and insured?",
+    answer: "Yes. We're licensed, bonded, and insured, and BBB Accredited.",
+  },
+];
+---
+
+<InteriorLayout
+  title="Flat Roofing (TPO) | Triple R Roofing"
+  description="TPO flat and low-slope roofing repair, replacement, and silicone restoration for residential and commercial properties in Sacramento, CA."
+>
+  <PageHero
+    title="Flat Roofing"
+    description="TPO repair, replacement, and silicone restoration for residential and commercial flat roofs."
+    image="/media/placeholder-page-hero-flat-roofing.svg"
+    breadcrumbs={[
+      { label: "Home", href: "/" },
+      { label: "Services", href: "/services" },
+      { label: "Flat Roofing" },
+    ]}
+  />
+
+  <section class="overview">
+    <Container>
+      <div class="overview__content" data-reveal>
+        <p class="eyebrow">Flat Roofing</p>
+        <h2 class="overview__headline">There's more than one way to handle a TPO roof.</h2>
+        <p class="overview__body">
+          Triple R works on TPO flat and low-slope roofs for both
+          residential and commercial properties. Depending on what we
+          find, that can mean a repair, silicone roof restoration, or a
+          full replacement. We inspect the roof first and tell you which
+          one makes sense.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <ServiceTriad
+    eyebrow="Flat Roofing"
+    headline="The right approach depends on the roof."
+    items={OPTIONS}
+  />
+
+  <ServiceCoverageList
+    eyebrow="What We Look For"
+    headline="Common flat roof issues we inspect for."
+    items={ISSUES}
+  />
+
+  <section class="restoration">
+    <Container>
+      <p class="eyebrow">Silicone Restoration</p>
+      <h2 class="restoration__headline">How silicone restoration works.</h2>
+      <p class="restoration__intro">Silicone restoration generally involves:</p>
+
+      <div class="restoration__sequence" data-reveal-group>
+        {[
+          "The existing roof is inspected to see if it's a good candidate for restoration.",
+          "Any wet or damaged areas are identified and addressed first.",
+          "The roof is thoroughly cleaned and prepared.",
+          "Adhesion is tested, and a primer is used if the coating system calls for it.",
+          "Seams, penetrations, drains, and flashings are addressed as needed.",
+          "The silicone coating is applied according to the coating system's specifications.",
+        ].map((step, i) => (
+          <div class="restoration__row" data-reveal-item style={`--i: ${i}`}>
+            <span class="restoration__index">{String(i + 1).padStart(2, "0")}</span>
+            <p class="restoration__step">{step}</p>
+          </div>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <PhotoBand
+    image="/media/placeholder-detail-flat-roofing.svg"
+    imageAlt="Placeholder. A real photo of a Triple R TPO or silicone restoration job will replace this image."
+  />
+
+  <FinancingCallout
+    eyebrow="Financing Available"
+    statement="Financing is available through Wisetack for qualified borrowers."
+  />
+
+  <FAQSection
+    eyebrow="Common Questions"
+    headline="Flat roofing, answered"
+    groupName="faq-flat-roofing"
+    items={FAQS}
+  />
+
+  <FinalCtaSection
+    headline="Let's take a look at your flat roof."
+    body="Request a free estimate and we'll take a look at the roof and go over your options."
+  />
+</InteriorLayout>
+
+<style>
+  .overview {
+    padding-block: var(--space-9);
+  }
+
+  .overview__content {
+    max-width: 720px;
+  }
+
+  .overview__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .overview__body {
+    font-size: var(--text-body-lg);
+    max-width: 62ch;
+  }
+
+  /* ---- How Silicone Restoration Works - the same numbered/gold-spine
+     editorial language introduced on Roof Rejuvenation, adapted for six
+     steps rather than four: a visible intro sentence (Rejuvenation had
+     none), and a much shallower cascading indent per row so six items
+     don't turn into a staircase. Not cards, not icons, not a diagram. ---- */
+  .restoration {
+    padding-block: var(--space-9);
+  }
+
+  .restoration__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    max-width: 640px;
+  }
+
+  .restoration__intro {
+    margin-top: var(--space-5);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted);
+    max-width: 640px;
+  }
+
+  .restoration__sequence {
+    max-width: 640px;
+    margin-top: var(--space-6);
+    padding-left: var(--space-6);
+    border-left: 2px solid var(--color-accent-strong);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .restoration__row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-left: calc(var(--i, 0) * var(--space-1));
+  }
+
+  .restoration__index {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-accent-strong);
+  }
+
+  .restoration__step {
+    font-size: var(--text-body-lg);
+    color: var(--color-text);
+  }
+
+  @media (min-width: 700px) {
+    .restoration__row {
+      margin-left: calc(var(--i, 0) * var(--space-2));
+    }
+  }
+</style>

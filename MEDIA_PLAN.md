@@ -751,3 +751,34 @@ has a subtle "View all projects" link to `/projects`, and the Footer's
   specific to this page, but worth noting here since it's the reason
   `FinancingCallout` stays off this page rather than being added later
   with an assumed figure.
+
+---
+
+## Flat Roofing (TPO) page media
+
+- **Page hero background:** `public/media/placeholder-page-hero-flat-roofing.svg`
+  - flat `#1c1f1e` field. Same shared `PageHero.astro` spec as the other
+  service pages (full-bleed landscape, dark scrim, eager loading) - a
+  distinct placeholder file so this page doesn't visually match any
+  other page's hero once real photos exist.
+- **Detail photo:** `public/media/placeholder-detail-flat-roofing.svg`
+  - flat `#1d201f` field, built with the shared `PhotoBand.astro`
+  component (same spec as its other uses: mobile fixed ~16:9 crop,
+  desktop `clamp(160px, 24vh, 280px)` viewport-driven height).
+- **Recommended shot:** A real photo of an actual Triple R TPO or
+  silicone restoration job - **must be a genuine Triple R job, not stock
+  or manufacturer marketing imagery.** Preferably the restoration/repair
+  work in progress, or a clear shot of the TPO roof being treated
+  (residential or commercial).
+- **Financing note:** this page's `FinancingCallout` uses a page-specific
+  `statement` override ("Financing is available through Wisetack for
+  qualified borrowers.") with no promotional duration, rate, or $0-down
+  figure - the shared component's own default statement (which does
+  state a specific term) is untouched. Revisit this override once the
+  site's Wisetack promotional terms are reverified sitewide.
+- **No Recent Work spotlight, no CertificationsSection:** no real
+  flat-roof project photos are confirmed yet, and GAF/CertainTeed
+  relevance to TPO work hasn't been confirmed (same reasoning as Tile
+  Roofing omitting those credentials for non-shingle work). No silicone
+  brand name, dealer/authorized-applicator status, or warranty figure
+  appears anywhere on this page - none of that is confirmed.
