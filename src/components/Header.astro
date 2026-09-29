@@ -487,6 +487,7 @@ const PHONE_HREF = "tel:+19164205635";
     visibility: hidden;
     opacity: 0;
     transform: translateY(-8px);
+    touch-action: pan-y;
     transition:
       opacity var(--duration-base) var(--ease-standard),
       transform var(--duration-base) var(--ease-standard),
@@ -524,7 +525,14 @@ const PHONE_HREF = "tel:+19164205635";
   .mobile-menu__nav {
     flex: 1;
     display: flex;
+    overflow-x: hidden;
     overflow-y: auto;
+    /* Without this, touch drags are free-form (the browser's default
+       lets a scrollable element pan diagonally/sideways even with
+       nothing to actually scroll horizontally into), which is what
+       reads as "loose"/not locked in place. pan-y restricts touch
+       gestures here to vertical only. */
+    touch-action: pan-y;
   }
 
   .mobile-menu__list {
