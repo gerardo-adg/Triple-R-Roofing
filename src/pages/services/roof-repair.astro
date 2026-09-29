@@ -3,15 +3,29 @@ import InteriorLayout from "../../layouts/InteriorLayout.astro";
 import Container from "../../components/Container.astro";
 import PageHero from "../../components/PageHero.astro";
 import PhotoBand from "../../components/PhotoBand.astro";
+import PlayableVideo from "../../components/PlayableVideo.astro";
 import ServiceCoverageList from "../../components/ServiceCoverageList.astro";
-import ServiceProjectSpotlight from "../../components/ServiceProjectSpotlight.astro";
 import CertificationsSection from "../../components/CertificationsSection.astro";
 import FinancingCallout from "../../components/FinancingCallout.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
 import pageHeroImage from "../../assets/media/placeholder-page-hero-repair.svg";
 import detailImage from "../../assets/media/placeholder-detail-roof-repair.svg";
-import projectImage from "../../assets/media/placeholder-project-roof-repair.svg";
+
+// Real jobsite footage: a Triple R crew member on an active roof,
+// patching a leak and explaining the repair as it happens. Not a
+// talking-head clip - this fills the "Recent work" slot that was
+// already reserved on this page (previously a placeholder photo,
+// per MEDIA_PLAN.md's tier system: a photo there normally uses
+// ServiceProjectSpotlight, but that shared component is built
+// full-bleed at 16:9 and is also used by Roof Replacement, Tile
+// Roofing, and Gutters - stretching a 9:16 video into that treatment
+// would render absurdly tall, and modifying the shared component would
+// affect those other pages. This page uses its own contained "Recent
+// work" section instead, so ServiceProjectSpotlight and the other
+// pages using it are untouched. Client-confirmed poster frame.
+const REPAIR_VIDEO_MUX_ID = "tyzo1wJhg8kM1ktkrpswjEBF00D02umT2p3cCLOZ24U8I";
+const REPAIR_VIDEO_POSTER = `https://image.mux.com/${REPAIR_VIDEO_MUX_ID}/thumbnail.jpg?time=2`;
 
 // Problem descriptions are drafted generically (standard, widely-true
 // roofing knowledge) rather than sourced from the client - not yet
@@ -132,13 +146,26 @@ const FAQS = [
     items={COVERAGE}
   />
 
-  <ServiceProjectSpotlight
-    eyebrow="Recent work"
-    meta="Roof Repair · Location TBD"
-    image={projectImage}
-    imageAlt="Placeholder. A real completed roof repair photo will replace this image."
-    caption="Real project photo and details (type, location, materials) coming soon."
-  />
+  <section class="repair-video">
+    <Container>
+      <div class="repair-video__intro" data-reveal>
+        <p class="eyebrow">Recent work</p>
+        <h2 class="repair-video__headline">Patching a roof leak.</h2>
+        <p class="repair-video__body">
+          See how the Triple R crew handles a roof leak repair on site.
+        </p>
+      </div>
+
+      <div class="repair-video__frame" data-reveal-media>
+        <PlayableVideo
+          poster={REPAIR_VIDEO_POSTER}
+          alt="A Triple R crew member patches a roof leak on an active job."
+          aspectRatio="9 / 16"
+          muxPlaybackId={REPAIR_VIDEO_MUX_ID}
+        />
+      </div>
+    </Container>
+  </section>
 
   <CertificationsSection
     eyebrow="Materials & Certifications"
@@ -180,5 +207,48 @@ const FAQS = [
   .overview__body {
     font-size: var(--text-body-lg);
     max-width: 62ch;
+  }
+
+  /* ---- Recent work video - replaces this page's ServiceProjectSpotlight
+     placeholder with a contained (not full-bleed) 9:16 frame, since that
+     shared component is built for full-bleed 16:9 photos and is also
+     used by other service pages. Sized and composed the same way as the
+     Roof Maintenance page's video section for consistency. ---- */
+  .repair-video {
+    padding-block: var(--space-9);
+    text-align: center;
+  }
+
+  .repair-video__intro {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .repair-video__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .repair-video__body {
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted);
+  }
+
+  .repair-video__frame {
+    margin-top: var(--space-8);
+    width: 100%;
+    max-width: 300px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 900px) {
+    .repair-video {
+      padding-block: var(--space-8);
+    }
+
+    .repair-video__frame {
+      max-width: clamp(380px, 30vw, 430px);
+    }
   }
 </style>
