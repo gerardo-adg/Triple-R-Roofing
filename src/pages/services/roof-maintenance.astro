@@ -1,12 +1,24 @@
 ---
 import InteriorLayout from "../../layouts/InteriorLayout.astro";
 import Container from "../../components/Container.astro";
-import PhotoBand from "../../components/PhotoBand.astro";
+import LazyVideo from "../../components/LazyVideo.astro";
 import PlayableVideo from "../../components/PlayableVideo.astro";
 import FinancingCallout from "../../components/FinancingCallout.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
-import detailImage from "../../assets/media/placeholder-detail-maintenance.svg";
+import droneCrewPhoto from "../../assets/media/photo-maintenance-crew-aerial.jpg";
+
+// Real drone footage of the Triple R crew actively performing roof
+// maintenance - replaces the old PhotoBand placeholder with a muted,
+// looping, non-interactive background video (LazyVideo, hero={false}),
+// serving as visual proof of the crew at work. This is a documented
+// exception to the "only the homepage Hero autoplays" rule - see
+// MEDIA_PLAN.md's Autoplay rules section. Kept separate from the
+// vertical Rogelio explainer below, which remains the educational,
+// click-to-play walkthrough. Poster is a real photo from the same
+// maintenance job (not a Mux thumbnail), so prefers-reduced-motion
+// users see actual proof of work, not a generic frame.
+const MAINTENANCE_DRONE_MUX_ID = "01g2gapJoJY701aQaqOwoW66J6e3eMtL7yGAylzegUQE8";
 
 // A third Mux video: ~1 minute, vertical, Rogelio explaining the full
 // roof maintenance package - service-specific (unlike the About page's
@@ -95,9 +107,12 @@ const FAQS = [
     </Container>
   </section>
 
-  <PhotoBand
-    image={detailImage}
-    imageAlt=""
+  <LazyVideo
+    class="maintenance-drone-video"
+    poster={droneCrewPhoto}
+    alt="Aerial view of the Triple R crew performing roof maintenance."
+    aspectRatio="16 / 9"
+    muxPlaybackId={MAINTENANCE_DRONE_MUX_ID}
   />
 
   <section class="maintenance-areas">
@@ -227,6 +242,33 @@ const FAQS = [
 
     .maintenance-hero__body {
       max-width: 50ch;
+    }
+  }
+
+  /* ---- Drone maintenance footage - page-local sizing, taller than
+     PhotoBand's original footprint so the aerial composition (roof and
+     crew) isn't cropped down to a thin panoramic sliver. Explicit height
+     at every breakpoint wins over the component's inline aspect-ratio
+     style (both can't govern height at once), so this never has to
+     touch the shared LazyVideo component, which is also used by the
+     homepage Hero. object-fit: cover (set by the component) still
+     applies, so the video is never distorted, only more of it is
+     visible. Cinematic and full width, deliberately short of a
+     hero-sized section. ---- */
+  :global(.maintenance-drone-video) {
+    background: var(--color-charcoal-raised);
+    height: clamp(190px, 50vw, 230px);
+  }
+
+  @media (min-width: 700px) {
+    :global(.maintenance-drone-video) {
+      height: clamp(260px, 34vw, 320px);
+    }
+  }
+
+  @media (min-width: 900px) {
+    :global(.maintenance-drone-video) {
+      height: clamp(320px, 22vw, 380px);
     }
   }
 

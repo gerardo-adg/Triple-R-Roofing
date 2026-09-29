@@ -465,17 +465,30 @@ icon-card/badge layout - don't.
 
 ### Autoplay rules
 
-- At most **one** autoplaying video per page, and only when it's a true
-  above-the-fold hero (currently: the homepage Hero only).
-- Every other video (About/homepage Family, and any future Recent Work
-  video upgrade) is click-to-play via `PlayableVideo` - sound-on,
-  never autoplay.
-- `prefers-reduced-motion: reduce` skips video entirely on the Hero;
-  the poster is the whole experience for those users.
-- Mobile keeps the same rule; `playsinline` is already set for iOS
+- At most **one** above-the-fold hero autoplay per page (currently: the
+  homepage Hero only), via `LazyVideo` with `hero={true}`.
+- **Decorative PhotoBand-style moments may also use a muted, looping,
+  lazy-loaded background video in place of a static image**, via the
+  same `LazyVideo` component with `hero={false}` (the default) - this
+  is not a second "hero," it's the same non-interactive, captionless,
+  text-free pause `PhotoBand` was always defined as, just moving
+  instead of static. No play button, no controls, never sound. First
+  used on the Roof Maintenance page (drone footage of the crew actually
+  working, replacing that page's PhotoBand). `hero={false}` means the
+  video doesn't load or play until an IntersectionObserver brings it
+  near the viewport, and it pauses again once scrolled well past -
+  unlike the Hero, it never initializes on page load.
+- Everywhere else (About/homepage Family, Meet the Team, every
+  educational or Recent Work video) stays click-to-play via
+  `PlayableVideo` - sound-on, never autoplay.
+- `prefers-reduced-motion: reduce` skips video entirely on both the
+  Hero and any `LazyVideo` PhotoBand replacement; the poster (a real
+  frame or real photo from the actual job, never a generic stand-in)
+  is the whole experience for those users.
+- Mobile keeps the same rules; `playsinline` is already set for iOS
   inline autoplay. A `navigator.connection`/`saveData` check to skip
-  Hero autoplay on slow/metered connections is a good later addition,
-  not yet implemented - see "Deferred" below.
+  autoplay on slow/metered connections is a good later addition, not
+  yet implemented - see "Deferred" below.
 
 ### Poster requirements
 
@@ -657,20 +670,38 @@ has a subtle "View all projects" link to `/projects`, and the Footer's
 
 ## Roof Maintenance & Leak Prevention page media
 
-- **Detail photo:** `public/media/placeholder-detail-maintenance.svg`
-  - flat `#1d201c` field, built with the shared `PhotoBand.astro`
-  component (same spec as its other uses: mobile fixed ~16:9 crop,
-  desktop `clamp(160px, 24vh, 280px)` viewport-driven height). This is
-  the page's only supporting image - it isn't filling a long-text-stretch
-  gap like `PhotoBand`'s other uses, it's the one real visual moment on a
-  deliberately short page, so it earns its place rather than being
-  decorative.
-- **Recommended shot:** A close/detail shot of maintenance work actually
-  in progress - ideally roof metals (flashing), a vent, or another
-  potential leak area being addressed, since that's the one confirmed
-  example of what this service can involve. Closer and more specific
-  than a wide establishing shot - this band is meant to read as "here's
-  the actual work," not a generic roof-from-a-distance photo.
+- **Drone maintenance footage: LIVE.** Real landscape drone video of the
+  Triple R crew actively performing roof maintenance replaces the old
+  `PhotoBand` placeholder. Built with `LazyVideo`, `hero={false}` (muted,
+  looped, no play button, no controls, never sound, lazy-loaded via
+  IntersectionObserver - see the Autoplay rules section above for why
+  this is treated the same as a static `PhotoBand` image, not a second
+  hero).
+  - **Mux playback ID:** `01g2gapJoJY701aQaqOwoW66J6e3eMtL7yGAylzegUQE8`
+  - **Sizing:** taller than `PhotoBand`'s original footprint so the
+    aerial composition (roof and crew) reads clearly rather than
+    cropping down to a thin panoramic sliver, via page-local `clamp()`
+    overrides on `LazyVideo`'s root rather than touching the shared
+    component (also used by the homepage Hero): mobile
+    `clamp(190px, 50vw, 230px)`, tablet (≥700px)
+    `clamp(260px, 34vw, 320px)`, desktop (≥900px)
+    `clamp(320px, 22vw, 380px)`. `object-fit: cover` throughout - full
+    width, cinematic, deliberately short of a hero-sized section.
+  - **Poster/reduced-motion fallback:** a real photo from the same
+    maintenance job (`src/assets/media/photo-maintenance-crew-aerial.jpg`,
+    via `astro:assets`), not a Mux thumbnail - close aerial shot with
+    two crew members clearly visible actively working. This is the
+    entire experience for `prefers-reduced-motion` users.
+- **Educational explainer video (separate, unaffected):** Rogelio
+  explains the full maintenance package, `PlayableVideo`, click-to-play,
+  contained 9:16, positioned after "What a visit can involve." Unrelated
+  to the drone footage above and unchanged by it.
+- **Other maintenance photos from the same job:** the wider establishing
+  shot from the same job (showing the whole property, crew, and
+  driveway) wasn't used here - it reads as "present" rather than clearly
+  "working" at that distance. It remains a strong candidate for the
+  homepage Featured Work carousel or the Projects page grid, both still
+  unfilled placeholders, whenever real content starts going into those.
 - **No page hero image needed:** this page intentionally has no
   `PageHero` - it opens with a text-only dark statement hero (same move
   About's name-reveal already makes), so it doesn't need a background
