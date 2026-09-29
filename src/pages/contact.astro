@@ -9,14 +9,33 @@ import Button from "../components/Button.astro";
 // submission notifications (who gets emailed) are configured in the
 // Netlify dashboard after deploy, not in code - see the note left for
 // the user in this session's reply.
-const SERVICE_OPTIONS = [
-  "Roof Replacement",
-  "Roof Repair",
-  "Tile Roofing",
-  "Gutters",
-  "Solar Panel Cleaning",
-  "Moss Removal",
-  "Other",
+// Matches the Services hub/navigation's exact grouping and naming, so
+// this list never drifts from what's live elsewhere on the site.
+// Rendered as native <optgroup>s - a real, accessible grouping
+// mechanism (not a fake/non-selectable option), with no change to the
+// select field's own visual styling.
+const SERVICE_GROUPS = [
+  {
+    name: "Roofing",
+    items: ["Roof Replacement", "Roof Repair", "Tile Roofing", "Flat Roofing"],
+  },
+  {
+    name: "Roof Care",
+    items: [
+      "Roof Maintenance & Leak Prevention",
+      "Roof Rejuvenation",
+      "Roof Certifications",
+      "Moss Removal",
+    ],
+  },
+  {
+    name: "Gutters",
+    items: ["Gutters"],
+  },
+  {
+    name: "Solar",
+    items: ["Solar Panel Cleaning", "Roofing + Solar"],
+  },
 ];
 ---
 
@@ -91,7 +110,12 @@ const SERVICE_OPTIONS = [
               <label for="service">What do you need help with?</label>
               <select id="service" name="service" required>
                 <option value="" disabled selected>Select one</option>
-                {SERVICE_OPTIONS.map((option) => <option value={option}>{option}</option>)}
+                {SERVICE_GROUPS.map((group) => (
+                  <optgroup label={group.name}>
+                    {group.items.map((item) => <option value={item}>{item}</option>)}
+                  </optgroup>
+                ))}
+                <option value="Other">Other</option>
               </select>
             </div>
 
