@@ -2,10 +2,18 @@
 import InteriorLayout from "../../layouts/InteriorLayout.astro";
 import Container from "../../components/Container.astro";
 import PhotoBand from "../../components/PhotoBand.astro";
+import PlayableVideo from "../../components/PlayableVideo.astro";
 import FinancingCallout from "../../components/FinancingCallout.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
 import detailImage from "../../assets/media/placeholder-detail-maintenance.svg";
+
+// A third Mux video: ~1 minute, vertical, Rogelio explaining the full
+// roof maintenance package - service-specific (unlike the About page's
+// name-origin and team clips), so this is the only page it belongs on.
+// Client-confirmed poster frame.
+const MAINTENANCE_VIDEO_MUX_ID = "BCN700zAeUGNRbhLOclQI5VHVkp00se78tLqSaDyzyGgU";
+const MAINTENANCE_VIDEO_POSTER = `https://image.mux.com/${MAINTENANCE_VIDEO_MUX_ID}/thumbnail.jpg?time=2`;
 
 // Deliberately shorter and differently shaped than Roof Repair/Roof
 // Replacement - only three facts are confirmed for this service (it's
@@ -106,6 +114,28 @@ const FAQS = [
             <p class="maintenance-areas__description">{area.description}</p>
           </div>
         ))}
+      </div>
+    </Container>
+  </section>
+
+  <section class="maintenance-video">
+    <Container>
+      <div class="maintenance-video__intro" data-reveal>
+        <p class="eyebrow">Roof Maintenance</p>
+        <h2 class="maintenance-video__headline">See what a full maintenance includes.</h2>
+        <p class="maintenance-video__body">
+          Rogelio walks through what Triple R checks and addresses during
+          a roof maintenance visit.
+        </p>
+      </div>
+
+      <div class="maintenance-video__frame" data-reveal-media>
+        <PlayableVideo
+          poster={MAINTENANCE_VIDEO_POSTER}
+          alt="Rogelio explains the full roof maintenance package."
+          aspectRatio="9 / 16"
+          muxPlaybackId={MAINTENANCE_VIDEO_MUX_ID}
+        />
       </div>
     </Container>
   </section>
@@ -247,6 +277,52 @@ const FAQS = [
       grid-template-columns: minmax(0, 280px) 1fr;
       align-items: baseline;
       gap: var(--space-8);
+    }
+  }
+
+  /* ---- Maintenance video - a supporting explainer, not this page's
+     central visual moment, so it stays smaller than About's family
+     video and uses the same light background as the section above it
+     rather than introducing a second dark moment on this page. ---- */
+  .maintenance-video {
+    padding-block: var(--space-9);
+    text-align: center;
+  }
+
+  .maintenance-video__intro {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .maintenance-video__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .maintenance-video__body {
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted);
+  }
+
+  .maintenance-video__frame {
+    margin-top: var(--space-8);
+    width: 100%;
+    max-width: 300px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 900px) {
+    /* Tighter block padding and a wider frame than the mobile defaults -
+       the original --space-9 padding plus a 380px cap left too much
+       empty vertical space around the video at desktop; still modest,
+       not the page's central visual moment. */
+    .maintenance-video {
+      padding-block: var(--space-8);
+    }
+
+    .maintenance-video__frame {
+      max-width: clamp(380px, 30vw, 430px);
     }
   }
 </style>
