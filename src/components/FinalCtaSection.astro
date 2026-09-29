@@ -87,12 +87,20 @@ const {
   /* Desktop: horizontal, not centered - copy left, actions right,
      within a working measure narrower than the full container so the
      row doesn't stretch edge-to-edge on wide viewports. Mobile keeps
-     the centered/stacked composition above untouched. */
+     the centered/stacked composition above untouched. flex-wrap is a
+     safety net, not the primary layout: content's max-width (560px)
+     plus actions normally leaves room in this row at typical desktop
+     widths, but a long enough headline/body combination in the ~900-
+     1024px band can exceed the available width - wrapping the actions
+     to their own row there beats a horizontal scrollbar. Doesn't change
+     anything at widths where the row already fits (verified against
+     every page currently using this component). */
   @media (min-width: 900px) {
     .final-cta__inner {
       max-width: 1160px;
       text-align: left;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: var(--space-8);

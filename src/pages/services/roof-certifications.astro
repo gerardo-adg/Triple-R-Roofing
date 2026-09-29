@@ -1,0 +1,154 @@
+---
+import InteriorLayout from "../../layouts/InteriorLayout.astro";
+import Container from "../../components/Container.astro";
+import PageHero from "../../components/PageHero.astro";
+import PhotoBand from "../../components/PhotoBand.astro";
+import FAQSection from "../../components/FAQSection.astro";
+import FinalCtaSection from "../../components/FinalCtaSection.astro";
+
+// A short, situational page (selling a home), not a repair/replacement
+// scope - so it deliberately skips the usual list/spotlight/certifications-
+// brand-section pattern. Copy is careful to describe only that Triple R
+// offers 2-year roof certifications and that the roof is inspected to
+// determine qualification - never what the certification document itself
+// states or guarantees, since the exact legal/document language hasn't
+// been confirmed. No fee/pricing language anywhere, and "free estimate"
+// phrasing is avoided here specifically so nothing implies the
+// inspection/certification itself is free. Scoped strictly to the
+// confirmed home-sale use case - no refinancing/insurance-renewal
+// mentions until those are confirmed. This is a different service from
+// the GAF Certified/CertainTeed SELECT ShingleMaster/BBB Accredited
+// credentials used elsewhere on the site - CertificationsSection is
+// reserved for those and isn't reused here.
+const FAQS = [
+  {
+    question: "What is a 2-year roof certification?",
+    answer:
+      "It's a certification Triple R offers for homeowners selling their home. The roof is inspected first to determine whether it qualifies.",
+  },
+  {
+    question: "Does every roof qualify?",
+    answer:
+      "No. We inspect the roof first and let you know if anything needs to be addressed before certification.",
+  },
+  {
+    question: "What happens if my roof needs work before it can be certified?",
+    answer:
+      "We'll tell you what we find. Depending on what's needed, we'll go over next steps before certification can be issued.",
+  },
+  {
+    question: "Are you licensed and insured?",
+    answer: "Yes. We're licensed, bonded, and insured, and BBB Accredited.",
+  },
+  {
+    question: "How do I get started?",
+    answer: "Call or reach out online and we'll go over what's involved for your home.",
+  },
+];
+---
+
+<InteriorLayout
+  title="Roof Certifications | Triple R Roofing"
+  description="2-year roof certifications for homeowners selling their home in Sacramento, CA. The roof is inspected first to determine whether it qualifies."
+>
+  <PageHero
+    title="Roof Certifications"
+    description="2-year roof certifications for homeowners selling their home."
+    image="/media/placeholder-page-hero-certifications.svg"
+    breadcrumbs={[
+      { label: "Home", href: "/" },
+      { label: "Services", href: "/services" },
+      { label: "Roof Certifications" },
+    ]}
+  />
+
+  <section class="overview">
+    <Container>
+      <div class="overview__content" data-reveal>
+        <p class="eyebrow">Roof Certifications</p>
+        <h2 class="overview__headline">For when you're selling your home.</h2>
+        <p class="overview__body">
+          If you're selling your home, you may be asked for a 2-year roof
+          certification. Triple R offers this certification after an
+          inspection determines whether the roof qualifies.
+        </p>
+
+        <div class="overview__callout">
+          <p>
+            Not every roof qualifies. If we find something that needs
+            attention first, we'll tell you what it is before certification
+            can move forward.
+          </p>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <PhotoBand
+    image="/media/placeholder-detail-certifications.svg"
+    imageAlt="Placeholder. A real photo of a Triple R roof inspection will replace this image."
+  />
+
+  <FAQSection
+    eyebrow="Common Questions"
+    headline="Roof certifications, answered"
+    groupName="faq-roof-certifications"
+    items={FAQS}
+  />
+
+  <FinalCtaSection
+    headline="Need a roof certification?"
+    body="Reach out and we'll go over what's involved for your home."
+    primaryCta={{ label: "Contact Us", href: "/contact" }}
+  />
+</InteriorLayout>
+
+<style>
+  .overview {
+    padding-block: var(--space-9);
+  }
+
+  .overview__content {
+    max-width: 640px;
+  }
+
+  .overview__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .overview__body {
+    font-size: var(--text-body-lg);
+    font-weight: var(--weight-medium);
+    max-width: 62ch;
+  }
+
+  /* The one new structural idea on this page - the qualification
+     disclosure gets its own visually distinct moment (a bordered inset)
+     rather than being folded into the paragraph above, so it can't be
+     skimmed past as just another sentence. Text-only, no background
+     tint or icon - restrained, consistent with the rest of the site. */
+  .overview__callout {
+    max-width: 56ch;
+    margin-top: var(--space-6);
+    padding-left: var(--space-5);
+    border-left: 2px solid var(--color-accent-strong);
+  }
+
+  .overview__callout p {
+    font-size: var(--text-body-lg);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+  }
+
+  /* Mobile only: a touch more separation from the paragraph above and
+     more room between the gold rule and the text - the same treatment,
+     just easier to read at this width. */
+  @media (max-width: 899px) {
+    .overview__callout {
+      margin-top: var(--space-7);
+      padding-left: var(--space-6);
+    }
+  }
+</style>

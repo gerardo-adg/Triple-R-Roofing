@@ -704,3 +704,26 @@ has a subtle "View all projects" link to `/projects`, and the Footer's
   financing offer (Wisetack, roofing only) hasn't been confirmed to
   extend to a solar portion, so `FinancingCallout` is deliberately left
   off this page.
+
+---
+
+## Roof Certifications page media
+
+- **Page hero background:** `public/media/placeholder-page-hero-certifications.svg`
+  - flat `#1d1e21` field. Same shared `PageHero.astro` spec as the other
+  service pages (full-bleed landscape, dark scrim, eager loading) - a
+  distinct placeholder file so this page doesn't visually match any
+  other page's hero once real photos exist.
+- **Detail photo:** `public/media/placeholder-detail-certifications.svg`
+  - flat `#1f201d` field, built with the shared `PhotoBand.astro`
+  component (same spec as its other uses: mobile fixed ~16:9 crop,
+  desktop `clamp(160px, 24vh, 280px)` viewport-driven height).
+- **Recommended shot:** A real photo of an actual Triple R roof
+  inspection in progress - **must be a genuine Triple R job, not stock
+  imagery.** This is the one confirmed real activity this service
+  involves (inspecting the roof to determine whether it qualifies), so
+  it's the honest visual to use here rather than a generic real-estate
+  or roofing stock photo.
+- **No Recent Work spotlight, no Financing section:** no real
+  certification-project photos are confirmed yet, and no financing
+  offer has been confirmed for this service.
