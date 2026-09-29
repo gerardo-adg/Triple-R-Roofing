@@ -12,8 +12,13 @@ import FinalCtaSection from "../components/FinalCtaSection.astro";
 // years-in-business, project counts, employee count, generations claim,
 // awards, or origin-story/values language - none of that has been
 // confirmed. The video referenced below is the single confirmed ~34s
-// family/Triple-R clip already used (in compact form) on the homepage
-// FamilySection - no other family videos are assumed here.
+// family/Triple-R clip, delivered via Mux, already used (in compact
+// form) on the homepage FamilySection - no other family videos are
+// assumed here.
+const FAMILY_VIDEO_MUX_ID = "SD1osly2CMfZzT9PsdLPNsg57WzoMrDYstt9STKI02Fk";
+// Same provisional, not-yet-visually-verified frame choice as
+// FamilySection.astro - see the comment there.
+const FAMILY_VIDEO_POSTER = `https://image.mux.com/${FAMILY_VIDEO_MUX_ID}/thumbnail.jpg?time=14`;
 ---
 
 <InteriorLayout
@@ -58,9 +63,10 @@ import FinalCtaSection from "../components/FinalCtaSection.astro";
 
       <div class="family-story__video" data-reveal-media>
         <PlayableVideo
-          poster="/media/placeholder-about-family-video.svg"
-          alt="Placeholder. A future video of Rogelio Ramirez explaining Triple R Roofing will replace this poster."
+          poster={FAMILY_VIDEO_POSTER}
+          alt="Rogelio Ramirez explains what Triple R Roofing stands for."
           aspectRatio="9 / 16"
+          muxPlaybackId={FAMILY_VIDEO_MUX_ID}
         />
         <p class="family-story__caption">Rogelio Ramirez explains Triple R.</p>
       </div>

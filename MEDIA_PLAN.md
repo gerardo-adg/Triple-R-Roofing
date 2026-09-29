@@ -85,35 +85,36 @@ just a resized crop of the same layout — documented separately.
 
 ### Family/brand video — `FamilySection.astro` ("The Family Behind Triple R")
 
-The first genuinely real (non-generic-placeholder-forever) content video
-planned for the site - a real ~34s vertical video of Rogelio Ramirez
-explaining what Triple R stands for, provided by the client. Not yet
-delivered as of this entry; a neutral placeholder is in place.
+**Status: LIVE.** The client's ~34s vertical video of Rogelio Ramirez
+explaining what Triple R stands for has been delivered via Mux and is
+wired in on both the homepage `FamilySection` and the About page
+`family-story__video` (same clip, same playback ID, both places).
 
 - **Asset type:** Video (watchable/sound-on, not decorative loop - built
-  with the new `PlayableVideo` component, not `LazyVideo`)
+  with `PlayableVideo`, not `LazyVideo`)
+- **Mux playback ID:** `SD1osly2CMfZzT9PsdLPNsg57WzoMrDYstt9STKI02Fk`
+  (source: 9:16, 2160p, 60fps, 34s)
 - **Aspect ratio (desktop and mobile, same asset):** 9:16 portrait - the
   source is natively vertical, so no separate crop is needed the way the
   Hero's landscape asset needs a mobile-specific crop
-- **Recommended shot:** Already exists - the client's ~34s video of Rogelio
-  explaining what Triple R stands for. Related videos (how he got into
-  roofing, starting from zero, meeting the team) are reserved for the
-  About page, not this section.
 - **Autoplay:** No, under any circumstance. Poster + a click-to-play
-  affordance; only plays (with sound) after a direct user click.
-- **Loading priority:** Lazy - poster only until the visitor clicks;
-  nothing else loads until then.
-- **Poster requirement:** A clean still frame from the video, or a
-  separate photo of Rogelio if one reads better as a first impression.
-- **Current placeholder:** `public/media/placeholder-family-portrait.svg`
-  - flat `#151515` field, 9:16, no source configured
-  (`src`/`muxPlaybackId` both unset), so the play button renders for
-  layout review but is inert (no click handler attached) until a real
-  source exists.
-- **Known caveat:** the client's existing export has burned-in
-  social-style captions/text. A cleaner export without that overlay is
-  preferred if the client can provide one; the component doesn't need any
-  changes either way, just a different `src`/`muxPlaybackId` value.
+  affordance; only plays (with sound, `autoplay` set on the created
+  `<mux-player>` immediately following the click) after a direct user
+  click.
+- **Loading priority:** Lazy - poster only until the visitor clicks; the
+  `@mux/mux-player` library and the video itself only load once clicked.
+- **Poster:** A real frame pulled from the video itself via Mux's
+  thumbnail image API (`https://image.mux.com/<id>/thumbnail.jpg?time=14`),
+  not a separately-shot photo. **The `time=14` value is a provisional
+  pick, not yet visually confirmed** - the environment that wired this up
+  couldn't reach `image.mux.com` to preview candidate frames, so this
+  needs a human check (does the frame look intentional/flattering, not
+  mid-blink or mid-word) and the `time` value adjusted in
+  `FamilySection.astro` / `about.astro` if not.
+- **Known caveat:** if the delivered export has burned-in captions
+  baked into the video image itself, that will show up in playback and
+  in any Mux-generated thumbnail frame - worth confirming when the poster
+  frame above gets its visual check.
 
 ---
 
@@ -309,16 +310,15 @@ Projects) will each get entries here as they're built.
 
 ### About page media
 
-- **Family video:** `public/media/placeholder-about-family-video.svg`
-  - flat `#1c1c19` field, 9:16, built with `PlayableVideo.astro` (same
-  component, same click-to-play/sound-on/no-autoplay behavior as the
-  homepage `FamilySection` instance) - no `src`/`muxPlaybackId` configured
-  yet, so the play control renders inert for layout review. This is the
-  same single confirmed ~34s family/Triple-R clip already referenced in
-  the homepage `FamilySection` media entry above, sized much larger here
-  (the page's visual centerpiece, `clamp(300px, 42vw, 480px)` wide) since
-  this is the story page it belongs to. The caption directly below it
-  shares that same width/center via a `--family-video-width` custom
+- **Family video:** **LIVE** - same Mux playback ID as the homepage
+  `FamilySection` entry above (`SD1osly2CMfZzT9PsdLPNsg57WzoMrDYstt9STKI02Fk`),
+  same provisional `time=14` poster frame, same
+  click-to-play/sound-on/no-autoplay behavior via `PlayableVideo.astro`.
+  This is the same single confirmed ~34s family/Triple-R clip referenced
+  in the homepage `FamilySection` media entry above, sized much larger
+  here (the page's visual centerpiece, `clamp(300px, 42vw, 480px)` wide)
+  since this is the story page it belongs to. The caption directly below
+  it shares that same width/center via a `--family-video-width` custom
   property, so it reads as attached to the frame rather than merely
   centered somewhere near it.
   - **Poster:** per the client, use a still frame from the existing video

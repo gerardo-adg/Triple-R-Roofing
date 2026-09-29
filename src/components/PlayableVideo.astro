@@ -11,12 +11,22 @@
  *   which browsers allow because it follows a direct user gesture
  * - accepts `src` or `muxPlaybackId` so swapping in a cleaner export
  *   later is a one-line prop change, not a rebuild
+ * - `poster` accepts either a locally-imported image (goes through
+ *   ResponsiveImage/astro:assets, same as every other photo on the site)
+ *   or a plain remote URL string - for a Mux-hosted playback ID, that's
+ *   normally a frame pulled straight from the video itself via Mux's own
+ *   thumbnail image API (https://docs.mux.com/guides/get-images-from-a-video),
+ *   which already supports width/format query params, so there's no need
+ *   to route it through Astro's local image pipeline too.
  *
  * Not subject to the reduced-motion autoplay suppression that governs
  * Hero/decorative video, since nothing plays until the visitor asks it to.
  */
+import ResponsiveImage from "./ResponsiveImage.astro";
+import type { ImageMetadata } from "astro";
+
 interface Props {
-  poster: string;
+  poster: ImageMetadata | string;
   alt: string;
   src?: string;
   muxPlaybackId?: string;
@@ -26,6 +36,15 @@ interface Props {
 
 const { poster, alt, src, muxPlaybackId, aspectRatio = "9 / 16", class: className } =
   Astro.props;
+
+const isRemotePoster = typeof poster === "string";
+// Mux thumbnail URLs already carry `?time=...`; append `&width=W` per
+// candidate so the browser can still pick an appropriately-sized file
+// instead of always downloading whatever the base URL happens to return.
+const remoteWidths = [480, 768, 1024];
+const remoteSrcset = isRemotePoster
+  ? remoteWidths.map((w) => `${poster}&width=${w} ${w}w`).join(", ")
+  : undefined;
 ---
 
 <div
@@ -35,13 +54,27 @@ const { poster, alt, src, muxPlaybackId, aspectRatio = "9 / 16", class: classNam
   data-src={src}
   data-mux-id={muxPlaybackId}
 >
-  <img
-    class="playable-video__poster"
-    src={poster}
-    alt={alt}
-    loading="lazy"
-    decoding="async"
-  />
+  {isRemotePoster ? (
+    <img
+      class="playable-video__poster"
+      src={`${poster}&width=768`}
+      srcset={remoteSrcset}
+      sizes="(min-width: 900px) 30vw, 90vw"
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+    />
+  ) : (
+    <ResponsiveImage
+      class="playable-video__poster"
+      src={poster}
+      alt={alt}
+      widths={[480, 768, 1024]}
+      sizes="(min-width: 900px) 30vw, 90vw"
+      loading="lazy"
+      decoding="async"
+    />
+  )}
   <button class="playable-video__play" data-play-trigger aria-label={`Play video: ${alt}`}>
     <span class="playable-video__play-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="22" height="22">
@@ -142,6 +175,11 @@ const { poster, alt, src, muxPlaybackId, aspectRatio = "9 / 16", class: classNam
         player.setAttribute("playback-id", muxId);
         player.setAttribute("controls", "");
         player.setAttribute("playsinline", "");
+        // Without this, the click swaps the poster for mux-player's own
+        // paused UI, requiring a second click on its native play button -
+        // this keeps "click the play button" a single action, matching
+        // the plain-<video> branch below, which already sets autoplay.
+        player.setAttribute("autoplay", "");
         if (poster) player.setAttribute("poster", poster);
         player.className = "playable-video__video";
         container.innerHTML = "";

@@ -6,11 +6,19 @@ import PlayableVideo from "./PlayableVideo.astro";
 // Confirmed directly by the client: Triple R comes from Rogelio Ramirez
 // Roofing. Owner Rogelio Ramirez works with his father (also named
 // Rogelio), brothers David and Abraham, and other Ramirez family members.
-// Primary asset: an existing ~34s vertical video of Rogelio explaining
-// what Triple R stands for (not yet delivered - placeholder in place
-// until it is). Related videos (how he got into roofing, starting from
-// zero, meeting the team) are reserved for the About page, not this
-// section.
+// Primary asset: the ~34s vertical video of Rogelio explaining what
+// Triple R stands for, delivered via Mux (playback ID below) - the same
+// clip used (in compact form) on the About page. Related videos (how he
+// got into roofing, starting from zero, meeting the team) are reserved
+// for the About page, not this section.
+const FAMILY_VIDEO_MUX_ID = "SD1osly2CMfZzT9PsdLPNsg57WzoMrDYstt9STKI02Fk";
+// A frame pulled from the video itself via Mux's thumbnail API, not a
+// separately-uploaded photo. `time=14` is a provisional pick (roughly a
+// third of the way into the 34s clip, past a likely opening fade) - not
+// visually verified against the actual footage, since this environment
+// can't reach image.mux.com to preview it. Swap the `time` value once
+// the real poster has been previewed and confirmed.
+const FAMILY_VIDEO_POSTER = `https://image.mux.com/${FAMILY_VIDEO_MUX_ID}/thumbnail.jpg?time=14`;
 ---
 
 <section class="family">
@@ -30,9 +38,10 @@ import PlayableVideo from "./PlayableVideo.astro";
 
       <div class="family__media" data-reveal-media>
         <PlayableVideo
-          poster="/media/placeholder-family-portrait.svg"
-          alt="Placeholder. A future video of Rogelio Ramirez introducing Triple R Roofing will replace this poster."
+          poster={FAMILY_VIDEO_POSTER}
+          alt="Rogelio Ramirez explains what Triple R Roofing stands for."
           aspectRatio="9 / 16"
+          muxPlaybackId={FAMILY_VIDEO_MUX_ID}
         />
       </div>
     </div>
