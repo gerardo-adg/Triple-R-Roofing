@@ -10,21 +10,51 @@ interface Props {
 const { alwaysSolid = false } = Astro.props;
 
 const NAV_LINKS = [
+  { label: "Projects", href: "/projects" },
   { label: "About", href: "/about" },
   { label: "Financing", href: "/financing" },
   { label: "Contact", href: "/contact" },
 ];
 
-// Sourced from the current site's confirmed service list (Phase 1 audit).
-const SERVICE_LINKS = [
-  { label: "Roof Replacement", href: "/services/roof-replacement" },
-  { label: "Roof Repair", href: "/services/roof-repair" },
-  { label: "Tile Roofing", href: "/services/tile-roofing" },
-  { label: "Gutters", href: "/services/gutters" },
-  { label: "Solar Panel Cleaning", href: "/services/solar-panel-cleaning" },
-  { label: "Moss Removal", href: "/services/moss-removal" },
-  { label: "Insurance Claim Assistance", href: "/insurance-claims" },
+// Every confirmed, live service, grouped to match /services' own
+// category structure exactly - single source of truth reused for both
+// the desktop mega-menu (grouped into 3 columns below) and the mobile
+// disclosure (rendered as one flat list of these 4 groups in order).
+const SERVICE_GROUPS = [
+  {
+    name: "Roofing",
+    items: [
+      { label: "Roof Replacement", href: "/services/roof-replacement" },
+      { label: "Roof Repair", href: "/services/roof-repair" },
+      { label: "Tile Roofing", href: "/services/tile-roofing" },
+      { label: "Flat Roofing", href: "/services/flat-roofing" },
+    ],
+  },
+  {
+    name: "Roof Care",
+    items: [
+      { label: "Roof Maintenance & Leak Prevention", href: "/services/roof-maintenance" },
+      { label: "Roof Rejuvenation", href: "/services/roof-rejuvenation" },
+      { label: "Roof Certifications", href: "/services/roof-certifications" },
+      { label: "Moss Removal", href: "/services/moss-removal" },
+    ],
+  },
+  {
+    name: "Gutters",
+    items: [{ label: "Gutters", href: "/services/gutters" }],
+  },
+  {
+    name: "Solar",
+    items: [
+      { label: "Solar Panel Cleaning", href: "/services/solar-panel-cleaning" },
+      { label: "Roofing + Solar", href: "/services/roofing-solar" },
+    ],
+  },
 ];
+
+// Desktop-only grouping of the 4 categories above into 3 columns -
+// Gutters and Solar share a column since each is short on its own.
+const SERVICE_COLUMNS = [[SERVICE_GROUPS[0]], [SERVICE_GROUPS[1]], [SERVICE_GROUPS[2], SERVICE_GROUPS[3]]];
 
 // Sourced from public directory listings (BBB/Yelp) during the Phase 1
 // audit — pending the client's explicit confirmation before launch.
@@ -50,12 +80,24 @@ const PHONE_HREF = "tel:+19164205635";
           <button class="header__nav-link header__nav-trigger" aria-haspopup="true">
             Services
           </button>
-          <div class="header__dropdown">
-            <ul>
-              {SERVICE_LINKS.map((link) => (
-                <li><a href={link.href}>{link.label}</a></li>
+          <div class="header__dropdown header__dropdown--mega">
+            <div class="header__dropdown-columns">
+              {SERVICE_COLUMNS.map((column) => (
+                <div class="header__dropdown-column">
+                  {column.map((group) => (
+                    <div class="header__dropdown-group">
+                      <p class="header__dropdown-label">{group.name}</p>
+                      <ul>
+                        {group.items.map((item) => (
+                          <li><a href={item.href}>{item.label}</a></li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
               ))}
-            </ul>
+            </div>
+            <a href="/services" class="header__dropdown-viewall">View All Services &rarr;</a>
           </div>
         </li>
         {NAV_LINKS.map((link, i) => (
@@ -112,11 +154,19 @@ const PHONE_HREF = "tel:+19164205635";
               <span class="mobile-menu__index">01</span>
               <span>Services</span>
             </summary>
-            <ul>
-              {SERVICE_LINKS.map((link) => (
-                <li><a href={link.href} data-menu-link>{link.label}</a></li>
+            <div class="mobile-menu__groups">
+              {SERVICE_GROUPS.map((group) => (
+                <div class="mobile-menu__group">
+                  <p class="mobile-menu__group-label">{group.name}</p>
+                  <ul>
+                    {group.items.map((item) => (
+                      <li><a href={item.href} data-menu-link>{item.label}</a></li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+              <a href="/services" class="mobile-menu__viewall" data-menu-link>View All Services &rarr;</a>
+            </div>
           </details>
         </li>
         {NAV_LINKS.map((link, i) => (
@@ -262,21 +312,21 @@ const PHONE_HREF = "tel:+19164205635";
   }
 
   /* Dark panel, thin gold top edge — integrated into the black/gold
-     interface rather than a disconnected white rectangle. */
+     interface rather than a disconnected white rectangle. Anchored to
+     the trigger's left edge (not centered) now that the mega-menu is
+     wide enough that centering could push it past the viewport edge on
+     narrower desktop widths. */
   .header__dropdown {
     position: absolute;
     top: calc(100% + var(--space-4));
-    left: 50%;
-    transform: translateX(-50%);
-    min-width: 240px;
-    padding: var(--space-3) 0;
+    left: 0;
     background: var(--color-charcoal-raised);
     border: 1px solid var(--color-border-inverse);
     border-top: 2px solid var(--color-gold);
     color: var(--color-text-inverse);
     opacity: 0;
     visibility: hidden;
-    transform: translateX(-50%) translateY(4px);
+    transform: translateY(4px);
     transition:
       opacity var(--duration-fast) var(--ease-standard),
       transform var(--duration-fast) var(--ease-standard),
@@ -287,23 +337,73 @@ const PHONE_HREF = "tel:+19164205635";
   .header__nav-item--dropdown:focus-within .header__dropdown {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 
-  .header__dropdown ul {
+  .header__dropdown--mega {
+    min-width: 640px;
+    padding: var(--space-6);
+  }
+
+  .header__dropdown-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-7);
+  }
+
+  .header__dropdown-group {
+    margin-bottom: var(--space-6);
+  }
+
+  .header__dropdown-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .header__dropdown-label {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin-bottom: var(--space-3);
+  }
+
+  .header__dropdown-column ul {
     list-style: none;
   }
 
-  .header__dropdown li a {
+  .header__dropdown-column li a {
     display: block;
-    padding: var(--space-2) var(--space-5);
+    padding-block: var(--space-2);
     font-size: var(--text-body-sm);
     white-space: nowrap;
     text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-standard);
   }
 
-  .header__dropdown li a:hover {
-    color: var(--color-accent);
+  .header__dropdown-column li a:hover,
+  .header__dropdown-column li a:focus-visible {
+    color: var(--color-gold);
+  }
+
+  .header__dropdown-viewall {
+    display: block;
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border-inverse);
+    text-align: center;
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-gold);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  .header__dropdown-viewall:hover,
+  .header__dropdown-viewall:focus-visible {
+    color: var(--color-text-inverse);
   }
 
   .header__actions {
@@ -478,20 +578,50 @@ const PHONE_HREF = "tel:+19164205635";
     transform: rotate(-135deg);
   }
 
-  .mobile-menu__disclosure ul {
+  /* ---- Mobile Services groups - category labels break the 11 links
+     into 4 scannable clusters instead of one long list. Same
+     typographic language as the desktop mega-menu's column labels. ---- */
+  .mobile-menu__groups {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--space-6);
     padding-bottom: var(--space-4);
     padding-left: calc(var(--text-body-sm) + var(--space-4));
+  }
+
+  .mobile-menu__group-label {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin-bottom: var(--space-3);
+  }
+
+  /* Tighter than the space between groups (.mobile-menu__groups' own
+     gap) - shortens the total scroll length a little without the
+     category separations losing their visual distinctness. */
+  .mobile-menu__group ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
     list-style: none;
   }
 
-  .mobile-menu__disclosure ul a {
+  .mobile-menu__group ul a {
     font-family: var(--font-body);
     font-size: var(--text-body-lg);
     font-weight: var(--weight-medium);
     color: var(--color-text-muted-inverse);
+  }
+
+  .mobile-menu__viewall {
+    display: inline-block;
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-gold);
   }
 
   .mobile-menu__footer {

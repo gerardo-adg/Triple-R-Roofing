@@ -7,14 +7,14 @@ import FinalCtaSection from "../../components/FinalCtaSection.astro";
 // Only confirmed, live services are listed - no tentative/"coming soon"
 // rows yet, per the client. Every description below is reused verbatim
 // from that service's own page (not paraphrased), so this list never
-// drifts from copy already approved elsewhere.
+// drifts from copy already approved elsewhere. Category names/order
+// match the header nav's mega-menu exactly, so the two never disagree
+// about how services are grouped.
 //
 // Structured for growth without a redesign: add a new item to an
 // existing category, or a new { name, items } category object, and it
 // renders automatically in the same list/row treatment - no markup or
-// style changes needed. This is where the owner-confirmed services
-// (flat roof, roof maintenance plans, roof rejuvenation, solar
-// installation, etc.) will go once their copy is confirmed.
+// style changes needed.
 const CATEGORIES = [
   {
     name: "Roofing",
@@ -36,6 +36,39 @@ const CATEGORIES = [
         description: "Tile roof repair, resets, and replacement in Sacramento.",
         href: "/services/tile-roofing",
       },
+      {
+        name: "Flat Roofing",
+        description:
+          "TPO repair, replacement, and silicone restoration for residential and commercial flat roofs.",
+        href: "/services/flat-roofing",
+      },
+    ],
+  },
+  {
+    name: "Roof Care",
+    items: [
+      {
+        name: "Roof Maintenance & Leak Prevention",
+        description:
+          "Roof maintenance and leak prevention in Sacramento, CA - addressing potential leak areas before they become a problem.",
+        href: "/services/roof-maintenance",
+      },
+      {
+        name: "Roof Rejuvenation",
+        description:
+          "Roof Maxx roof rejuvenation for aging asphalt shingle roofs in Sacramento, CA - designed to restore flexibility to shingles that qualify.",
+        href: "/services/roof-rejuvenation",
+      },
+      {
+        name: "Roof Certifications",
+        description: "2-year roof certifications for homeowners selling their home.",
+        href: "/services/roof-certifications",
+      },
+      {
+        name: "Moss Removal",
+        description: "Moss removal for roofs in Sacramento.",
+        href: "/services/moss-removal",
+      },
     ],
   },
   {
@@ -49,22 +82,18 @@ const CATEGORIES = [
     ],
   },
   {
-    name: "Roof Care",
-    items: [
-      {
-        name: "Moss Removal",
-        description: "Moss removal for roofs in Sacramento.",
-        href: "/services/moss-removal",
-      },
-    ],
-  },
-  {
     name: "Solar",
     items: [
       {
         name: "Solar Panel Cleaning",
         description: "Solar panel cleaning for homes in Sacramento.",
         href: "/services/solar-panel-cleaning",
+      },
+      {
+        name: "Roofing + Solar",
+        description:
+          "Need a new roof and considering solar? Triple R Roofing handles the roofing side and works with a solar partner for the solar portion.",
+        href: "/services/roofing-solar",
       },
     ],
   },
@@ -77,7 +106,7 @@ const CATEGORIES = [
 >
   <PageHero
     title="Services"
-    description="Roofing, gutters, roof care, and solar panel cleaning in Sacramento."
+    description="Roofing, gutters, roof care, and solar services in Sacramento."
     image="/media/placeholder-page-hero-services.svg"
     breadcrumbs={[{ label: "Home", href: "/" }, { label: "Services" }]}
   />

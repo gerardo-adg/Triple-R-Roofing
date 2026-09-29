@@ -54,6 +54,7 @@ const YEAR = new Date().getFullYear();
             <li><a href={link.href}>{link.label}</a></li>
           ))}
         </ul>
+        <a href="/services" class="site-footer__viewall">View all services &rarr;</a>
       </nav>
 
       <nav class="site-footer__nav" aria-label="Company">
@@ -150,6 +151,20 @@ const YEAR = new Date().getFullYear();
 
   .site-footer__nav a:hover {
     color: var(--color-gold);
+  }
+
+  .site-footer__nav a.site-footer__viewall {
+    display: inline-block;
+    margin-top: var(--space-4);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-gold);
+    border-bottom: 1px solid var(--color-border-gold);
+  }
+
+  .site-footer__nav a.site-footer__viewall:hover {
+    color: var(--color-gold);
+    border-bottom-color: var(--color-gold);
   }
 
   .site-footer__bottom {
