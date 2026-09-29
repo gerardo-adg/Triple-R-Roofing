@@ -524,7 +524,6 @@ const PHONE_HREF = "tel:+19164205635";
   .mobile-menu__nav {
     flex: 1;
     display: flex;
-    align-items: center;
     overflow-y: auto;
   }
 
@@ -532,6 +531,15 @@ const PHONE_HREF = "tel:+19164205635";
     display: flex;
     flex-direction: column;
     width: 100%;
+    /* margin-block: auto (not align-items: center on the scroll
+       container) centers the list when it's short enough to fit, but
+       degrades to top-aligned once expanding "Services" makes it taller
+       than the available space - auto margins collapse to 0 when there's
+       no free space to absorb. align-items: center on an overflow: auto
+       container instead centers an oversized child by pushing part of
+       its top above the reachable scroll range, making it unscrollable
+       into view - that's what was cutting the expanded list off. */
+    margin-block: auto;
   }
 
   .mobile-menu__list > li {
