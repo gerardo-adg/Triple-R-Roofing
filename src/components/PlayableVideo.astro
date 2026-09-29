@@ -149,6 +149,12 @@ const remoteSrcset = isRemotePoster
 <script>
   const players = document.querySelectorAll<HTMLElement>("[data-playable-video]");
 
+  // Safari (desktop and iOS) plays HLS natively in a plain <video> - no
+  // player library needed at all, which also means Safari never depends
+  // on the @mux/mux-player bundle loading successfully in the first place.
+  const supportsNativeHls = () =>
+    document.createElement("video").canPlayType("application/vnd.apple.mpegurl") !== "";
+
   players.forEach((container) => {
     const trigger = container.querySelector<HTMLButtonElement>("[data-play-trigger]");
     const src = container.dataset.src;
@@ -163,32 +169,9 @@ const remoteSrcset = isRemotePoster
       return;
     }
 
-    trigger.addEventListener("click", async () => {
-      const poster = container.querySelector("img")?.getAttribute("src") ?? undefined;
-
-      if (muxId && !src) {
-        // @ts-expect-error - remote ESM import, no local type declarations
-        await import(/* @vite-ignore */ "https://cdn.jsdelivr.net/npm/@mux/mux-player@3/+esm");
-        const player = document.createElement("mux-player") as HTMLElement & {
-          playbackId?: string;
-        };
-        player.setAttribute("playback-id", muxId);
-        player.setAttribute("controls", "");
-        player.setAttribute("playsinline", "");
-        // Without this, the click swaps the poster for mux-player's own
-        // paused UI, requiring a second click on its native play button -
-        // this keeps "click the play button" a single action, matching
-        // the plain-<video> branch below, which already sets autoplay.
-        player.setAttribute("autoplay", "");
-        if (poster) player.setAttribute("poster", poster);
-        player.className = "playable-video__video";
-        container.innerHTML = "";
-        container.appendChild(player);
-        return;
-      }
-
+    const playPlainVideo = (videoSrc: string, poster?: string) => {
       const video = document.createElement("video");
-      video.src = src ?? "";
+      video.src = videoSrc;
       video.controls = true;
       video.playsInline = true;
       video.autoplay = true;
@@ -197,6 +180,49 @@ const remoteSrcset = isRemotePoster
       container.innerHTML = "";
       container.appendChild(video);
       video.play().catch(() => {});
+    };
+
+    trigger.addEventListener("click", async () => {
+      const poster = container.querySelector("img")?.getAttribute("src") ?? undefined;
+
+      if (muxId && !src) {
+        const hlsUrl = `https://stream.mux.com/${muxId}.m3u8`;
+
+        if (supportsNativeHls()) {
+          playPlainVideo(hlsUrl, poster);
+          return;
+        }
+
+        try {
+          // Bundled with the build (package.json dependency), not fetched
+          // from a third-party CDN at click time - this import is still
+          // lazy (a separate chunk, only requested on click), just served
+          // from the same origin as the rest of the site.
+          await import("@mux/mux-player");
+          const player = document.createElement("mux-player") as HTMLElement;
+          player.setAttribute("playback-id", muxId);
+          player.setAttribute("controls", "");
+          player.setAttribute("playsinline", "");
+          // Without this, the click swaps the poster for mux-player's own
+          // paused UI, requiring a second click on its native play button -
+          // this keeps "click the play button" a single action, matching
+          // the plain-<video> path, which already sets autoplay.
+          player.setAttribute("autoplay", "");
+          if (poster) player.setAttribute("poster", poster);
+          player.className = "playable-video__video";
+          container.innerHTML = "";
+          container.appendChild(player);
+        } catch (err) {
+          // Playback should never just silently fail - log why, then fall
+          // back to a plain HLS <video> rather than leaving the button
+          // looking clicked-but-unresponsive.
+          console.error("Mux player failed to load; falling back to a plain video element.", err);
+          playPlainVideo(hlsUrl, poster);
+        }
+        return;
+      }
+
+      playPlainVideo(src ?? "", poster);
     });
   });
 </script>
