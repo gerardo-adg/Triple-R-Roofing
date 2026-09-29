@@ -194,19 +194,16 @@ const FAQS = [
         <p class="eyebrow replacement-spotlight__eyebrow">Recent work</p>
         <p class="replacement-spotlight__meta">Roof Replacement &middot; North Highlands, CA</p>
       </div>
-    </Container>
 
-    <div class="replacement-spotlight__frame">
-      <PlayableVideo
-        poster={NORTH_HIGHLANDS_POSTER}
-        alt="Drone footage of a completed roof replacement in North Highlands, California."
-        aspectRatio="16 / 9"
-        muxPlaybackId={NORTH_HIGHLANDS_MUX_ID}
-        data-reveal-media
-      />
-    </div>
+      <div class="replacement-spotlight__frame" data-reveal-media>
+        <PlayableVideo
+          poster={NORTH_HIGHLANDS_POSTER}
+          alt="Drone footage of a completed roof replacement in North Highlands, California."
+          aspectRatio="16 / 9"
+          muxPlaybackId={NORTH_HIGHLANDS_MUX_ID}
+        />
+      </div>
 
-    <Container>
       <p class="replacement-spotlight__caption">
         A completed roof replacement in North Highlands, shown from the air.
       </p>
@@ -297,11 +294,15 @@ const FAQS = [
     }
   }
 
-  /* ---- Recent work (video) - visually identical to
-     ServiceProjectSpotlight's full-bleed 16:9 treatment (same padding,
-     same max-height cap, same eyebrow/meta/caption placement), but kept
-     as page-local markup so the shared component - still used by
-     Gutters and Tile Roofing - never has to know about video. ---- */
+  /* ---- Recent work (video) - contained within the page's normal
+     content width (matching the Projects page's featured-project
+     treatment), not a full-bleed 100vw frame like ServiceProjectSpotlight.
+     A full-bleed frame reads oddly for a paused, click-to-play video at
+     that scale; a contained frame (like Projects already uses for this
+     exact clip) suits it better. Kept as page-local markup so the shared
+     ServiceProjectSpotlight component - still used by Gutters and Tile
+     Roofing for real photos, where full-bleed doesn't have this problem -
+     never has to know about video. ---- */
   .replacement-spotlight {
     padding-block: var(--space-9);
   }
@@ -335,7 +336,7 @@ const FAQS = [
 
   @media (min-width: 900px) {
     .replacement-spotlight__frame {
-      max-height: 65vh;
+      max-height: 75vh;
     }
   }
 </style>

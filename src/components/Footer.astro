@@ -95,6 +95,10 @@ const YEAR = new Date().getFullYear();
   .site-footer__mark {
     color: var(--color-paper);
     flex-shrink: 0;
+    /* Same optical-alignment nudge as the header mark - a circular badge
+       reads as sitting lower than adjacent all-caps text even when the
+       two are exactly box-centered. */
+    transform: translateY(-2px);
   }
 
   .site-footer__wordmark {

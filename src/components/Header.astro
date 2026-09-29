@@ -190,6 +190,15 @@ const PHONE_HREF = "tel:+19164205635";
     right: 0;
     z-index: var(--z-nav);
     height: var(--nav-height);
+    /* Container (a shared component used all over the site) has no
+       height of its own, so without this the row inside it collapses to
+       its content's height and sits flush at the top of this fixed
+       84px bar instead of filling/centering within it - invisible
+       against a transparent background, obvious once the header goes
+       solid on scroll. Centering here (not by giving Container a height)
+       keeps the fix scoped to the header only. */
+    display: flex;
+    align-items: center;
     color: var(--color-text-inverse);
     background: transparent;
     border-bottom: 1px solid transparent;
@@ -262,6 +271,15 @@ const PHONE_HREF = "tel:+19164205635";
     flex-shrink: 0;
     opacity: 0;
     animation: nav-item-in var(--duration-base) var(--ease-out) forwards;
+  }
+
+  /* A solid circular badge next to all-caps text reads as sitting lower
+     than the text even when the two are exactly box-centered (confirmed
+     via computed bounding boxes) - a common optical-alignment mismatch
+     between geometric marks and text. This nudge is deliberate, not a
+     layout fix. */
+  .header__mark {
+    transform: translateY(-2px);
   }
 
   .header__wordmark {
