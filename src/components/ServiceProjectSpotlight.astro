@@ -1,9 +1,10 @@
 ---
 /**
  * A single large real-project photo with minimal metadata - not another
- * homepage Featured Work carousel. One image, full-bleed edge to edge for
- * scale/impact, cinematic 16:9 rather than Featured Work's 3:2 so the two
- * don't read as the same device.
+ * homepage Featured Work carousel. One image, contained within the page's
+ * normal content width (matching the Projects page's featured-project
+ * treatment) rather than full-bleed - cinematic 16:9 rather than Featured
+ * Work's 3:2 so the two don't read as the same device.
  *
  * Metadata is split into two restrained slots so real project data drops
  * in later without a rebuild: `meta` is a short "TYPE · LOCATION" tag
@@ -35,16 +36,18 @@ const { eyebrow, meta, image, imageAlt, caption } = Astro.props;
     </div>
   </Container>
 
-  <div class="project-spotlight__frame">
-    <ResponsiveImage
-      src={image}
-      alt={imageAlt}
-      widths={[768, 1024, 1440, 1920]}
-      sizes="100vw"
-      loading="lazy"
-      data-reveal-media
-    />
-  </div>
+  <Container>
+    <div class="project-spotlight__frame">
+      <ResponsiveImage
+        src={image}
+        alt={imageAlt}
+        widths={[768, 1024, 1440, 1920]}
+        sizes="100vw"
+        loading="lazy"
+        data-reveal-media
+      />
+    </div>
+  </Container>
 
   <Container>
     <p class="project-spotlight__caption">{caption}</p>
@@ -89,15 +92,14 @@ const { eyebrow, meta, image, imageAlt, caption } = Astro.props;
     color: var(--color-text-muted);
   }
 
-  /* Full-bleed 16:9 was reading as almost another full-screen hero at
-     wide desktop widths (e.g. ~810px tall at 1440px). Capping the height
-     keeps the cinematic full-width feel as a strong visual moment
-     without it overwhelming the page - object-fit: cover handles the
-     resulting wider-than-16:9 crop gracefully. Mobile is unaffected;
-     16:9 at phone widths was already a reasonable height. */
+  /* Capped so a 16:9 image contained at full container width doesn't get
+     too tall at wide desktop widths - same cap the Projects page's own
+     featured-project treatment uses, so the two read as the same device.
+     Mobile is unaffected; 16:9 at phone widths was already a reasonable
+     height. */
   @media (min-width: 900px) {
     .project-spotlight__frame {
-      max-height: 65vh;
+      max-height: 75vh;
     }
   }
 </style>
