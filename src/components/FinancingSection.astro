@@ -89,13 +89,47 @@ import Button from "./Button.astro";
     border-top: 1px solid var(--color-border-inverse);
   }
 
-  /* Mobile only: tighten just the gap between the two stat blocks
-     (~18% less than the default var(--space-6)) without touching the
-     gap before the disclosure line, and without touching desktop, which
-     switches to a row layout at 900px. */
+  /* Mobile only: $0 Down and 0% Interest sit side by side instead of
+     stacked (same row + wrap + flex-basis: 100% technique desktop
+     already uses to push the disclosure onto its own full-width line
+     below), with a much tighter gap after the divider and before the
+     disclosure than desktop uses - desktop's own layout below is
+     untouched. Typography, color, and copy are unchanged; only spacing
+     and direction move. */
   @media (max-width: 899px) {
-    .financing__stat:first-child {
-      margin-bottom: -6px;
+    /* Tightens the space above the divider (between "Explore Financing"
+       and the border-top below), separate from .financing__stats'
+       own padding-top, which controls the gap after the divider. */
+    .financing__grid {
+      gap: calc(var(--space-8) - 24px);
+    }
+
+    .financing__stats {
+      flex-direction: row;
+      flex-wrap: wrap;
+      column-gap: var(--space-6);
+      row-gap: var(--space-3);
+      padding-top: var(--space-5);
+    }
+
+    .financing__stat {
+      flex: 1 1 0;
+    }
+
+    /* $0 and 0% already share the same top edge and equal-width columns
+       (confirmed by measuring, not assumed) - the only real misalignment
+       is that 0%'s larger, more-emphasized font (see .financing__stat--
+       primary below) is taller than $0's, which pushes its label down
+       further than DOWN's. Reserving a shared min-height for every value
+       - sized to fit the larger one - means both labels start at the
+       same offset regardless of which value is currently rendering
+       taller, without changing either font size. */
+    .financing__stat-value {
+      min-height: 3.5rem;
+    }
+
+    .financing__disclosure {
+      flex-basis: 100%;
     }
   }
 
