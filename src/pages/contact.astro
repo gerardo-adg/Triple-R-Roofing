@@ -1,7 +1,8 @@
 ---
 import InteriorLayout from "../layouts/InteriorLayout.astro";
-import Container from "../components/Container.astro";
 import Button from "../components/Button.astro";
+import ResponsiveImage from "../components/ResponsiveImage.astro";
+import contactPhoto from "../assets/media/photo-contact-completed-roof.jpg";
 
 // Netlify Forms detects this form at deploy time from the static HTML
 // (data-netlify + the hidden form-name field) - no backend code needed
@@ -44,47 +45,44 @@ const SERVICE_GROUPS = [
   description="Request a free roofing or gutter estimate in Sacramento, CA. Call (916) 420-5635 or fill out the form to get started."
   headerAlwaysSolid
 >
-  <section class="contact">
-    <Container>
-      <nav class="contact__breadcrumb" aria-label="Breadcrumb">
-        <a href="/">Home</a>
-        <span aria-hidden="true">/</span>
-        <span aria-current="page">Contact</span>
-      </nav>
+  <section class="contact-hero">
+    <div class="contact-hero__form-panel">
+      <div class="contact-hero__form-inner">
+        <nav class="contact-hero__breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Contact</span>
+        </nav>
 
-      <div class="contact__grid">
-        <div class="contact__main">
-          <p class="eyebrow">Contact</p>
-          <h1 class="contact__headline">Request a free estimate.</h1>
-          <p class="contact__lead">
-            Tell us what you need help with and we&rsquo;ll follow up to
-            schedule a time to take a look.
+        <p class="eyebrow">Contact</p>
+        <h1 class="contact-hero__headline">Request a free estimate.</h1>
+        <p class="contact-hero__lead">
+          Tell us what you need help with and we&rsquo;ll follow up to
+          schedule a time to take a look.
+        </p>
+
+        <form
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          action="/thank-you"
+          class="contact-form"
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="contact-form__honeypot" aria-hidden="true">
+            <label>
+              Leave this field blank
+              <input name="bot-field" tabindex="-1" autocomplete="off" />
+            </label>
           </p>
-          <p class="contact__call">
-            Prefer to call? <a href="tel:+19164205635">(916) 420-5635</a>
-          </p>
 
-          <form
-            name="contact"
-            method="POST"
-            data-netlify="true"
-            netlify-honeypot="bot-field"
-            action="/thank-you"
-            class="contact-form"
-          >
-            <input type="hidden" name="form-name" value="contact" />
-            <p class="contact-form__honeypot" aria-hidden="true">
-              <label>
-                Leave this field blank
-                <input name="bot-field" tabindex="-1" autocomplete="off" />
-              </label>
-            </p>
+          <div class="contact-form__field contact-form__field--full">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required />
+          </div>
 
-            <div class="contact-form__field">
-              <label for="name">Name</label>
-              <input id="name" name="name" type="text" autocomplete="name" required />
-            </div>
-
+          <div class="contact-form__row">
             <div class="contact-form__field">
               <label for="phone">Phone</label>
               <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required />
@@ -94,65 +92,112 @@ const SERVICE_GROUPS = [
               <label for="email">Email (optional)</label>
               <input id="email" name="email" type="email" inputmode="email" autocomplete="email" />
             </div>
-
-            <div class="contact-form__field">
-              <label for="address">Property Address</label>
-              <input
-                id="address"
-                name="address"
-                type="text"
-                autocomplete="street-address"
-                required
-              />
-            </div>
-
-            <div class="contact-form__field">
-              <label for="service">What do you need help with?</label>
-              <select id="service" name="service" required>
-                <option value="" disabled selected>Select one</option>
-                {SERVICE_GROUPS.map((group) => (
-                  <optgroup label={group.name}>
-                    {group.items.map((item) => <option value={item}>{item}</option>)}
-                  </optgroup>
-                ))}
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <div class="contact-form__field">
-              <label for="details">Tell us what&rsquo;s going on (optional)</label>
-              <textarea id="details" name="details" rows="4"></textarea>
-            </div>
-
-            <Button variant="primary" type="submit" class="contact-form__submit">
-              Request a Free Estimate
-            </Button>
-          </form>
-        </div>
-
-        <div class="contact__divider" aria-hidden="true"></div>
-
-        <aside class="contact__aside">
-          <div class="contact__aside-phone-block">
-            <p class="contact__aside-label">Prefer to call?</p>
-            <a href="tel:+19164205635" class="contact__aside-phone">(916) 420-5635</a>
           </div>
 
-          <p class="contact__aside-line contact__aside-line--first">Licensed, bonded &amp; insured</p>
-          <p class="contact__aside-line">Serving Sacramento and surrounding areas</p>
-        </aside>
+          <div class="contact-form__field contact-form__field--full">
+            <label for="address">Property Address</label>
+            <input
+              id="address"
+              name="address"
+              type="text"
+              autocomplete="street-address"
+              required
+            />
+          </div>
+
+          <div class="contact-form__field contact-form__field--full">
+            <label for="service">Service Needed</label>
+            <select id="service" name="service" required>
+              <option value="" disabled selected>Select one</option>
+              {SERVICE_GROUPS.map((group) => (
+                <optgroup label={group.name}>
+                  {group.items.map((item) => <option value={item}>{item}</option>)}
+                </optgroup>
+              ))}
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="contact-form__field contact-form__field--full">
+            <label for="details">Message (optional)</label>
+            <textarea id="details" name="details" rows="4"></textarea>
+          </div>
+
+          <Button variant="primary" type="submit" class="contact-form__submit">
+            Request Estimate &rarr;
+          </Button>
+        </form>
       </div>
-    </Container>
+    </div>
+
+    <div class="contact-hero__aside-panel section--inverse">
+      <div class="contact-hero__aside-inner">
+        <p class="eyebrow">Prefer to call?</p>
+        <a href="tel:+19164205635" class="contact-hero__phone">(916) 420-5635</a>
+
+        <div class="contact-hero__trust-divider" aria-hidden="true"></div>
+
+        <ul class="contact-hero__trust">
+          <li>Licensed, bonded &amp; insured</li>
+          <li><span class="contact-hero__star" aria-hidden="true">&#9733;</span> 4.8 Google rating</li>
+          <li>Serving Sacramento and surrounding areas</li>
+        </ul>
+      </div>
+
+      <div class="contact-hero__photo">
+        <ResponsiveImage
+          src={contactPhoto}
+          alt="Aerial view of a completed roof by Triple R Roofing."
+          widths={[480, 768, 1024]}
+          sizes="(min-width: 1024px) 45vw, 100vw"
+          loading="lazy"
+        />
+        <div class="contact-hero__photo-scrim" aria-hidden="true"></div>
+      </div>
+    </div>
   </section>
 </InteriorLayout>
 
 <style>
-  .contact {
-    padding-top: calc(var(--nav-height) + var(--space-7));
-    padding-bottom: var(--space-9);
+  /* ---- Split composition - one full-width section, two edge-to-edge
+     panels (cream form / dark aside), not two floating cards. Stacked
+     (form, then aside+photo) below 1024px - see the min-width override
+     for the side-by-side split. `margin-top` (not padding) clears the
+     fixed header so there's no gap in either panel's own background
+     above it. ---- */
+  .contact-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Mobile-only value - reset to the original (space-6) at 1024px below,
+       so desktop spacing is untouched. */
+    margin-top: calc(var(--nav-height) + var(--space-4));
   }
 
-  .contact__breadcrumb {
+  .contact-hero__form-panel {
+    background: var(--color-bg);
+  }
+
+  .contact-hero__form-inner {
+    max-width: 600px;
+    padding: var(--space-8) var(--container-padding) var(--space-9);
+    margin-inline: auto;
+  }
+
+  /* Desktop-only: ~13% wider than the base 600px cap - the form read
+     slightly too narrow within its column. Mobile/tablet stacked layout
+     keeps the base 600px, which was never the issue (that's already
+     nearly the full viewport width there). */
+  @media (min-width: 1024px) {
+    .contact-hero {
+      margin-top: calc(var(--nav-height) + var(--space-6));
+    }
+
+    .contact-hero__form-inner {
+      max-width: 680px;
+    }
+  }
+
+  .contact-hero__breadcrumb {
     display: flex;
     align-items: center;
     gap: var(--space-2);
@@ -161,64 +206,39 @@ const SERVICE_GROUPS = [
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
-    margin-bottom: var(--space-7);
+    margin-bottom: var(--space-6);
   }
 
-  .contact__breadcrumb a {
+  .contact-hero__breadcrumb a {
     color: var(--color-text-muted);
   }
 
-  .contact__breadcrumb a:hover {
+  .contact-hero__breadcrumb a:hover {
     color: var(--color-accent-strong);
   }
 
-  .contact__breadcrumb [aria-current] {
+  .contact-hero__breadcrumb [aria-current] {
     color: var(--color-accent-strong);
   }
 
-  .contact__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-  }
-
-  .contact__divider {
-    display: none;
-  }
-
-  .contact__headline {
+  .contact-hero__headline {
     font-size: var(--text-h2);
     margin-top: var(--space-3);
     margin-bottom: var(--space-4);
   }
 
-  .contact__lead {
+  .contact-hero__lead {
     font-size: var(--text-body-lg);
     color: var(--color-text-muted);
-    max-width: 52ch;
-    margin-bottom: var(--space-5);
-  }
-
-  .contact__call {
-    margin-bottom: var(--space-8);
-  }
-
-  .contact__call a {
-    font-weight: var(--weight-bold);
-    color: var(--color-text);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .contact__call a:hover {
-    color: var(--color-accent-strong);
-    border-color: var(--color-accent-strong);
+    max-width: 46ch;
+    margin-bottom: var(--space-7);
   }
 
   /* ---- Form ---- */
   .contact-form {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--space-5);
   }
 
   /* Visible to bots, hidden from sighted users and skipped by
@@ -229,6 +249,22 @@ const SERVICE_GROUPS = [
     width: 1px;
     height: 1px;
     overflow: hidden;
+  }
+
+  .contact-form__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  /* Phone/email go two-up as soon as there's room for it, independent of
+     the 1024px breakpoint where the full split layout kicks in - a
+     tablet-width viewport still in the stacked mobile layout shouldn't
+     have to wait for that to make better use of its width. */
+  @media (min-width: 700px) {
+    .contact-form__row {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
   .contact-form__field {
@@ -245,25 +281,27 @@ const SERVICE_GROUPS = [
     color: var(--color-text);
   }
 
+  /* Proper visible boxes (white fill, full border) rather than the
+     underline-only fields this page used to have - reads as more
+     designed/compact and makes each field's tap target obvious on
+     mobile, not just its bottom edge. */
   .contact-form__field input,
   .contact-form__field select,
   .contact-form__field textarea {
     font-family: var(--font-body);
     font-size: 1rem;
     color: var(--color-text);
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-none);
-    padding-block: var(--space-3);
-    padding-inline: 0;
+    padding: var(--space-3) var(--space-4);
     transition: border-color var(--duration-fast) var(--ease-standard);
   }
 
   .contact-form__field input:focus-visible,
   .contact-form__field select:focus-visible,
   .contact-form__field textarea:focus-visible {
-    border-bottom-color: var(--color-accent-strong);
+    border-color: var(--color-accent-strong);
   }
 
   .contact-form__field textarea {
@@ -274,80 +312,131 @@ const SERVICE_GROUPS = [
   .contact-form__submit {
     width: 100%;
     justify-content: center;
+    margin-top: var(--space-2);
+  }
+
+  /* ---- Aside panel (dark) ---- */
+  .contact-hero__aside-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contact-hero__aside-inner {
+    padding: var(--space-8) var(--container-padding);
+  }
+
+  .contact-hero__phone {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-h4);
+    color: var(--color-text-inverse);
     margin-top: var(--space-3);
   }
 
-  /* ---- Aside ---- */
-  .contact__aside-label {
-    font-size: var(--text-body-sm);
-    font-weight: var(--weight-bold);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-2);
+  .contact-hero__phone:hover {
+    color: var(--color-accent);
   }
 
-  .contact__aside-phone {
-    display: inline-block;
-    font-family: var(--font-display);
-    font-weight: var(--weight-bold);
-    font-size: var(--text-h5);
-    color: var(--color-text);
+  .contact-hero__trust-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--color-border-inverse);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-6);
   }
 
-  .contact__aside-phone:hover {
-    color: var(--color-accent-strong);
+  .contact-hero__trust {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    color: var(--color-text-muted-inverse);
   }
 
-  .contact__aside-line {
-    color: var(--color-text-muted);
+  .contact-hero__star {
+    color: var(--color-gold);
   }
 
-  /* On mobile the phone block is hidden (already shown pre-form and in
-     the footer - three instances on one short page was one too many),
-     so these two lines become the whole aside and don't need the gap
-     that used to separate them from the phone block above. */
-  .contact__aside-line--first {
-    margin-top: 0;
+  /* Fixed aspect ratio on mobile (stacked flow has no shared-height
+     context to fill); becomes a flex-filled remainder of the panel's
+     height at desktop instead - see the min-width override below.
+     `max-height` matters here because the stacked layout runs all the
+     way up to 1024px (tablet widths, not just phones) - at 4:3 alone, a
+     1000px-wide tablet viewport scaled this to 750px tall, a huge
+     vertical block. Capping it keeps the crop close to 4:3 at real phone
+     widths (390px wide -> 293px tall, barely affected) while stopping it
+     from ballooning at wider stacked widths; object-fit: cover on the
+     image (below) absorbs the resulting crop difference at those wider
+     sizes. Reset to none at desktop, where sizing is flex-driven instead
+     - see the min-width override below. */
+  .contact-hero__photo {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    max-height: 280px;
+    overflow: hidden;
+    margin-top: var(--space-7);
   }
 
-  /* ---- Mobile-only: tighter form rhythm ---- */
-  @media (max-width: 1023px) {
-    .contact__aside-phone-block {
-      display: none;
-    }
+  .contact-hero__photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-    .contact-form__field input,
-    .contact-form__field select,
-    .contact-form__field textarea {
-      padding-block: var(--space-2);
-    }
+  /* Blends the photo into the panel instead of reading as a separate
+     inset image card - fades from the panel's own background color at
+     the top edge down to transparent. */
+  .contact-hero__photo-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, var(--color-charcoal) 0%, rgb(10 10 10 / 0%) 35%);
+    pointer-events: none;
   }
 
   @media (min-width: 1024px) {
-    .contact__grid {
-      grid-template-columns: minmax(0, 600px) auto 1fr;
-      gap: var(--space-9);
-      align-items: start;
+    .contact-hero {
+      grid-template-columns: 55fr 45fr;
+      align-items: stretch;
     }
 
-    .contact__divider {
-      display: block;
-      width: 1px;
+    .contact-hero__form-inner {
+      margin-inline: 0;
+      padding-inline-start: var(--container-padding);
+      padding-inline-end: var(--space-7);
+    }
+
+    .contact-hero__aside-panel {
       height: 100%;
-      background: var(--color-border);
     }
 
-    /* Nudges the aside down so it aligns with the form's start rather
-       than pinning to the very top of the section next to the eyebrow -
-       reads as related to the primary content instead of a header bar
-       for its own column. */
-    .contact__aside {
-      margin-top: var(--space-9);
+    .contact-hero__aside-inner {
+      padding-inline: var(--space-8);
+      /* Explicit half-height allocation (not "whatever's left over") so
+         the photo below reliably lands around the panel's lower half
+         regardless of how short the phone/trust content is - flexbox's
+         default min-height:auto on a flex item still protects the
+         content from ever being compressed shorter than it needs, so a
+         taller content block (e.g. a future added trust point) would
+         still win over this and just leave the photo a bit less than
+         half. */
+      flex: 1 1 0;
     }
 
-    .contact__aside-line--first {
-      margin-top: var(--space-6);
+    .contact-hero__trust-divider {
+      max-width: 320px;
+    }
+
+    /* Explicit half-height allocation, matching .contact-hero__aside-inner
+       above - a deliberate ~50/50 split rather than the photo simply
+       absorbing whatever vertical space the content didn't use, which
+       left it looking incidental rather than an intentional media area. */
+    .contact-hero__photo {
+      flex: 1 1 0;
+      aspect-ratio: auto;
+      max-height: none;
+      min-height: 320px;
+      margin-top: 0;
     }
   }
 </style>
