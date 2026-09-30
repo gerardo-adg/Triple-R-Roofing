@@ -47,22 +47,50 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
   </Container>
 
   <div class="certifications__track" data-reveal>
-    {credentials.map((credential) => (
-      <div class="certifications__item">
-        <div class="certifications__logo-slot">
-          {credential.logo && (
-            <Image
-              class="certifications__logo"
-              src={credential.logo}
-              alt=""
-              width={Math.round(96 * (credential.logo.width / credential.logo.height))}
-              height={96}
-            />
-          )}
-        </div>
-        <p class="certifications__label">{credential.name}</p>
+    <div class="certifications__marquee">
+      <div class="certifications__group">
+        {credentials.map((credential) => (
+          <div class="certifications__item">
+            <div class="certifications__logo-slot">
+              {credential.logo && (
+                <Image
+                  class="certifications__logo"
+                  src={credential.logo}
+                  alt=""
+                  width={Math.round(96 * (credential.logo.width / credential.logo.height))}
+                  height={96}
+                />
+              )}
+            </div>
+            <p class="certifications__label">{credential.name}</p>
+          </div>
+        ))}
       </div>
-    ))}
+      {/* Exact duplicate of the group above, purely so the mobile marquee
+          (below) has a seamless second lap to scroll into - translateX
+          shifts by exactly one group-width, so this clone lands precisely
+          where the first group started with no visible seam. Hidden from
+          assistive tech (the real content was already announced once) and
+          hidden outright on desktop, which doesn't animate. */}
+      <div class="certifications__group certifications__group--clone" aria-hidden="true">
+        {credentials.map((credential) => (
+          <div class="certifications__item">
+            <div class="certifications__logo-slot">
+              {credential.logo && (
+                <Image
+                  class="certifications__logo"
+                  src={credential.logo}
+                  alt=""
+                  width={Math.round(96 * (credential.logo.width / credential.logo.height))}
+                  height={96}
+                />
+              )}
+            </div>
+            <p class="certifications__label">{credential.name}</p>
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 </section>
 
@@ -86,29 +114,40 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
     color: var(--color-text-muted-inverse);
   }
 
-  /* Native horizontal scroll-snap on mobile, same pattern as Featured
-     Work's project track - full-bleed past Container so the next
-     credential visibly peeks in from the edge, signaling there's more to
-     swipe through without a marquee or autoplay. Becomes a normal,
-     non-scrolling row (evenly distributed, capped at the same width as
-     the intro above) at desktop - see the min-width override below. */
+  /* Mobile: a slow, continuous right-to-left marquee instead of a row the
+     visitor has to know to swipe - the clone group (identical content)
+     sitting right after the real one means translating the whole
+     `.certifications__marquee` by exactly -50% of its own width (one
+     group-width) lands it precisely back on the real group's starting
+     position, so the loop has no visible seam or jump. `overflow: hidden`
+     here is what keeps the oversized (2x-width) marquee from widening the
+     page itself. Becomes a normal, non-animated, non-scrolling row
+     (evenly distributed, capped at the same width as the intro above) at
+     desktop - see the min-width override below. */
   .certifications__track {
-    display: flex;
-    gap: var(--space-5);
+    overflow: hidden;
     padding-inline: var(--container-padding);
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
   }
 
-  .certifications__track::-webkit-scrollbar {
-    display: none;
+  .certifications__marquee {
+    display: flex;
+    width: max-content;
+    animation: certifications-marquee 30s linear infinite;
+  }
+
+  .certifications__group {
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--space-5);
+    /* Same size as the inter-item gap, so the seam between the two groups
+       reads identically to every other gap in the strip - a different
+       value here is the classic way a "seamless" marquee ends up with a
+       visible stutter at the loop point. */
+    padding-inline-end: var(--space-5);
   }
 
   .certifications__item {
     flex: 0 0 132px;
-    scroll-snap-align: start;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -150,13 +189,64 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
     color: var(--color-text-inverse);
   }
 
+  @keyframes certifications-marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Respect prefers-reduced-motion: stop the marquee and drop the cloned
+     group, then let the one real group wrap into a plain static grid
+     instead of a single unscrollable line - reduced-motion visitors get
+     a clean, fully visible layout rather than a frozen mid-scroll strip
+     or content clipped off past the viewport edge. */
+  @media (prefers-reduced-motion: reduce) {
+    /* `.certifications__marquee` has to stop being a flex container here,
+       not just lose its animation - as a flex row it sizes to its child's
+       full unwrapped width regardless of `width: auto`, so the group's own
+       `flex-wrap` never had a constrained box to actually wrap within,
+       and the oversized result overflowed the page. `display: block` (the
+       same fix already used for desktop below) gives the group a real
+       100%-of-viewport box to wrap inside. */
+    .certifications__marquee {
+      display: block;
+      width: auto;
+      animation: none;
+    }
+
+    .certifications__group {
+      flex-wrap: wrap;
+      justify-content: center;
+      padding-inline-end: 0;
+      row-gap: var(--space-5);
+    }
+
+    .certifications__group--clone {
+      display: none;
+    }
+  }
+
   @media (min-width: 900px) {
     .certifications__track {
       max-width: var(--container-max);
       margin-inline: auto;
+      overflow: visible;
+    }
+
+    .certifications__marquee {
+      display: block;
+      width: auto;
+      animation: none;
+    }
+
+    .certifications__group {
+      display: flex;
       gap: var(--space-7);
-      overflow-x: visible;
-      scroll-snap-type: none;
+      padding-inline-end: 0;
+    }
+
+    .certifications__group--clone {
+      display: none;
     }
 
     .certifications__item {
