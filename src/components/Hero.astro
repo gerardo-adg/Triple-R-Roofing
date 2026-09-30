@@ -10,8 +10,12 @@ interface CTA {
 }
 
 interface Props {
-  /** Headline authored as short, stacked lines — brand/message first, per the required hierarchy (media -> message -> location -> action). Same copy at every breakpoint; mobile reflows this via responsive type, not a separate line set. */
+  /** Headline authored as short, stacked lines — brand/message first, per the required hierarchy (media -> message -> location -> action). */
   lines: string[];
+  /** Optional mobile-only override, for when the mobile headline needs
+   * different wording/line breaks than desktop (not just a reflow of the
+   * same text) - falls back to `lines` when not provided. */
+  mobileLines?: string[];
   /** Secondary, smaller — should never compete with the headline. */
   subheadline: string;
   primaryCta: CTA;
@@ -22,8 +26,17 @@ interface Props {
   videoSrc?: string;
 }
 
-const { lines, subheadline, primaryCta, secondaryCta, poster, alt, muxPlaybackId, videoSrc } =
-  Astro.props;
+const {
+  lines,
+  mobileLines = lines,
+  subheadline,
+  primaryCta,
+  secondaryCta,
+  poster,
+  alt,
+  muxPlaybackId,
+  videoSrc,
+} = Astro.props;
 ---
 
 <section class="hero" data-hero>
@@ -45,13 +58,24 @@ const { lines, subheadline, primaryCta, secondaryCta, poster, alt, muxPlaybackId
   <Container>
   <div class="hero__content">
     <h1 class="hero__headline">
-      {lines.map((line, i) => (
-        <span class="hero__line-mask">
-          <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
-            {line}
+      <div class="hero__headline-set hero__headline-set--mobile">
+        {mobileLines.map((line, i) => (
+          <span class="hero__line-mask">
+            <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
+              {line}
+            </span>
           </span>
-        </span>
-      ))}
+        ))}
+      </div>
+      <div class="hero__headline-set hero__headline-set--desktop">
+        {lines.map((line, i) => (
+          <span class="hero__line-mask">
+            <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
+              {line}
+            </span>
+          </span>
+        ))}
+      </div>
     </h1>
 
     <p class="hero__subheadline">{subheadline}</p>
@@ -154,6 +178,25 @@ const { lines, subheadline, primaryCta, secondaryCta, poster, alt, muxPlaybackId
     margin-bottom: var(--space-5);
   }
 
+  /* Two headline variants (mobile can carry different wording/line
+     breaks than desktop, not just a reflow of the same text) - only one
+     is ever visible at a time, toggled by breakpoint, same "separate
+     DOM, not reflowed" approach the header already uses for its
+     mobile/desktop nav. */
+  .hero__headline-set--desktop {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .hero__headline-set--mobile {
+      display: none;
+    }
+
+    .hero__headline-set--desktop {
+      display: block;
+    }
+  }
+
   .hero__line-mask {
     display: block;
     overflow: hidden;
@@ -234,42 +277,17 @@ const { lines, subheadline, primaryCta, secondaryCta, poster, alt, muxPlaybackId
     }
   }
 
-  /* Mobile typography (<900px). The base clamp above scales too
-     aggressively for this range on its own — measured directly (not
-     estimated): between roughly 480-700px it was pushing the font large
-     enough that BOTH lines wrapped a second time, producing 4 visual
-     lines instead of 2-3. This range replaces it with a gentler curve
-     tuned against the actual rendered width of both lines, so "Premier
-     Roofing" wraps into two lines only where there isn't room for it on
-     one (roughly ≤430px), "in Sacramento." never wraps (checked down to
-     the 375px floor, with margin), and the total stays at 2-3 lines
-     across the whole range instead of jumping around. Also tightens the
-     dead space directly around the text/CTA block - the hero itself
-     stays full-height (100svh, unchanged) so there's still plenty of
-     video visible above and below this cluster, it's just no longer
-     padded out further than the content needs. */
-  @media (max-width: 899px) {
-    .hero__content {
-      padding-top: calc(var(--nav-height) + var(--space-4));
-      padding-bottom: calc(clamp(80px, 12vh, 140px) + env(safe-area-inset-bottom));
-    }
-
-    .hero__headline {
-      font-size: clamp(2rem, 0.8rem + 5.5vw, 4rem);
-    }
-
-    .hero__subheadline {
-      margin-bottom: var(--space-6);
-    }
-  }
-
   @media (max-width: 480px) {
     .hero__headline {
       /* "Sacramento." is the longest single word in the headline and
          can't break mid-word — measured against the actual rendered
          glyph widths at the narrowest supported viewport (375px), not
          estimated, with a margin of safety. */
-      font-size: 1.875rem;
+      font-size: 2.1rem;
+    }
+
+    .hero__subheadline {
+      margin-bottom: var(--space-6);
     }
   }
 </style>
