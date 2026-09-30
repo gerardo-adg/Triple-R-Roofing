@@ -166,11 +166,38 @@ const FAQS = [
     max-width: 62ch;
   }
 
+  /* Mobile-only: this page's own overview section and the shared
+     ServiceTriad component ("Tile Roof Services") each carry a 96px
+     padding-block, stacking into an oversized gap between them - same
+     issue already fixed elsewhere on the site, e.g. Roof Replacement's
+     deck-video section. `:global` is needed here since ServiceTriad
+     renders its own `.triad` element under its own component scope, not
+     this page's - reset back to 0 on desktop, where ServiceTriad's own
+     existing desktop override already tightened this gap from the other
+     side (its bottom padding, not this margin). Page-local, so this
+     doesn't affect ServiceTriad's other callers (Gutters, Roof
+     Maintenance, Roof Rejuvenation, Flat Roofing). */
+  :global(.triad) {
+    margin-top: -60px;
+  }
+
+  @media (min-width: 900px) {
+    :global(.triad) {
+      margin-top: 0;
+    }
+  }
+
   /* ---- Recent work (video) - contained within the page's normal content
      width, same pattern as Roof Replacement's North Highlands drone
      video section. ---- */
   .tile-spotlight {
     padding-block: var(--space-9);
+    /* Mobile-only: same oversized-gap issue as above, between ServiceTriad
+       and this section - measured larger here than the overview->triad
+       gap (ServiceTriad's grid/items carry a bit more trailing space than
+       a plain padding-bottom), so this needed a bigger pull-up to land in
+       the same visual range. Reset to 0 on desktop below. */
+    margin-top: -120px;
   }
 
   .tile-spotlight__eyebrow {
@@ -201,6 +228,10 @@ const FAQS = [
   }
 
   @media (min-width: 900px) {
+    .tile-spotlight {
+      margin-top: 0;
+    }
+
     .tile-spotlight__frame {
       max-height: 75vh;
     }
