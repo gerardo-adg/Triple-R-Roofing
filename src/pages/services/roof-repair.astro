@@ -242,6 +242,14 @@ const FAQS = [
      Roof Maintenance page's video section for consistency. ---- */
   .repair-video {
     padding-block: var(--space-9);
+    /* Mobile-only: ServiceCoverageList's own bottom padding plus this
+       section's top padding (96px + 96px) left an oversized gap above
+       this heading on narrow screens - same fix as Roof Replacement's
+       deck-video section, using the same tuned -60px (a full -96px
+       reduction read too tight there once actually shown on-device).
+       Reset back to 0 on desktop below, where the two paddings already
+       read fine together. */
+    margin-top: -60px;
     text-align: center;
   }
 
@@ -271,6 +279,7 @@ const FAQS = [
   @media (min-width: 900px) {
     .repair-video {
       padding-block: var(--space-8);
+      margin-top: 0;
     }
 
     .repair-video__frame {
