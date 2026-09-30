@@ -284,6 +284,13 @@ const FAQS = [
      "Recent work" ServiceProjectSpotlight below it. ---- */
   .deck-video {
     padding-block: var(--space-9);
+    /* Mobile-only: ServiceIncludes' own bottom padding plus this section's
+       top padding (96px + 96px) left an oversized gap between the process
+       steps and this section on narrow screens. Pulling the section up
+       closes that gap without touching either section's own padding
+       (reset back to 0 on desktop below, where the two paddings already
+       read fine together). */
+    margin-top: calc(-1 * var(--space-9));
     text-align: center;
   }
 
@@ -313,6 +320,7 @@ const FAQS = [
   @media (min-width: 900px) {
     .deck-video {
       padding-block: var(--space-8);
+      margin-top: 0;
     }
 
     .deck-video__frame {
