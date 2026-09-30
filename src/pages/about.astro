@@ -207,54 +207,13 @@ const TEAM_VIDEO_POSTER = `https://image.mux.com/${TEAM_VIDEO_MUX_ID}/thumbnail.
 
   /* display: contents keeps this wrapper invisible to layout below
      900px, so mobile stays pixel-identical to before this grid existed -
-     the intro and video simply stack in DOM order same as always. */
+     the intro and video simply stack in DOM order same as always. All
+     desktop-specific overrides for this grid live in the single media
+     query at the bottom of this section's rules (not here), so they
+     always come after - and win the cascade over - the base/mobile
+     rules for the same selectors below. */
   .family-story__grid {
     display: contents;
-  }
-
-  /* Bottom padding only, desktop only - the combined gap before What We
-     Do's own top padding read as more generous than intended once the
-     video's own height was already providing plenty of visual weight and
-     closure. Top padding (the gap under the intro paragraph) and mobile
-     spacing are untouched. */
-  @media (min-width: 900px) {
-    .family-story {
-      padding-bottom: var(--space-6);
-    }
-
-    /* Video left, text right - reversed from Meet the Team below it
-       (text left, video right), reusing that section's own two column
-       widths just swapped, so the two 9:16-video sections read as
-       intentional mirrors of each other rather than the same layout
-       repeated twice. Gap is wider than Meet the Team's despite this
-       being the lighter section - the video frame's dark background
-       sits directly against this section's light background (a sharp,
-       high-contrast edge that reads as closer than it measures), where
-       Meet the Team's same-tone dark frame on a dark section blends in
-       and needs less physical space to read as equally roomy. */
-    .family-story__grid {
-      display: grid;
-      grid-template-columns: clamp(320px, 34vw, 420px) minmax(0, 480px);
-      align-items: center;
-      gap: var(--space-9);
-    }
-
-    .family-story__intro {
-      max-width: none;
-      margin-inline: 0;
-      text-align: left;
-    }
-
-    /* order: -1 moves it into the grid's first (left) column visually -
-       DOM order stays intro-first (matches mobile reading/tab order),
-       same technique the homepage FamilySection already uses for its own
-       video-left layout. Width/margin reset from the mobile centered
-       treatment so it fills its grid column instead. */
-    .family-story__video {
-      order: -1;
-      margin-top: 0;
-      --family-video-width: 100%;
-    }
   }
 
   .family-story__intro {
@@ -294,6 +253,57 @@ const TEAM_VIDEO_POSTER = `https://image.mux.com/${TEAM_VIDEO_MUX_ID}/thumbnail.
     margin-top: var(--space-4);
     font-size: var(--text-body-sm);
     color: var(--color-text-muted);
+  }
+
+  /* All desktop-only overrides for "The family" live in this one block,
+     placed after every base/mobile rule above for the same selectors -
+     equal-specificity rules cascade by source order, so this ordering is
+     load-bearing, not stylistic. (An earlier version of this media query
+     sat above the base rules and was silently losing the cascade to
+     them - --family-video-width never actually reached 100% at desktop,
+     so the video was still sizing itself off the mobile clamp.) */
+  @media (min-width: 900px) {
+    /* Bottom padding only - the combined gap before What We Do's own top
+       padding read as more generous than intended once the video's own
+       height was already providing plenty of visual weight and closure.
+       Top padding and mobile spacing are untouched. */
+    .family-story {
+      padding-bottom: var(--space-6);
+    }
+
+    /* Video left, text right - reversed from Meet the Team below it
+       (text left, video right), reusing that section's own two column
+       widths just swapped, so the two 9:16-video sections read as
+       intentional mirrors of each other rather than the same layout
+       repeated twice. Gap is wider than Meet the Team's despite this
+       being the lighter section - the video frame's dark background
+       sits directly against this section's light background (a sharp,
+       high-contrast edge that reads as closer than it measures), where
+       Meet the Team's same-tone dark frame on a dark section blends in
+       and needs less physical space to read as equally roomy. */
+    .family-story__grid {
+      display: grid;
+      grid-template-columns: clamp(280px, 30vw, 360px) minmax(0, 480px);
+      align-items: center;
+      gap: var(--space-9);
+    }
+
+    .family-story__intro {
+      max-width: none;
+      margin-inline: 0;
+      text-align: left;
+    }
+
+    /* order: -1 moves it into the grid's first (left) column visually -
+       DOM order stays intro-first (matches mobile reading/tab order),
+       same technique the homepage FamilySection already uses for its own
+       video-left layout. Width/margin reset from the mobile centered
+       treatment so it fills its grid column instead. */
+    .family-story__video {
+      order: -1;
+      margin-top: 0;
+      --family-video-width: 100%;
+    }
   }
 
   /* ---- Meet the Team ----
@@ -351,7 +361,7 @@ const TEAM_VIDEO_POSTER = `https://image.mux.com/${TEAM_VIDEO_MUX_ID}/thumbnail.
        leftover row width lands outside the two-column block instead,
        which `justify-content: center` then balances within the section. */
     .meet-team__grid {
-      grid-template-columns: minmax(0, 480px) clamp(320px, 34vw, 420px);
+      grid-template-columns: minmax(0, 480px) clamp(280px, 30vw, 360px);
       justify-content: center;
       align-items: center;
       gap: var(--space-7);
