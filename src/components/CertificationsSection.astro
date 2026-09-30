@@ -1,15 +1,21 @@
 ---
 /**
- * Credentials get typographic weight instead of three icon cards - large
- * display-style lines with rule dividers (same divider language as
- * Trust's column rule), so the section gets real visual presence without
- * introducing the boxed/card pattern the brand direction rules out.
+ * A single horizontal credential strip (logo + short label per
+ * credential) rather than five large stacked rows with descriptions -
+ * the row-per-credential layout carried real visual weight but ran very
+ * tall; this reads as one compact, premium "backed by" showcase instead.
+ * No cards/boxes/shadows - a thin divider between items (same language
+ * as Trust's column rule) is the only separator.
  *
- * `logo` is optional and deliberately small (a mark next to the name, not
- * a badge-forward card) - real certifying-body logos, at whatever aspect
+ * `logo` is optional - real certifying-body logos, at whatever aspect
  * ratio they actually ship in (square badges, wide horizontal lockups),
- * constrained to a shared height so a very wide logo and a square one
- * still sit at a consistent visual weight in the same row.
+ * constrained to a shared box so a very wide logo and a square one still
+ * sit at a consistent visual weight next to each other.
+ *
+ * `description` is accepted but intentionally unused here (kept on the
+ * type/prop so callers don't need updating) - the credential name alone
+ * carries enough context at this compact size; the longer copy this used
+ * to show doesn't fit the showcase format.
  */
 import Container from "./Container.astro";
 import { Image } from "astro:assets";
@@ -38,27 +44,26 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
       <h2 class="certifications__headline">{headline}</h2>
       <p class="certifications__lead">{intro}</p>
     </div>
-
-    <div class="certifications__list" data-reveal>
-      {credentials.map((credential) => (
-        <div class="certifications__row">
-          <div class="certifications__identity">
-            {credential.logo && (
-              <Image
-                class="certifications__logo"
-                src={credential.logo}
-                alt=""
-                width={Math.round(96 * (credential.logo.width / credential.logo.height))}
-                height={96}
-              />
-            )}
-            <p class="certifications__name">{credential.name}</p>
-          </div>
-          <p class="certifications__description">{credential.description}</p>
-        </div>
-      ))}
-    </div>
   </Container>
+
+  <div class="certifications__track" data-reveal>
+    {credentials.map((credential) => (
+      <div class="certifications__item">
+        <div class="certifications__logo-slot">
+          {credential.logo && (
+            <Image
+              class="certifications__logo"
+              src={credential.logo}
+              alt=""
+              width={Math.round(96 * (credential.logo.width / credential.logo.height))}
+              height={96}
+            />
+          )}
+        </div>
+        <p class="certifications__label">{credential.name}</p>
+      </div>
+    ))}
+  </div>
 </section>
 
 <style>
@@ -81,64 +86,90 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
     color: var(--color-text-muted-inverse);
   }
 
-  .certifications__list {
-    border-top: 1px solid var(--color-border-inverse);
+  /* Native horizontal scroll-snap on mobile, same pattern as Featured
+     Work's project track - full-bleed past Container so the next
+     credential visibly peeks in from the edge, signaling there's more to
+     swipe through without a marquee or autoplay. Becomes a normal,
+     non-scrolling row (evenly distributed, capped at the same width as
+     the intro above) at desktop - see the min-width override below. */
+  .certifications__track {
+    display: flex;
+    gap: var(--space-5);
+    padding-inline: var(--container-padding);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .certifications__row {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-2);
-    padding-block: var(--space-6);
-    border-bottom: 1px solid var(--color-border-inverse);
+  .certifications__track::-webkit-scrollbar {
+    display: none;
   }
 
-  /* Always stacked (logo above name) rather than side-by-side - relying on
-     flex-wrap to push the name below the logo only when they didn't fit on
-     one line left the layout inconsistent: short names (e.g. "BBB
-     Accredited") sat inline next to their logo while longer ones wrapped
-     below theirs. Stacking unconditionally keeps every row the same. */
-  .certifications__identity {
+  .certifications__item {
+    flex: 0 0 132px;
+    scroll-snap-align: start;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--space-3);
+    text-align: center;
   }
 
-  /* Bounded on both axes (not just height) - certifying-body logos ship at
-     very different aspect ratios, from near-square badges to wide
-     horizontal lockups (ASC's, ~7:1). Constraining height alone let that
-     one badge render far wider than the others; capping width too (via
-     object-fit: contain, so it still shrinks proportionally) keeps every
-     logo within a consistent visual footprint. */
+  /* A fixed-height slot (not just a max-height on the image) - certifying-
+     body logos ship at very different aspect ratios, from near-square
+     badges to wide horizontal lockups (ASC's, ~7:1). Without a reserved
+     slot, a wide logo renders much shorter than a square one once both
+     are capped to the same max-width, which pushed its label out of line
+     with the rest of the row. Centering every logo inside the same-height
+     slot keeps all five labels sitting on one shared baseline regardless
+     of each logo's actual proportions. */
+  .certifications__logo-slot {
+    height: 44px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .certifications__logo {
     height: auto;
     width: auto;
-    max-height: 40px;
-    max-width: 110px;
+    max-height: 44px;
+    max-width: 124px;
     object-fit: contain;
     flex-shrink: 0;
   }
 
-  .certifications__name {
-    font-family: var(--font-display);
-    font-weight: var(--weight-black);
-    font-stretch: var(--stretch-expanded);
-    letter-spacing: -0.01em;
-    font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  .certifications__label {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    line-height: 1.35;
     color: var(--color-text-inverse);
   }
 
-  .certifications__description {
-    max-width: 56ch;
-    color: var(--color-text-muted-inverse);
-  }
-
   @media (min-width: 900px) {
-    .certifications__row {
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      gap: var(--space-8);
+    .certifications__track {
+      max-width: var(--container-max);
+      margin-inline: auto;
+      gap: var(--space-7);
+      overflow-x: visible;
+      scroll-snap-type: none;
+    }
+
+    .certifications__item {
+      flex: 1 1 0;
+      /* Thin column rule between credentials - same divider language as
+         Trust's column rule - instead of a card/box around each one. */
+      border-inline-start: 1px solid var(--color-border-inverse);
+      padding-inline-start: var(--space-7);
+    }
+
+    .certifications__item:first-child {
+      border-inline-start: none;
+      padding-inline-start: 0;
     }
   }
 </style>
