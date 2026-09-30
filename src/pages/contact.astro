@@ -2,7 +2,7 @@
 import InteriorLayout from "../layouts/InteriorLayout.astro";
 import Button from "../components/Button.astro";
 import ResponsiveImage from "../components/ResponsiveImage.astro";
-import contactPhoto from "../assets/media/photo-contact-completed-roof.jpg";
+import contactPhoto from "../assets/media/photo-contact-tile-repair.jpg";
 
 // Netlify Forms detects this form at deploy time from the static HTML
 // (data-netlify + the hidden form-name field) - no backend code needed
@@ -147,7 +147,7 @@ const SERVICE_GROUPS = [
       <div class="contact-hero__photo">
         <ResponsiveImage
           src={contactPhoto}
-          alt="Aerial view of a completed roof by Triple R Roofing."
+          alt="A Triple R Roofing crew member repairing a tile roof."
           widths={[480, 768, 1024]}
           sizes="(min-width: 1024px) 45vw, 100vw"
           loading="lazy"
@@ -325,6 +325,18 @@ const SERVICE_GROUPS = [
     padding: var(--space-8) var(--container-padding);
   }
 
+  /* Mobile/tablet-only: the scrim on the photo below already reads as
+     black for roughly its own top third, so this padding was stacking
+     with that to create a much bigger dead-black zone than the raw CSS
+     gap alone suggested. Reset to the original space-8 at 1024px so
+     desktop (which uses a completely different, already-approved
+     50/50 flex split) is untouched. */
+  @media (max-width: 1023px) {
+    .contact-hero__aside-inner {
+      padding-bottom: 0;
+    }
+  }
+
   .contact-hero__phone {
     display: block;
     font-family: var(--font-display);
@@ -375,7 +387,13 @@ const SERVICE_GROUPS = [
     aspect-ratio: 4 / 3;
     max-height: 280px;
     overflow: hidden;
-    margin-top: var(--space-7);
+    /* Paired with the aside-inner padding-bottom reset above - together
+       they replace what used to be a combined 112px gap (before the
+       photo's own scrim adds more visual black on top of that) with a
+       tighter one, while still leaving real breathing room. Desktop
+       fully overrides this to 0 regardless (see the min-width block
+       below), so tightening this mobile value doesn't touch it. */
+    margin-top: var(--space-6);
   }
 
   .contact-hero__photo :global(img) {
@@ -412,25 +430,37 @@ const SERVICE_GROUPS = [
 
     .contact-hero__aside-inner {
       padding-inline: var(--space-8);
-      /* Explicit half-height allocation (not "whatever's left over") so
-         the photo below reliably lands around the panel's lower half
-         regardless of how short the phone/trust content is - flexbox's
-         default min-height:auto on a flex item still protects the
-         content from ever being compressed shorter than it needs, so a
-         taller content block (e.g. a future added trust point) would
-         still win over this and just leave the photo a bit less than
-         half. */
-      flex: 1 1 0;
+      /* Natural content height, not a forced 50/50 split - an equal
+         flex-grow here was stretching this box far past the trust
+         content's actual height (it's much shorter than half the panel),
+         which is what created the oversized dead zone below the text
+         (measured ~336px of empty space within this box alone, before
+         the photo even starts). A negative margin on the photo doesn't
+         cleanly claw that back either: with both items sharing
+         flex-grow, pulling the photo up just freed space that aside-inner
+         itself grew into, so only about half of any pull-up ever showed
+         up as real movement. Fixed height + an explicit bottom padding
+         below is a direct, predictable substitute for both - this value
+         is the entire gap (the photo's own margin-top is reset to 0 just
+         below, rather than left to inherit the mobile-only spacing rule),
+         landing comfortably in the "substantially reduced, still
+         intentional" range the client asked for. */
+      flex: 0 0 auto;
+      padding-bottom: 182px;
     }
 
     .contact-hero__trust-divider {
       max-width: 320px;
     }
 
-    /* Explicit half-height allocation, matching .contact-hero__aside-inner
-       above - a deliberate ~50/50 split rather than the photo simply
-       absorbing whatever vertical space the content didn't use, which
-       left it looking incidental rather than an intentional media area. */
+    /* Absorbs 100% of the panel's remaining height (aside-inner no longer
+       grows), so the photo reliably reaches the panel's own bottom/right
+       edges - the gap above it is exactly aside-inner's padding-bottom,
+       not an emergent flex-redistribution result. flex-basis must stay 0
+       (not auto): auto would let the real photo's own natural (portrait,
+       tall) rendered height count toward the panel's intrinsic size
+       before grid's stretch ever applies, inflating the whole right
+       panel past the form panel's height instead of matching it. */
     .contact-hero__photo {
       flex: 1 1 0;
       aspect-ratio: auto;
