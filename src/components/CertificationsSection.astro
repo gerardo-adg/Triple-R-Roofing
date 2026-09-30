@@ -57,8 +57,8 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
                   class="certifications__logo"
                   src={credential.logo}
                   alt=""
-                  width={Math.round(96 * (credential.logo.width / credential.logo.height))}
-                  height={96}
+                  width={Math.round(120 * (credential.logo.width / credential.logo.height))}
+                  height={120}
                 />
               )}
             </div>
@@ -81,8 +81,8 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
                   class="certifications__logo"
                   src={credential.logo}
                   alt=""
-                  width={Math.round(96 * (credential.logo.width / credential.logo.height))}
-                  height={96}
+                  width={Math.round(120 * (credential.logo.width / credential.logo.height))}
+                  height={120}
                 />
               )}
             </div>
@@ -162,10 +162,16 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
      are capped to the same max-width, which pushed its label out of line
      with the rest of the row. Centering every logo inside the same-height
      slot keeps all five labels sitting on one shared baseline regardless
-     of each logo's actual proportions. */
+     of each logo's actual proportions.
+     Mobile-only height is larger than desktop's (56px vs. 44px, reset
+     below): measured that a near-square badge (GAF, CertainTeed) at 44px
+     rendered only 44px wide inside this 132px-wide column, leaving ~44px
+     of dead black margin on each side - during the marquee's continuous
+     motion that reads as a stretch of empty black between logos rather
+     than a static row, where the eye has time to take in the whole row
+     at once. Sizing up narrows that margin without changing desktop. */
   .certifications__logo-slot {
-    height: 44px;
-    width: 100%;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -174,7 +180,7 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
   .certifications__logo {
     height: auto;
     width: auto;
-    max-height: 44px;
+    max-height: 56px;
     max-width: 124px;
     object-fit: contain;
     flex-shrink: 0;
@@ -260,6 +266,17 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
     .certifications__item:first-child {
       border-inline-start: none;
       padding-inline-start: 0;
+    }
+
+    /* Reset back to the original (smaller) size here - the mobile-only
+       bump above is specifically for the marquee's continuous motion and
+       has no reason to apply to this static, non-scrolling row. */
+    .certifications__logo-slot {
+      height: 44px;
+    }
+
+    .certifications__logo {
+      max-height: 44px;
     }
   }
 </style>
