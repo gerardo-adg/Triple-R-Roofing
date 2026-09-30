@@ -120,7 +120,7 @@ const SERVICE_GROUPS = [
 
           <div class="contact-form__field contact-form__field--full">
             <label for="details">Message (optional)</label>
-            <textarea id="details" name="details" rows="4"></textarea>
+            <textarea id="details" name="details" rows="3"></textarea>
           </div>
 
           <Button variant="primary" type="submit" class="contact-form__submit">
@@ -179,7 +179,7 @@ const SERVICE_GROUPS = [
 
   .contact-hero__form-inner {
     max-width: 600px;
-    padding: var(--space-8) var(--container-padding) var(--space-9);
+    padding: var(--space-6) var(--container-padding) var(--space-7);
     margin-inline: auto;
   }
 
@@ -206,7 +206,7 @@ const SERVICE_GROUPS = [
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     color: var(--color-text-muted);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-4);
   }
 
   .contact-hero__breadcrumb a {
@@ -231,14 +231,14 @@ const SERVICE_GROUPS = [
     font-size: var(--text-body-lg);
     color: var(--color-text-muted);
     max-width: 46ch;
-    margin-bottom: var(--space-7);
+    margin-bottom: var(--space-5);
   }
 
   /* ---- Form ---- */
   .contact-form {
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
+    gap: var(--space-4);
   }
 
   /* Visible to bots, hidden from sighted users and skipped by
@@ -254,7 +254,7 @@ const SERVICE_GROUPS = [
   .contact-form__row {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-5);
+    gap: var(--space-4);
   }
 
   /* Phone/email go two-up as soon as there's room for it, independent of
@@ -306,7 +306,7 @@ const SERVICE_GROUPS = [
 
   .contact-form__field textarea {
     resize: vertical;
-    min-height: 96px;
+    min-height: 72px;
   }
 
   .contact-form__submit {
@@ -387,13 +387,12 @@ const SERVICE_GROUPS = [
     aspect-ratio: 4 / 3;
     max-height: 280px;
     overflow: hidden;
-    /* Paired with the aside-inner padding-bottom reset above - together
-       they replace what used to be a combined 112px gap (before the
-       photo's own scrim adds more visual black on top of that) with a
-       tighter one, while still leaving real breathing room. Desktop
-       fully overrides this to 0 regardless (see the min-width block
-       below), so tightening this mobile value doesn't touch it. */
-    margin-top: var(--space-6);
+    /* A small deliberate pause before the photo's own scrim takes over
+       the rest of the transition - not a separate dead-space layer on
+       top of it. Desktop fully overrides this to 0 regardless (see the
+       min-width block below), so tightening this mobile value doesn't
+       touch it. */
+    margin-top: var(--space-2);
   }
 
   .contact-hero__photo :global(img) {
@@ -442,11 +441,11 @@ const SERVICE_GROUPS = [
          up as real movement. Fixed height + an explicit bottom padding
          below is a direct, predictable substitute for both - this value
          is the entire gap (the photo's own margin-top is reset to 0 just
-         below, rather than left to inherit the mobile-only spacing rule),
-         landing comfortably in the "substantially reduced, still
-         intentional" range the client asked for. */
+         below, rather than left to inherit the mobile-only spacing rule).
+         Cut further (182px -> 90px) in the compacting pass: still a real,
+         intentional pause, but well under half the previous gap. */
       flex: 0 0 auto;
-      padding-bottom: 182px;
+      padding-bottom: 90px;
     }
 
     .contact-hero__trust-divider {
