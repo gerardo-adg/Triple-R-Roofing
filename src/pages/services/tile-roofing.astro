@@ -7,7 +7,9 @@ import PlayableVideo from "../../components/PlayableVideo.astro";
 import FinancingCallout from "../../components/FinancingCallout.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
+import ResponsiveImage from "../../components/ResponsiveImage.astro";
 import pageHeroImage from "../../assets/media/placeholder-page-hero-tile.svg";
+import overviewImage from "../../assets/media/photo-tile-roof-tearoff-crew.jpg";
 
 // Real drone footage of a Triple R tile roofing job, replacing the old
 // photo-placeholder ServiceProjectSpotlight slot - contained (not
@@ -86,19 +88,31 @@ const FAQS = [
 
   <section class="overview">
     <Container>
-      <div class="overview__content" data-reveal>
-        <p class="eyebrow">Tile Roofing</p>
-        <h2 class="overview__headline">The problem isn&rsquo;t always the tile.</h2>
-        <p class="overview__body">
-          The tile is what you see, but there&rsquo;s an underlayment and roof
-          system underneath it. When a tile roof leaks, the issue can be
-          coming from underneath the tile.
-        </p>
-        <p class="overview__body">
-          Depending on what we find, the roof may need an isolated repair, a
-          tile reset to address the underlayment, or a full replacement. We
-          inspect it first and figure out which one makes sense.
-        </p>
+      <div class="overview__grid">
+        <div class="overview__content" data-reveal>
+          <p class="eyebrow">Tile Roofing</p>
+          <h2 class="overview__headline">The problem isn&rsquo;t always the tile.</h2>
+          <p class="overview__body">
+            The tile is what you see, but there&rsquo;s an underlayment and roof
+            system underneath it. When a tile roof leaks, the issue can be
+            coming from underneath the tile.
+          </p>
+          <p class="overview__body">
+            Depending on what we find, the roof may need an isolated repair, a
+            tile reset to address the underlayment, or a full replacement. We
+            inspect it first and figure out which one makes sense.
+          </p>
+        </div>
+
+        <div class="overview__media" data-reveal-media>
+          <ResponsiveImage
+            src={overviewImage}
+            alt="A Triple R crew tearing off and replacing a tile roof."
+            widths={[400, 600, 800, 1200]}
+            sizes="(min-width: 900px) 50vw, 100vw"
+            loading="lazy"
+          />
+        </div>
       </div>
     </Container>
   </section>
@@ -151,6 +165,15 @@ const FAQS = [
     padding-block: var(--space-9);
   }
 
+  /* Stacked (text above photo) on mobile - matches DOM order, so no
+     reordering needed there. Becomes a two-column, text-left/photo-right
+     grid at desktop - see the min-width override below. */
+  .overview__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+
   .overview__content {
     max-width: 720px;
   }
@@ -164,6 +187,30 @@ const FAQS = [
   .overview__body {
     font-size: var(--text-body-lg);
     max-width: 62ch;
+  }
+
+  .overview__media {
+    aspect-ratio: 1206 / 1136;
+    overflow: hidden;
+    background: var(--color-charcoal-raised);
+  }
+
+  .overview__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 900px) {
+    .overview__grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--space-8);
+    }
+
+    .overview__content {
+      max-width: none;
+    }
   }
 
   /* Mobile-only: this page's own overview section and the shared
