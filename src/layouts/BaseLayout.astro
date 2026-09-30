@@ -3,6 +3,12 @@ import "../styles/fonts.css";
 import "../styles/tokens.css";
 import "../styles/reset.css";
 import "../styles/base.css";
+// Preloaded below so the browser fetches it immediately instead of only
+// discovering it after parsing fonts.css - shortens the fallback-to-
+// Archivo flash (font-display: swap) rather than removing it outright.
+// Only the latin subset, matching what every page on this site actually
+// uses (see fonts.css's own note on subsetting).
+import archivoLatinWoff2 from "@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url";
 
 interface Props {
   title: string;
@@ -20,6 +26,13 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={archivoLatinWoff2}
+      crossorigin
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonicalURL} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
