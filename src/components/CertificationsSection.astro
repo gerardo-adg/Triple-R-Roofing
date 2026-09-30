@@ -4,12 +4,21 @@
  * display-style lines with rule dividers (same divider language as
  * Trust's column rule), so the section gets real visual presence without
  * introducing the boxed/card pattern the brand direction rules out.
+ *
+ * `logo` is optional and deliberately small (a mark next to the name, not
+ * a badge-forward card) - real certifying-body logos, at whatever aspect
+ * ratio they actually ship in (square badges, wide horizontal lockups),
+ * constrained to a shared height so a very wide logo and a square one
+ * still sit at a consistent visual weight in the same row.
  */
 import Container from "./Container.astro";
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 
 interface Credential {
   name: string;
   description: string;
+  logo?: ImageMetadata;
 }
 
 interface Props {
@@ -33,7 +42,18 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
     <div class="certifications__list" data-reveal>
       {credentials.map((credential) => (
         <div class="certifications__row">
-          <p class="certifications__name">{credential.name}</p>
+          <div class="certifications__identity">
+            {credential.logo && (
+              <Image
+                class="certifications__logo"
+                src={credential.logo}
+                alt=""
+                width={Math.round(96 * (credential.logo.width / credential.logo.height))}
+                height={96}
+              />
+            )}
+            <p class="certifications__name">{credential.name}</p>
+          </div>
           <p class="certifications__description">{credential.description}</p>
         </div>
       ))}
@@ -71,6 +91,33 @@ const { eyebrow, headline, intro, credentials } = Astro.props;
     gap: var(--space-2);
     padding-block: var(--space-6);
     border-bottom: 1px solid var(--color-border-inverse);
+  }
+
+  /* Always stacked (logo above name) rather than side-by-side - relying on
+     flex-wrap to push the name below the logo only when they didn't fit on
+     one line left the layout inconsistent: short names (e.g. "BBB
+     Accredited") sat inline next to their logo while longer ones wrapped
+     below theirs. Stacking unconditionally keeps every row the same. */
+  .certifications__identity {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  /* Bounded on both axes (not just height) - certifying-body logos ship at
+     very different aspect ratios, from near-square badges to wide
+     horizontal lockups (ASC's, ~7:1). Constraining height alone let that
+     one badge render far wider than the others; capping width too (via
+     object-fit: contain, so it still shrinks proportionally) keeps every
+     logo within a consistent visual footprint. */
+  .certifications__logo {
+    height: auto;
+    width: auto;
+    max-height: 40px;
+    max-width: 110px;
+    object-fit: contain;
+    flex-shrink: 0;
   }
 
   .certifications__name {

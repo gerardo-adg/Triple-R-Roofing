@@ -11,6 +11,11 @@ import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
 import pageHeroImage from "../../assets/media/placeholder-page-hero-repair.svg";
 import detailImage from "../../assets/media/placeholder-detail-roof-repair.svg";
+import gafLogo from "../../assets/media/cert-gaf-certified-plus.png";
+import certainteedLogo from "../../assets/media/cert-certainteed-select-shinglemaster.png";
+import owensCorningLogo from "../../assets/media/cert-owens-corning-preferred-contractor.png";
+import ascLogo from "../../assets/media/cert-asc-certified-contractor.png";
+import bbbLogo from "../../assets/media/cert-bbb-accredited-business.png";
 
 // Real jobsite footage: a Triple R crew member on an active roof,
 // patching a leak and explaining the repair as it happens. Not a
@@ -57,19 +62,40 @@ const COVERAGE = [
   },
 ];
 
-// Verified (Trust section, Phase 1 audit / client-confirmed copy).
+// Verified (Trust section, Phase 1 audit / client-confirmed copy), plus
+// Owens Corning and ASC (American Standard Coatings) added directly from
+// the client's own certification badges. Owens Corning/ASC descriptions
+// are deliberately conservative - researched against independent
+// roofing-industry sources (their own program pages were unreachable to
+// verify directly), so specifics like exact warranty terms are left out
+// rather than stated as fact.
 const CREDENTIALS = [
   {
-    name: "GAF Certified",
-    description: "Certified roofing contractor through GAF.",
+    name: "GAF Certified Plus",
+    description: "Certified Plus Residential Roofing Contractor through GAF.",
+    logo: gafLogo,
   },
   {
     name: "CertainTeed SELECT ShingleMaster",
     description: "CertainTeed's SELECT ShingleMaster credential.",
+    logo: certainteedLogo,
+  },
+  {
+    name: "Owens Corning Preferred Contractor",
+    description:
+      "Recognized by Owens Corning as a Preferred Contractor for meeting their standards for licensing, insurance, and installation quality.",
+    logo: owensCorningLogo,
+  },
+  {
+    name: "ASC Certified Contractor",
+    description:
+      "Certified by American Standard Coatings as a trained applicator of their roof coating and restoration systems.",
+    logo: ascLogo,
   },
   {
     name: "BBB Accredited",
     description: "Accredited by the Better Business Bureau.",
+    logo: bbbLogo,
   },
 ];
 
@@ -170,7 +196,7 @@ const FAQS = [
   <CertificationsSection
     eyebrow="Materials & Certifications"
     headline="Backed by the brands behind the roof."
-    intro="Triple R Roofing holds certifications from GAF and CertainTeed and is accredited by the Better Business Bureau."
+    intro="Triple R Roofing holds certifications from GAF, CertainTeed, Owens Corning, and ASC, and is accredited by the Better Business Bureau."
     credentials={CREDENTIALS}
   />
 
