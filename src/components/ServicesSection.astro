@@ -125,6 +125,13 @@ const SERVICES = [
 <style>
   .services {
     padding-block: var(--space-9);
+    /* Mobile-only: Trust's own bottom padding plus this section's top
+       padding (96px + 96px) left an oversized gap above this heading on
+       narrow screens. Pulling the section up closes part of that gap
+       without touching either section's own padding (reset back to 0 on
+       desktop below, where the two paddings already read fine
+       together). */
+    margin-top: -60px;
   }
 
   .services__intro {
@@ -193,6 +200,10 @@ const SERVICES = [
   }
 
   @media (min-width: 900px) {
+    .services {
+      margin-top: 0;
+    }
+
     .services__accordion {
       display: none;
     }
