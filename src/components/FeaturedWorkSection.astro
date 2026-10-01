@@ -2,7 +2,6 @@
 import Container from "./Container.astro";
 import ResponsiveImage from "./ResponsiveImage.astro";
 import PlayableVideo from "./PlayableVideo.astro";
-import projectImage2 from "../assets/media/placeholder-project-2.svg";
 import projectImage3 from "../assets/media/placeholder-project-3.svg";
 import projectImage4 from "../assets/media/placeholder-project-4.svg";
 
@@ -14,6 +13,11 @@ import projectImage4 from "../assets/media/placeholder-project-4.svg";
 // slot in here as real horizontal project videos arrive.
 const NORTH_HIGHLANDS_MUX_ID = "8G23HDzQ7IbFqq01E9wl8c7lfS9B491xkVCJ00p4Q02sQM";
 const NORTH_HIGHLANDS_POSTER = `https://image.mux.com/${NORTH_HIGHLANDS_MUX_ID}/thumbnail.jpg?time=10`;
+
+// Second real video: the same horizontal (16:9) tile-roofing drone clip
+// used on the Tile Roofing service page and the Projects page.
+const TILE_MUX_ID = "KnMcBpUJ6oGWLYkFe01BIOSwHQstRnvJkK02lJLSqDAMs";
+const TILE_POSTER = `https://image.mux.com/${TILE_MUX_ID}/thumbnail.jpg?time=15`;
 
 // Real project photography and captions (type, location) will replace
 // the remaining placeholders once the client provides them. Placeholder
@@ -29,7 +33,15 @@ const PROJECTS = [
     label: "Roof Replacement",
     location: "North Highlands, CA",
   },
-  { index: "02", type: "photo" as const, image: projectImage2 },
+  {
+    index: "02",
+    type: "video" as const,
+    muxPlaybackId: TILE_MUX_ID,
+    poster: TILE_POSTER,
+    alt: "Drone footage of a Triple R tile roofing project.",
+    label: "Tile Roofing",
+    location: "Sacramento, CA",
+  },
   { index: "03", type: "photo" as const, image: projectImage3 },
   { index: "04", type: "photo" as const, image: projectImage4 },
 ];
