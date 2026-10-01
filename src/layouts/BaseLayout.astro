@@ -45,6 +45,9 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
 
+    <!-- Page-specific head tags (e.g. the ad landing page's Meta Pixel). -->
+    <slot name="head" />
+
     <!--
       Synchronous, blocking, and deliberately tiny - runs before first
       paint so the reveal-hiding CSS below (scoped under .js-motion)

@@ -1,0 +1,682 @@
+---
+/**
+ * Meta ads landing page - quiz-funnel version of the client's existing,
+ * already-converting /roof-inspection-request page. Same section order
+ * and the same offer as that page (headline offer -> form -> reviews ->
+ * projects -> services), rebuilt in this site's design system, with the
+ * long form replaced by a one-question-per-screen quiz (QuizForm).
+ *
+ * Not linked from the site's navigation and noindex (LandingLayout) - it
+ * exists only for ad traffic.
+ */
+import LandingLayout from "../../layouts/LandingLayout.astro";
+import Container from "../../components/Container.astro";
+import ResponsiveImage from "../../components/ResponsiveImage.astro";
+import QuizForm from "../../components/landing/QuizForm.astro";
+import { Image } from "astro:assets";
+
+import heroImage from "../../assets/media/photo-home-services-roof-replacement-mobile.jpg";
+import reviewsPhoto from "../../assets/media/photo-contact-tile-repair.jpg";
+import projectReplacement from "../../assets/media/photo-replacement-sacramento-completed-2.jpg";
+import projectTile from "../../assets/media/photo-tile-roof-tearoff-crew.jpg";
+import projectReplacement2 from "../../assets/media/photo-home-services-roof-replacement-desktop.jpg";
+import projectRepair from "../../assets/media/photo-repair-tile-tearoff-crew.jpg";
+import serviceRepair from "../../assets/media/photo-home-services-roof-repair-mobile.jpg";
+import serviceReplacement from "../../assets/media/photo-replacement-shingle-install.jpg";
+import serviceMaintenance from "../../assets/media/photo-maintenance-crew-aerial.jpg";
+
+import gafLogo from "../../assets/media/cert-gaf-certified-plus.png";
+import certainteedLogo from "../../assets/media/cert-certainteed-select-shinglemaster.png";
+import owensCorningLogo from "../../assets/media/cert-owens-corning-preferred-contractor.png";
+import bbbLogo from "../../assets/media/cert-bbb-accredited-business.png";
+
+// The offer exactly as the client's live ad landing page states it.
+// NOTE: the main site's Financing page says 0% for 3 months (Wisetack) -
+// confirm which is current with the client before ads go live and keep
+// this in sync with the ad copy.
+const OFFER_MONTHS = 6;
+
+const GOOGLE_REVIEWS_URL = "https://share.google/thZ2wASKL8GO7bnIW";
+
+// Verbatim from the client's live landing page.
+const REVIEWS = [
+  {
+    name: "Zakary R.",
+    quote:
+      "Honest, experienced, Informative company. Fair pricing and straight forward services. Best thing is they take pics during the job so you know what's going on. Will definitely have them back when we can move forward with more cleaning and certification.",
+  },
+  {
+    name: "Allison N.",
+    quote:
+      "Rogelio and his team did a great job on my family's roof replacement (shingle)/seamless gutters! He went above & beyond to help us find cost effective options and offered best price & value. He was thorough, detailed, and followed through. He was informative, responsive, and shared status updates, arrival time, and pictures.\n\nRogelio and his team worked hard and were careful and reliable. Shout out to Triple R Roofing for providing affordable pricing, excellent customer service (patiently answered all questions), positive attitude, timely work, and good craftsmanship & warranty!",
+  },
+  {
+    name: "Yamel H.",
+    quote:
+      "I had some serious issues with my roof after a recent storm, and I'm so glad I found Triple R. They showed up on time, explained everything clearly, and got the job done quickly without cutting corners. The crew was super respectful of my property and cleaned up after themselves really well. You can tell they take pride in their work. My roof looks great now, and I feel confident it'll hold up for years. Definitely a company you can trust!",
+  },
+];
+
+const PROJECTS = [
+  { image: projectReplacement, label: "Roof Replacement", alt: "Aerial view of a completed roof replacement in Sacramento, California." },
+  { image: projectTile, label: "Tile Roofing", alt: "A Triple R crew tearing off and replacing a tile roof." },
+  { image: projectReplacement2, label: "Roof Replacement", alt: "Aerial view of a completed shingle roof replacement." },
+  { image: projectRepair, label: "Roof Repair", alt: "Aerial view of a Triple R crew repairing a tile roof." },
+];
+
+// Repair/replacement copy is the client's own, from the live landing page.
+const SERVICES = [
+  {
+    title: "Roof Repairs",
+    image: serviceRepair,
+    alt: "A Triple R crew member tearing off damaged tiles during a roof repair.",
+    body: "Our roof repair services are designed to keep your home safe, dry, and protected year-round. Whether you're dealing with missing shingles, leaks, storm damage, or general wear and tear, our experienced team provides fast, reliable solutions that restore your roof's strength and extend its lifespan.",
+  },
+  {
+    title: "Roof Replacements",
+    image: serviceReplacement,
+    alt: "A Triple R crew member installing shingles during a roof replacement.",
+    body: "When repairs aren't enough, a full roof replacement is the best way to protect your home and increase its value. We install durable, energy-efficient roofing systems built to stand up to harsh weather and last for decades, and guide you through every step from materials to final installation.",
+  },
+  {
+    title: "Roof Maintenance",
+    image: serviceMaintenance,
+    alt: "Aerial view of the Triple R crew performing roof maintenance.",
+    body: "Regular maintenance catches small problems before they become expensive ones. We clean valleys and gutters, replace broken or slipped tiles, reseal flashings, and patch trouble spots, with photos of everything we do so you always know the condition of your roof.",
+  },
+];
+
+const CREDENTIALS = [
+  { logo: gafLogo, name: "GAF Certified" },
+  { logo: certainteedLogo, name: "CertainTeed Select ShingleMaster" },
+  { logo: owensCorningLogo, name: "Owens Corning Preferred Contractor" },
+  { logo: bbbLogo, name: "BBB Accredited Business" },
+];
+---
+
+<LandingLayout
+  title={`New Roof for $0 Down & 0% Interest | Triple R Roofing`}
+  description={`New roof for $0 down and 0% interest for ${OFFER_MONTHS} months for qualified homeowners. Request a free roof inspection from Triple R Roofing in the Greater Sacramento area.`}
+>
+  <!-- ---- Hero + quiz ---- -->
+  <section class="lp-hero section--inverse">
+    <div class="lp-hero__media" aria-hidden="true">
+      <ResponsiveImage
+        src={heroImage}
+        alt=""
+        widths={[640, 1024, 1600, 2400]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+    <Container>
+      <div class="lp-hero__content">
+        <p class="eyebrow">Greater Sacramento Area Roofing Experts</p>
+        <h1 class="lp-hero__headline">
+          New Roof for <span class="lp-hero__accent">$0 Down</span> &amp;
+          <span class="lp-hero__accent">0% Interest</span> for {OFFER_MONTHS} Months.
+        </h1>
+        <p class="lp-hero__sub">See if you qualify in under 60 seconds.</p>
+        <ul class="lp-hero__trust">
+          <li><span class="lp-star" aria-hidden="true">&#9733;</span> 4.8 on Google</li>
+          <li>Licensed, bonded &amp; insured</li>
+          <li>GAF &amp; CertainTeed certified</li>
+        </ul>
+      </div>
+    </Container>
+  </section>
+
+  <section class="lp-quiz" id="quiz">
+    <div class="lp-quiz__card">
+      <h2 class="lp-quiz__title">
+        Request a <span class="lp-quiz__accent">FREE Roof Inspection</span>
+      </h2>
+      <p class="lp-quiz__lead">Answer 5 quick questions to get started with a free inspection and quote.</p>
+      <QuizForm />
+    </div>
+  </section>
+
+  <!-- ---- Credentials ---- -->
+  <section class="lp-creds" aria-label="Certifications">
+    <Container>
+      <ul class="lp-creds__list">
+        {CREDENTIALS.map((credential) => (
+          <li class="lp-creds__item">
+            <Image
+              src={credential.logo}
+              alt={credential.name}
+              height={64}
+              width={Math.round(64 * (credential.logo.width / credential.logo.height))}
+              densities={[2]}
+              loading="lazy"
+              class="lp-creds__logo"
+            />
+          </li>
+        ))}
+      </ul>
+    </Container>
+  </section>
+
+  <!-- ---- Reviews ---- -->
+  <section class="lp-reviews">
+    <Container>
+      <div class="lp-reviews__split">
+        <div class="lp-reviews__panel" data-reveal>
+          <p class="eyebrow">Google Reviews</p>
+          <h2 class="lp-reviews__headline">Our reviews.</h2>
+          <p class="lp-reviews__rating">
+            <span class="lp-star" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            4.8 average &middot; 95 Google reviews
+          </p>
+          <div class="lp-reviews__list">
+            {REVIEWS.map((review) => (
+              <figure class="lp-review">
+                <div class="lp-star" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <blockquote class="lp-review__quote">&ldquo;{review.quote}&rdquo;</blockquote>
+                <figcaption class="lp-review__name">&mdash; {review.name}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <a href={GOOGLE_REVIEWS_URL} class="lp-reviews__more" target="_blank" rel="noopener noreferrer">
+            Read more on Google &rarr;
+          </a>
+        </div>
+        <div class="lp-reviews__photo" data-reveal-media>
+          <ResponsiveImage
+            src={reviewsPhoto}
+            alt="A Triple R Roofing crew member repairing a broken tile roof in Elk Grove, California."
+            widths={[480, 768, 1024]}
+            sizes="(min-width: 900px) 45vw, 100vw"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <!-- ---- Projects ---- -->
+  <section class="lp-projects">
+    <Container>
+      <div class="lp-section-head" data-reveal>
+        <p class="eyebrow">Recent work</p>
+        <h2 class="lp-section-head__title">Our projects.</h2>
+      </div>
+      <div class="lp-projects__grid">
+        {PROJECTS.map((project) => (
+          <figure class="lp-project" data-reveal-media>
+            <div class="lp-project__frame">
+              <ResponsiveImage
+                src={project.image}
+                alt={project.alt}
+                widths={[400, 640, 900]}
+                sizes="(min-width: 1024px) 25vw, (min-width: 600px) 50vw, 100vw"
+                loading="lazy"
+              />
+            </div>
+            <figcaption class="lp-project__label">{project.label}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <!-- ---- Services ---- -->
+  <section class="lp-services">
+    <Container>
+      <div class="lp-section-head" data-reveal>
+        <p class="eyebrow">What we do</p>
+        <h2 class="lp-section-head__title">Professional &amp; trusted roofing solutions.</h2>
+      </div>
+      <div class="lp-services__grid">
+        {SERVICES.map((service) => (
+          <article class="lp-service section--inverse" data-reveal>
+            <div class="lp-service__frame">
+              <ResponsiveImage
+                src={service.image}
+                alt={service.alt}
+                widths={[400, 640, 900]}
+                sizes="(min-width: 1024px) 33vw, 100vw"
+                loading="lazy"
+              />
+            </div>
+            <div class="lp-service__body">
+              <h3 class="lp-service__title">{service.title}</h3>
+              <p>{service.body}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <!-- ---- Final CTA ---- -->
+  <section class="lp-final section--inverse">
+    <Container>
+      <div class="lp-final__inner" data-reveal>
+        <h2 class="lp-final__headline">
+          $0 down. 0% interest for {OFFER_MONTHS} months.
+        </h2>
+        <p class="lp-final__body">
+          Find out if you qualify and get a free roof inspection from a Sacramento crew homeowners trust.
+        </p>
+        <div class="lp-final__actions">
+          <a href="#quiz" class="lp-cta">See If I Qualify &rarr;</a>
+          <a href="tel:+19164205635" class="lp-cta lp-cta--ghost" data-track="call">Call (916) 420-5635</a>
+        </div>
+        <p class="lp-final__fineprint">Financing available to qualified borrowers, subject to credit approval.</p>
+      </div>
+    </Container>
+  </section>
+</LandingLayout>
+
+<script>
+  // "See If I Qualify" jumps to the quiz and puts focus on its first
+  // question, so keyboard and screen-reader users land in the right place.
+  document.querySelectorAll<HTMLAnchorElement>('a[href="#quiz"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const quiz = document.getElementById("quiz");
+      if (!quiz) return;
+      event.preventDefault();
+      quiz.scrollIntoView({ behavior: "smooth", block: "start" });
+      const question = quiz.querySelector<HTMLElement>(".quiz__step:not([hidden]) .quiz__question");
+      question?.focus({ preventScroll: true });
+    });
+  });
+
+  // Call taps are a lead too - report them to the pixel when it's loaded.
+  document.querySelectorAll<HTMLAnchorElement>('[data-track="call"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      const fbq = (window as unknown as { fbq?: (...args: unknown[]) => void }).fbq;
+      if (fbq) fbq("track", "Contact");
+    });
+  });
+</script>
+
+<style>
+  html {
+    scroll-padding-top: var(--space-4);
+  }
+
+  .lp-star {
+    color: var(--color-gold);
+    letter-spacing: 0.08em;
+  }
+
+  /* ---- Hero ---- */
+  .lp-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-top: var(--space-8);
+    padding-bottom: calc(var(--space-9) + var(--space-8));
+    text-align: center;
+  }
+
+  .lp-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .lp-hero__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .lp-hero__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgb(10 10 10 / 72%) 0%, rgb(10 10 10 / 82%) 100%);
+  }
+
+  .lp-hero__content {
+    max-width: 980px;
+    margin-inline: auto;
+  }
+
+  .lp-hero__headline {
+    font-size: var(--text-h2);
+    margin-top: var(--space-4);
+  }
+
+  .lp-hero__accent {
+    color: var(--color-gold);
+  }
+
+  .lp-hero__sub {
+    margin: var(--space-5) auto 0;
+    font-size: var(--text-body-lg);
+    color: var(--color-text-inverse);
+  }
+
+  .lp-hero__trust {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2) var(--space-5);
+    margin-top: var(--space-5);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text-muted-inverse);
+  }
+
+  /* ---- Quiz card (overlaps the hero, like the original page) ---- */
+  .lp-quiz {
+    position: relative;
+    z-index: 2;
+    padding-inline: var(--space-4);
+    margin-top: calc(-1 * (var(--space-9) + var(--space-6)));
+  }
+
+  .lp-quiz__card {
+    max-width: 760px;
+    margin-inline: auto;
+    padding: var(--space-6) var(--space-5);
+    background: var(--color-bg);
+    border-top: 4px solid var(--color-gold);
+    box-shadow: var(--shadow-soft);
+  }
+
+  @media (min-width: 768px) {
+    .lp-quiz__card {
+      padding: var(--space-7) var(--space-8);
+    }
+  }
+
+  .lp-quiz__title {
+    font-size: var(--text-h4);
+    text-align: center;
+  }
+
+  .lp-quiz__accent {
+    color: var(--color-accent-strong);
+  }
+
+  .lp-quiz__lead {
+    margin: var(--space-3) auto var(--space-6);
+    text-align: center;
+  }
+
+  /* ---- Credentials ---- */
+  .lp-creds {
+    padding-block: var(--space-7);
+  }
+
+  .lp-creds__list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-5) var(--space-7);
+  }
+
+  .lp-creds__logo {
+    height: 52px;
+    width: auto;
+    max-width: 160px;
+    object-fit: contain;
+  }
+
+  @media (min-width: 768px) {
+    .lp-creds__logo {
+      height: 64px;
+    }
+  }
+
+  /* ---- Reviews ---- */
+  .lp-reviews {
+    padding-block: var(--space-8);
+  }
+
+  .lp-reviews__split {
+    display: grid;
+    background: var(--color-bg-raised);
+    box-shadow: var(--shadow-soft);
+  }
+
+  @media (min-width: 900px) {
+    .lp-reviews__split {
+      grid-template-columns: 55fr 45fr;
+    }
+  }
+
+  .lp-reviews__panel {
+    padding: var(--space-6) var(--space-5);
+  }
+
+  @media (min-width: 768px) {
+    .lp-reviews__panel {
+      padding: var(--space-8) var(--space-7);
+    }
+  }
+
+  .lp-reviews__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+  }
+
+  .lp-reviews__rating {
+    margin-top: var(--space-3);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+  }
+
+  .lp-reviews__list {
+    display: grid;
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+  }
+
+  .lp-review__quote {
+    margin-top: var(--space-2);
+    white-space: pre-line;
+    color: var(--color-text-muted);
+  }
+
+  .lp-review__name {
+    margin-top: var(--space-3);
+    font-weight: var(--weight-bold);
+  }
+
+  .lp-reviews__more {
+    display: inline-block;
+    margin-top: var(--space-6);
+    font-weight: var(--weight-bold);
+    color: var(--color-accent-strong);
+    border-bottom: 1px solid var(--color-border-gold);
+    text-decoration: none;
+  }
+
+  .lp-reviews__photo {
+    position: relative;
+    min-height: 360px;
+    max-height: 520px;
+    overflow: hidden;
+  }
+
+  @media (min-width: 900px) {
+    .lp-reviews__photo {
+      max-height: none;
+    }
+  }
+
+  .lp-reviews__photo :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ---- Shared section heading ---- */
+  .lp-section-head {
+    text-align: center;
+    margin-bottom: var(--space-6);
+  }
+
+  .lp-section-head__title {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+  }
+
+  /* ---- Projects ---- */
+  .lp-projects {
+    padding-block: var(--space-8);
+    background: var(--color-bg-raised);
+  }
+
+  .lp-projects__grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (min-width: 1024px) {
+    .lp-projects__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .lp-project__frame {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+
+  .lp-project__frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .lp-project__label {
+    margin-top: var(--space-2);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  /* ---- Services ---- */
+  .lp-services {
+    padding-block: var(--space-8);
+  }
+
+  .lp-services__grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 900px) {
+    .lp-services__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .lp-service {
+    padding: var(--space-3);
+  }
+
+  .lp-service__frame {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .lp-service__frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .lp-service__body {
+    padding: var(--space-4) var(--space-2) var(--space-3);
+  }
+
+  .lp-service__title {
+    font-size: var(--text-h5);
+    color: var(--color-gold) !important;
+    margin-bottom: var(--space-3);
+  }
+
+  /* ---- Final CTA ---- */
+  .lp-final {
+    padding-block: var(--space-9);
+    text-align: center;
+    border-top: 4px solid var(--color-gold);
+  }
+
+  .lp-final__inner {
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
+  .lp-final__headline {
+    font-size: var(--text-h3);
+  }
+
+  .lp-final__body {
+    margin: var(--space-4) auto 0;
+    font-size: var(--text-body-lg);
+  }
+
+  .lp-final__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+
+  .lp-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    padding: var(--space-4) var(--space-6);
+    font-weight: var(--weight-black);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    text-decoration: none;
+    background: var(--color-gold);
+    color: var(--color-charcoal);
+    border: 1px solid var(--color-gold);
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard);
+  }
+
+  .lp-cta:hover {
+    background: var(--color-paper);
+    border-color: var(--color-paper);
+  }
+
+  .lp-cta--ghost {
+    background: transparent;
+    color: var(--color-text-inverse);
+    border-color: var(--color-border-inverse);
+  }
+
+  .lp-cta--ghost:hover {
+    background: transparent;
+    color: var(--color-gold);
+    border-color: var(--color-gold);
+  }
+
+  .lp-final__fineprint {
+    margin: var(--space-5) auto 0;
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 479px) {
+    .lp-cta {
+      width: 100%;
+    }
+  }
+</style>

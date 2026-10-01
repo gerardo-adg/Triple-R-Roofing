@@ -1,0 +1,653 @@
+---
+/**
+ * Step-by-step quiz version of the client's existing (converting)
+ * "Request a FREE Roof Inspection" form - same questions, same fields,
+ * one question per screen, contact details last.
+ *
+ * It's ONE real <form> with every field present in the static HTML, so
+ * Netlify Forms detects all of them at deploy time and a visitor without
+ * JS simply sees (and submits) the whole thing as a normal long form.
+ * With JS, the script below turns each <fieldset data-step> into its own
+ * screen. Nothing is submitted until the final step.
+ */
+
+// Same options, same order as the live landing page's form.
+const SERVICES = [
+  "Roof Repair",
+  "Roof Replacement",
+  "Gutter Replacement",
+  "Roof Maintenance",
+  "Solar Panel Cleaning",
+  "Roof Moss Removal",
+  "Other",
+];
+
+const PAYMENT = [
+  { value: "Financing", hint: "$0 down options for qualified homeowners" },
+  { value: "Cash", hint: "Paying out of pocket" },
+  { value: "Insurance", hint: "Storm or damage claim" },
+  { value: "Not Sure Yet", hint: "We'll walk you through options" },
+];
+
+// Autocomplete suggestions only - any city can still be typed.
+const CITIES = [
+  "Sacramento",
+  "Elk Grove",
+  "Roseville",
+  "Citrus Heights",
+  "Folsom",
+  "Rancho Cordova",
+  "Carmichael",
+  "Fair Oaks",
+  "North Highlands",
+  "Antelope",
+  "Rocklin",
+  "Natomas",
+  "West Sacramento",
+  "Davis",
+  "Orangevale",
+  "Granite Bay",
+  "Lincoln",
+  "El Dorado Hills",
+];
+
+const TOTAL_STEPS = 5;
+
+// Ad attribution - copied from the landing URL into the lead so each
+// submission in Netlify shows which campaign/ad it came from.
+const TRACKING_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid"];
+---
+
+<form
+  name="roof-inspection-quiz"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  action="/free-roof-inspection/thank-you"
+  class="quiz"
+  data-quiz
+>
+  <input type="hidden" name="form-name" value="roof-inspection-quiz" />
+  {TRACKING_FIELDS.map((name) => <input type="hidden" name={name} value="" data-tracking />)}
+  <p class="quiz__honeypot" aria-hidden="true">
+    <label>
+      Leave this field blank
+      <input name="bot-field" tabindex="-1" autocomplete="off" />
+    </label>
+  </p>
+
+  <div class="quiz__progress" data-quiz-progress hidden>
+    <div class="quiz__progress-meta">
+      <button type="button" class="quiz__back" data-quiz-back>
+        <span aria-hidden="true">&larr;</span> Back
+      </button>
+      <span class="quiz__progress-label" aria-live="polite">
+        Step <span data-quiz-current>1</span> of {TOTAL_STEPS}
+      </span>
+    </div>
+    <div class="quiz__progress-track" aria-hidden="true">
+      <div class="quiz__progress-bar" data-quiz-bar></div>
+    </div>
+  </div>
+
+  <!-- 1. Project type (multi-select, like the original) -->
+  <fieldset class="quiz__step" data-step data-required-group="services[]">
+    <legend class="quiz__question" tabindex="-1">What can we help you with?</legend>
+    <p class="quiz__hint">Select all that apply.</p>
+    <div class="quiz__options quiz__options--grid">
+      {SERVICES.map((service) => (
+        <label class="quiz__option">
+          <input type="checkbox" name="services[]" value={service} />
+          <span class="quiz__option-box">
+            <span class="quiz__check" aria-hidden="true"></span>
+            <span class="quiz__option-label">{service}</span>
+          </span>
+        </label>
+      ))}
+    </div>
+    <p class="quiz__error" data-quiz-error hidden>Pick at least one to continue.</p>
+    <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
+  </fieldset>
+
+  <!-- 2. Payment (single choice - auto-advances on tap) -->
+  <fieldset class="quiz__step" data-step data-required-group="payment" data-auto-advance>
+    <legend class="quiz__question" tabindex="-1">How do you plan to pay for this project?</legend>
+    <p class="quiz__hint">No commitment &mdash; this just helps us prepare your quote.</p>
+    <div class="quiz__options">
+      {PAYMENT.map((option) => (
+        <label class="quiz__option">
+          <input type="radio" name="payment" value={option.value} />
+          <span class="quiz__option-box">
+            <span class="quiz__check quiz__check--radio" aria-hidden="true"></span>
+            <span class="quiz__option-text">
+              <span class="quiz__option-label">{option.value}</span>
+              <span class="quiz__option-hint">{option.hint}</span>
+            </span>
+          </span>
+        </label>
+      ))}
+    </div>
+    <p class="quiz__error" data-quiz-error hidden>Pick one to continue.</p>
+    <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
+  </fieldset>
+
+  <!-- 3. City -->
+  <fieldset class="quiz__step" data-step>
+    <legend class="quiz__question" tabindex="-1">What city is the property in?</legend>
+    <p class="quiz__hint">We serve the Greater Sacramento area.</p>
+    <div class="quiz__field">
+      <label for="quiz-city" class="visually-hidden">City</label>
+      <input
+        id="quiz-city"
+        name="city"
+        type="text"
+        list="quiz-cities"
+        autocomplete="address-level2"
+        placeholder="e.g. Elk Grove"
+        required
+      />
+      <datalist id="quiz-cities">
+        {CITIES.map((city) => <option value={city} />)}
+      </datalist>
+    </div>
+    <p class="quiz__error" data-quiz-error hidden>Enter your city to continue.</p>
+    <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
+  </fieldset>
+
+  <!-- 4. Details (optional) -->
+  <fieldset class="quiz__step" data-step>
+    <legend class="quiz__question" tabindex="-1">Anything else we should know?</legend>
+    <p class="quiz__hint">Leaks, storm damage, roof age &mdash; optional, but it helps.</p>
+    <div class="quiz__field">
+      <label for="quiz-details" class="visually-hidden">Additional details about your project</label>
+      <textarea
+        id="quiz-details"
+        name="details"
+        rows="4"
+        placeholder="e.g. Leak over the garage after the last storm, roof is about 20 years old."
+      ></textarea>
+    </div>
+    <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
+  </fieldset>
+
+  <!-- 5. Contact -->
+  <fieldset class="quiz__step" data-step>
+    <legend class="quiz__question" tabindex="-1">Last step: where should we send your free inspection details?</legend>
+    <p class="quiz__hint">We&rsquo;ll reach out to schedule a time that works for you.</p>
+    <div class="quiz__row">
+      <div class="quiz__field">
+        <label for="quiz-first">First Name</label>
+        <input id="quiz-first" name="first_name" type="text" autocomplete="given-name" required />
+      </div>
+      <div class="quiz__field">
+        <label for="quiz-last">Last Name</label>
+        <input id="quiz-last" name="last_name" type="text" autocomplete="family-name" required />
+      </div>
+    </div>
+    <div class="quiz__field">
+      <label for="quiz-phone">Phone</label>
+      <input id="quiz-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required minlength="10" />
+    </div>
+    <div class="quiz__field">
+      <label for="quiz-email">Email</label>
+      <input id="quiz-email" name="email" type="email" inputmode="email" autocomplete="email" required />
+    </div>
+    <p class="quiz__error" data-quiz-error hidden>Please fill in all fields with a valid phone and email.</p>
+    <button type="submit" class="quiz__next quiz__submit">
+      Get My Free Inspection <span aria-hidden="true">&rarr;</span>
+    </button>
+    <p class="quiz__fineprint">
+      By submitting, you agree Triple R Roofing may contact you by phone, text, or email about your
+      request. No obligation. Financing subject to credit approval.
+    </p>
+  </fieldset>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-quiz]");
+
+  if (form) {
+    const steps = Array.from(form.querySelectorAll<HTMLFieldSetElement>("[data-step]"));
+    const progress = form.querySelector<HTMLElement>("[data-quiz-progress]")!;
+    const bar = form.querySelector<HTMLElement>("[data-quiz-bar]")!;
+    const currentLabel = form.querySelector<HTMLElement>("[data-quiz-current]")!;
+    const back = form.querySelector<HTMLButtonElement>("[data-quiz-back]")!;
+    let current = 0;
+
+    // Carry ad attribution from the landing URL into the lead.
+    const params = new URLSearchParams(window.location.search);
+    form.querySelectorAll<HTMLInputElement>("[data-tracking]").forEach((input) => {
+      input.value = params.get(input.name) ?? "";
+    });
+
+    const track = (event: string, data?: Record<string, unknown>) => {
+      const fbq = (window as unknown as { fbq?: (...args: unknown[]) => void }).fbq;
+      if (fbq) fbq("trackCustom", event, data);
+    };
+
+    const isStepValid = (step: HTMLFieldSetElement) => {
+      const group = step.dataset.requiredGroup;
+      if (group) {
+        return step.querySelector(`input[name="${group}"]:checked`) !== null;
+      }
+      const fields = Array.from(step.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea"));
+      return fields.every((field) => {
+        if (field.type === "tel" && field.value.replace(/\D/g, "").length < 10) return false;
+        return field.checkValidity();
+      });
+    };
+
+    const showError = (step: HTMLFieldSetElement, show: boolean) => {
+      const error = step.querySelector<HTMLElement>("[data-quiz-error]");
+      if (error) error.hidden = !show;
+    };
+
+    const show = (index: number, focus = true) => {
+      current = index;
+      steps.forEach((step, i) => {
+        step.hidden = i !== index;
+      });
+      currentLabel.textContent = String(index + 1);
+      bar.style.width = `${((index + 1) / steps.length) * 100}%`;
+      back.hidden = index === 0;
+      if (focus) {
+        steps[index].querySelector<HTMLElement>(".quiz__question")?.focus({ preventScroll: true });
+        // Keep the question in view on phones, where the card may have
+        // scrolled up with the previous step's taller content.
+        const top = form.getBoundingClientRect().top;
+        if (top < 0) form.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+
+    const next = () => {
+      const step = steps[current];
+      if (!isStepValid(step)) {
+        showError(step, true);
+        return;
+      }
+      showError(step, false);
+      track("QuizStep", { step: current + 1 });
+      if (current < steps.length - 1) show(current + 1);
+    };
+
+    // Browser validation stays on for the no-JS long form; the stepped
+    // version validates one step at a time itself.
+    form.noValidate = true;
+    form.classList.add("quiz--enhanced");
+    progress.hidden = false;
+    show(0, false);
+
+    form.querySelectorAll("[data-quiz-next]").forEach((button) => {
+      if ((button as HTMLButtonElement).type === "submit") return;
+      button.addEventListener("click", next);
+    });
+
+    back.addEventListener("click", () => {
+      if (current > 0) show(current - 1);
+    });
+
+    // Single-choice steps advance on tap - one less button press per
+    // question. A short delay lets the selected state register visually.
+    steps.forEach((step) => {
+      step.addEventListener("change", () => {
+        showError(step, false);
+        if (step.dataset.autoAdvance !== undefined) window.setTimeout(next, 220);
+      });
+    });
+
+    // Enter in a text input moves forward instead of submitting early.
+    form.addEventListener("keydown", (event) => {
+      const target = event.target as HTMLElement;
+      if (event.key === "Enter" && target instanceof HTMLInputElement && current < steps.length - 1) {
+        event.preventDefault();
+        next();
+      }
+    });
+
+    form.addEventListener("submit", (event) => {
+      const step = steps[current];
+      if (current !== steps.length - 1 || !isStepValid(step)) {
+        event.preventDefault();
+        if (current === steps.length - 1) showError(step, true);
+        else next();
+        return;
+      }
+      const submit = step.querySelector<HTMLButtonElement>("[type=submit]");
+      if (submit) {
+        submit.disabled = true;
+        submit.textContent = "Sending…";
+      }
+    });
+  }
+</script>
+
+<style>
+  .quiz {
+    position: relative;
+  }
+
+  .quiz__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* ---- Progress ---- */
+  .quiz__progress {
+    margin-bottom: var(--space-5);
+  }
+
+  .quiz__progress-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 2rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .quiz__back {
+    background: none;
+    border: 0;
+    padding: var(--space-1) 0;
+    cursor: pointer;
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text-muted);
+  }
+
+  .quiz__back:hover {
+    color: var(--color-accent-strong);
+  }
+
+  .quiz__back[hidden] {
+    display: inline-block;
+    visibility: hidden;
+  }
+
+  .quiz__progress-label {
+    margin-left: auto;
+    font-size: var(--text-eyebrow);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-accent-strong);
+  }
+
+  .quiz__progress-track {
+    height: 4px;
+    background: var(--color-border);
+  }
+
+  .quiz__progress-bar {
+    height: 100%;
+    width: 20%;
+    background: var(--color-accent);
+    transition: width var(--duration-base) var(--ease-out);
+  }
+
+  /* ---- Steps ---- */
+  .quiz__step {
+    border: 0;
+    padding: 0;
+    min-width: 0;
+  }
+
+  /* No-JS: every step shows as one long form, separated by rules. */
+  .quiz:not(.quiz--enhanced) .quiz__step + .quiz__step {
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .quiz:not(.quiz--enhanced) .quiz__next:not(.quiz__submit) {
+    display: none;
+  }
+
+  .quiz--enhanced .quiz__step:not([hidden]) {
+    animation: quiz-step-in var(--duration-base) var(--ease-out);
+  }
+
+  @keyframes quiz-step-in {
+    from {
+      opacity: 0;
+      transform: translateX(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .quiz__question {
+    display: block;
+    width: 100%;
+    font-family: var(--font-display);
+    font-size: var(--text-h5);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+    text-wrap: balance;
+    color: var(--color-text);
+    padding: 0;
+    outline: none;
+  }
+
+  .quiz__hint {
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-5);
+    font-size: var(--text-body-sm);
+  }
+
+  /* ---- Option tiles ---- */
+  .quiz__options {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 600px) {
+    .quiz__options--grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .quiz__option {
+    display: block;
+    cursor: pointer;
+  }
+
+  .quiz__option input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .quiz__option-box {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 56px;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    transition:
+      border-color var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard);
+  }
+
+  .quiz__option:hover .quiz__option-box {
+    border-color: var(--color-accent-strong);
+  }
+
+  .quiz__option input:focus-visible + .quiz__option-box {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .quiz__option input:checked + .quiz__option-box {
+    background: var(--color-charcoal);
+    border-color: var(--color-charcoal);
+    color: var(--color-text-inverse);
+  }
+
+  .quiz__check {
+    flex-shrink: 0;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--color-border);
+    background: var(--color-bg-raised);
+  }
+
+  .quiz__check--radio {
+    border-radius: 50%;
+  }
+
+  .quiz__option input:checked + .quiz__option-box .quiz__check {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .quiz__option input:checked + .quiz__option-box .quiz__check::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--color-charcoal);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .quiz__option-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .quiz__option-label {
+    font-weight: var(--weight-bold);
+  }
+
+  .quiz__option-hint {
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  .quiz__option input:checked + .quiz__option-box .quiz__option-hint {
+    color: var(--color-text-muted-inverse);
+  }
+
+  /* ---- Text fields ---- */
+  .quiz__row {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 600px) {
+    .quiz__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .quiz__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  .quiz__row .quiz__field {
+    margin-bottom: 0;
+  }
+
+  .quiz__row {
+    margin-bottom: var(--space-4);
+  }
+
+  .quiz__field label {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .quiz__field input,
+  .quiz__field textarea {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    min-height: 52px;
+    color: var(--color-text);
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-none);
+    padding: var(--space-3) var(--space-4);
+    transition: border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .quiz__field input:focus-visible,
+  .quiz__field textarea:focus-visible {
+    border-color: var(--color-accent-strong);
+  }
+
+  .quiz__field textarea {
+    resize: vertical;
+    min-height: 110px;
+  }
+
+  .quiz__error {
+    margin-top: var(--space-3);
+    margin-bottom: 0;
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    color: #a3261b;
+  }
+
+  /* ---- Buttons ---- */
+  .quiz__next {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    width: 100%;
+    min-height: 56px;
+    margin-top: var(--space-5);
+    padding: var(--space-4) var(--space-6);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    font-weight: var(--weight-black);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    background: var(--color-gold);
+    color: var(--color-charcoal);
+    border: 1px solid var(--color-gold);
+    border-radius: var(--radius-none);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard);
+  }
+
+  .quiz__next:hover {
+    background: var(--color-charcoal);
+    border-color: var(--color-charcoal);
+    color: var(--color-gold);
+  }
+
+  .quiz__next:disabled {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .quiz__fineprint {
+    margin-top: var(--space-4);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    max-width: none;
+    text-align: center;
+  }
+</style>
