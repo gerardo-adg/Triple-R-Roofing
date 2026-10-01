@@ -7,6 +7,7 @@ import serviceImage3 from "../assets/media/placeholder-service-3.svg";
 import roofReplacementMobileImage from "../assets/media/photo-home-services-roof-replacement-mobile.jpg";
 import roofRepairDesktopImage from "../assets/media/photo-home-services-roof-repair-desktop.jpg";
 import roofReplacementDesktopImage from "../assets/media/photo-home-services-roof-replacement-desktop.jpg";
+import roofRepairMobileImage from "../assets/media/photo-home-services-roof-repair-mobile.jpg";
 
 // Descriptions carried over verbatim from the client's existing site
 // (confirmed during the Phase 1 audit) rather than rewritten from
@@ -41,6 +42,11 @@ const SERVICES = [
     // height, split top/bottom) into this box's 4:5 ratio, which is far
     // gentler than forcing it into the mobile accordion's 16:9 panel.
     desktopImage: roofRepairDesktopImage,
+    // Real client photo, requested for the mobile accordion panel too -
+    // it's close to square (1206:1322), a much tighter box than this
+    // panel's 16:9, so it crops significantly (~49% of its height) to
+    // fill the width - client said cropping is fine.
+    mobileImage: roofRepairMobileImage,
   },
   {
     index: "03",
