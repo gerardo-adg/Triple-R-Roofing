@@ -2,14 +2,14 @@
 import InteriorLayout from "../../layouts/InteriorLayout.astro";
 import Container from "../../components/Container.astro";
 import PageHero from "../../components/PageHero.astro";
-import PhotoBand from "../../components/PhotoBand.astro";
+import ResponsiveImage from "../../components/ResponsiveImage.astro";
 import PlayableVideo from "../../components/PlayableVideo.astro";
 import ServiceIncludes from "../../components/ServiceIncludes.astro";
 import CertificationsSection from "../../components/CertificationsSection.astro";
 import FinancingCallout from "../../components/FinancingCallout.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
-import detailImage from "../../assets/media/placeholder-detail-roof-replacement.svg";
+import overviewImage from "../../assets/media/photo-replacement-shingle-install.jpg";
 import gafLogo from "../../assets/media/cert-gaf-certified-plus.png";
 import gafSilverPledgeLogo from "../../assets/media/cert-gaf-silver-pledge.png";
 import certainteedLogo from "../../assets/media/cert-certainteed-select-shinglemaster.png";
@@ -167,29 +167,36 @@ const FAQS = [
 
   <section class="overview">
     <Container>
-      <div class="overview__content" data-reveal>
-        <p class="eyebrow">Roof Replacement</p>
-        <h2 class="overview__headline">When repair isn&rsquo;t enough.</h2>
-        <p class="overview__body">
-          Most roofing problems start small: a leak, a few damaged shingles,
-          storm wear on one slope. Those are usually a repair, not a full
-          replacement, and we&rsquo;ll tell you that plainly if that&rsquo;s
-          what your roof needs.
-        </p>
-        <p class="overview__body">
-          A full replacement makes sense when the issue isn&rsquo;t isolated.
-          That&rsquo;s when patching a section would just be delaying the
-          same problem, and starting over from the deck up is the more
-          honest fix.
-        </p>
+      <div class="overview__grid">
+        <div class="overview__content" data-reveal>
+          <p class="eyebrow">Roof Replacement</p>
+          <h2 class="overview__headline">When repair isn&rsquo;t enough.</h2>
+          <p class="overview__body">
+            Most roofing problems start small: a leak, a few damaged shingles,
+            storm wear on one slope. Those are usually a repair, not a full
+            replacement, and we&rsquo;ll tell you that plainly if that&rsquo;s
+            what your roof needs.
+          </p>
+          <p class="overview__body">
+            A full replacement makes sense when the issue isn&rsquo;t isolated.
+            That&rsquo;s when patching a section would just be delaying the
+            same problem, and starting over from the deck up is the more
+            honest fix.
+          </p>
+        </div>
+
+        <div class="overview__media" data-reveal-media>
+          <ResponsiveImage
+            src={overviewImage}
+            alt="A Triple R crew member installing shingles during a roof replacement in North Highlands, California."
+            widths={[400, 600, 800, 1200]}
+            sizes="(min-width: 900px) 50vw, 100vw"
+            loading="lazy"
+          />
+        </div>
       </div>
     </Container>
   </section>
-
-  <PhotoBand
-    image={detailImage}
-    imageAlt=""
-  />
 
   <ServiceIncludes
     eyebrow="What's included"
@@ -269,6 +276,16 @@ const FAQS = [
     padding-block: var(--space-9);
   }
 
+  /* Stacked (text above photo) on mobile, text-left/photo-right at
+     desktop - same split as Tile Roofing's own overview section, applied
+     here now that a real North Highlands jobsite photo exists to fill it
+     instead of the old placeholder PhotoBand. */
+  .overview__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+
   .overview__content {
     max-width: 720px;
   }
@@ -282,6 +299,49 @@ const FAQS = [
   .overview__body {
     font-size: var(--text-body-lg);
     max-width: 62ch;
+  }
+
+  /* 4:5, not the source photo's own portrait ratio (1126:2000) - a
+     gentler crop that still reads as a deliberate frame instead of a
+     narrow sliver, while keeping more of the worker and roof context
+     than a square crop would. */
+  .overview__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--color-charcoal-raised);
+  }
+
+  .overview__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 900px) {
+    .overview__grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--space-8);
+    }
+
+    .overview__content {
+      max-width: none;
+    }
+  }
+
+  /* This section's own bottom padding plus ServiceIncludes' top padding
+     (96px + 96px) left an oversized gap now that the old placeholder
+     PhotoBand (which used to sit between them and absorb some of that
+     visually) is gone - same issue already fixed elsewhere on the site
+     (Tile Roofing's overview->ServiceTriad gap, this page's own
+     deck-video section below). Unlike ServiceTriad, ServiceIncludes has
+     no desktop-side reduction of its own, so this pull-up applies at
+     every width rather than resetting to 0 past a breakpoint. `:global`
+     is needed since ServiceIncludes renders its own `.includes` element
+     under its own component scope - safe to apply unscoped here since
+     this page is the only caller of ServiceIncludes. */
+  :global(.includes) {
+    margin-top: -80px;
   }
 
   /* ---- Deck inspection & repair video - a contained (not full-bleed)

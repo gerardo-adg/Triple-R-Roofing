@@ -27,6 +27,15 @@ const MAINTENANCE_DRONE_MUX_ID = "01g2gapJoJY701aQaqOwoW66J6e3eMtL7yGAylzegUQE8"
 const MAINTENANCE_VIDEO_MUX_ID = "BCN700zAeUGNRbhLOclQI5VHVkp00se78tLqSaDyzyGgU";
 const MAINTENANCE_VIDEO_POSTER = `https://image.mux.com/${MAINTENANCE_VIDEO_MUX_ID}/thumbnail.jpg?time=2`;
 
+// A fourth Mux video: a compilation of real maintenance-visit footage
+// (fixing broken tiles, cleaning valleys, patching leaks), client-
+// provided. No specific job location was given, so none is named in the
+// copy below. Poster frame time is a placeholder guess (not yet
+// client-confirmed like the other videos on this page) - easy to retune
+// once reviewed.
+const MAINTENANCE_SPOTLIGHT_MUX_ID = "Tr8ZSGT6EKwVshxnsLV2cmAvwtlZe78qngOUkjYrKWI";
+const MAINTENANCE_SPOTLIGHT_POSTER = `https://image.mux.com/${MAINTENANCE_SPOTLIGHT_MUX_ID}/thumbnail.jpg?time=2`;
+
 // Deliberately shorter and differently shaped than Roof Repair/Roof
 // Replacement - only three facts are confirmed for this service (it's
 // one offering, not two; the purpose is catching potential leak areas
@@ -150,6 +159,28 @@ const FAQS = [
           alt="Rogelio explains the full roof maintenance package."
           aspectRatio="9 / 16"
           muxPlaybackId={MAINTENANCE_VIDEO_MUX_ID}
+        />
+      </div>
+    </Container>
+  </section>
+
+  <section class="maintenance-spotlight">
+    <Container>
+      <div class="maintenance-spotlight__intro" data-reveal>
+        <p class="eyebrow">Recent work</p>
+        <h2 class="maintenance-spotlight__headline">See the crew in action.</h2>
+        <p class="maintenance-spotlight__body">
+          A look at the Triple R crew fixing broken tiles, cleaning valleys,
+          and patching leaks on a recent maintenance job.
+        </p>
+      </div>
+
+      <div class="maintenance-spotlight__frame" data-reveal-media>
+        <PlayableVideo
+          poster={MAINTENANCE_SPOTLIGHT_POSTER}
+          alt="The Triple R crew fixing broken tiles, cleaning valleys, and patching leaks during a roof maintenance visit."
+          aspectRatio="9 / 16"
+          muxPlaybackId={MAINTENANCE_SPOTLIGHT_MUX_ID}
         />
       </div>
     </Container>
@@ -364,6 +395,49 @@ const FAQS = [
     }
 
     .maintenance-video__frame {
+      max-width: clamp(380px, 30vw, 430px);
+    }
+  }
+
+  /* ---- Recent work (compilation video) - same contained, centered
+     pattern as the Rogelio explainer directly above it (this page's
+     established shape for a 9:16 video section), not Roof Replacement's
+     full-bleed-width spotlight grid, since this page already established
+     its own video-section rhythm. ---- */
+  .maintenance-spotlight {
+    padding-block: var(--space-9);
+    text-align: center;
+  }
+
+  .maintenance-spotlight__intro {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .maintenance-spotlight__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .maintenance-spotlight__body {
+    font-size: var(--text-body-lg);
+    color: var(--color-text-muted);
+  }
+
+  .maintenance-spotlight__frame {
+    margin-top: var(--space-8);
+    width: 100%;
+    max-width: 300px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 900px) {
+    .maintenance-spotlight {
+      padding-block: var(--space-8);
+    }
+
+    .maintenance-spotlight__frame {
       max-width: clamp(380px, 30vw, 430px);
     }
   }
