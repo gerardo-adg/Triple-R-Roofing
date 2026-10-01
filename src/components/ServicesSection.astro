@@ -4,6 +4,7 @@ import ResponsiveImage from "./ResponsiveImage.astro";
 import serviceImage1 from "../assets/media/placeholder-service-1.svg";
 import serviceImage2 from "../assets/media/placeholder-service-2.svg";
 import serviceImage3 from "../assets/media/placeholder-service-3.svg";
+import roofReplacementMobileImage from "../assets/media/photo-home-services-roof-replacement-mobile.jpg";
 
 // Descriptions carried over verbatim from the client's existing site
 // (confirmed during the Phase 1 audit) rather than rewritten from
@@ -16,6 +17,11 @@ const SERVICES = [
       "Full roof replacements using durable, weather-tested materials, installed with precision to protect your home for years to come.",
     href: "/services/roof-replacement",
     image: serviceImage1,
+    // Real client photo, requested for the mobile accordion panel only -
+    // it's landscape (4:3) and crops reasonably into this panel's 16:9
+    // box, but would crop awkwardly tall in the desktop sticky
+    // viewport's 4:5 box, which still uses the placeholder below.
+    mobileImage: roofReplacementMobileImage,
   },
   {
     index: "02",
@@ -104,7 +110,7 @@ const SERVICES = [
           <div class="services__panel-content">
             <div class="services__panel-media">
               <ResponsiveImage
-                src={service.image}
+                src={service.mobileImage ?? service.image}
                 alt=""
                 widths={[480, 640, 900]}
                 sizes="100vw"
