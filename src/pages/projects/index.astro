@@ -73,6 +73,12 @@ const SOLAR_CLEANING_POSTER = `https://image.mux.com/${SOLAR_CLEANING_MUX_ID}/th
 const SACRAMENTO_MUX_ID = "zS3heVPb02oLBsj9tflDaDjMrfCQjmFLncLL00F00bZ7yI";
 const SACRAMENTO_POSTER = `https://image.mux.com/${SACRAMENTO_MUX_ID}/thumbnail.jpg?time=11`;
 
+// Fourth real project: another drone video of a completed roof
+// replacement, client-provided - no location confirmed, so none is set
+// here. Poster frame time (3s) is client-confirmed.
+const REPLACEMENT_2_MUX_ID = "D2CkNoPYp1cfHCpzS4100jnb2PJuGPegwRG6DMr6gM3o";
+const REPLACEMENT_2_POSTER = `https://image.mux.com/${REPLACEMENT_2_MUX_ID}/thumbnail.jpg?time=3`;
+
 const PROJECTS: Project[] = [
   {
     serviceType: "Roof Replacement",
@@ -112,6 +118,15 @@ const PROJECTS: Project[] = [
       image: sacramentoReplacementImage2,
       imageAlt: "Aerial view of a second completed roof replacement in Sacramento, California.",
       aspectRatio: "3 / 4",
+    },
+  },
+  {
+    serviceType: "Roof Replacement",
+    media: {
+      type: "video",
+      poster: REPLACEMENT_2_POSTER,
+      videoAlt: "Drone footage of a completed roof replacement.",
+      muxPlaybackId: REPLACEMENT_2_MUX_ID,
     },
   },
 ];
