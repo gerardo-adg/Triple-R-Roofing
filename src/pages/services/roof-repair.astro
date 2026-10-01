@@ -2,7 +2,7 @@
 import InteriorLayout from "../../layouts/InteriorLayout.astro";
 import Container from "../../components/Container.astro";
 import PageHero from "../../components/PageHero.astro";
-import PhotoBand from "../../components/PhotoBand.astro";
+import ResponsiveImage from "../../components/ResponsiveImage.astro";
 import PlayableVideo from "../../components/PlayableVideo.astro";
 import ServiceCoverageList from "../../components/ServiceCoverageList.astro";
 import CertificationsSection from "../../components/CertificationsSection.astro";
@@ -10,7 +10,7 @@ import FinancingCallout from "../../components/FinancingCallout.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
 import pageHeroImage from "../../assets/media/placeholder-page-hero-repair.svg";
-import detailImage from "../../assets/media/placeholder-detail-roof-repair.svg";
+import overviewImage from "../../assets/media/photo-repair-tile-tearoff-crew.jpg";
 import gafLogo from "../../assets/media/cert-gaf-certified-plus.png";
 import gafSilverPledgeLogo from "../../assets/media/cert-gaf-silver-pledge.png";
 import certainteedLogo from "../../assets/media/cert-certainteed-select-shinglemaster.png";
@@ -148,29 +148,36 @@ const FAQS = [
 
   <section class="overview">
     <Container>
-      <div class="overview__content" data-reveal>
-        <p class="eyebrow">Roof Repair</p>
-        <h2 class="overview__headline">
-          A leak doesn&rsquo;t always mean you need a new roof.
-        </h2>
-        <p class="overview__body">
-          Some roof problems are isolated: a cracked shingle, a failed seal
-          around a vent, storm damage to one section. Those can usually be
-          repaired without touching the rest of the roof.
-        </p>
-        <p class="overview__body">
-          Other problems are more widespread and may not make sense to keep
-          patching. We inspect the roof first and tell you what we find,
-          rather than assuming it needs to be replaced.
-        </p>
+      <div class="overview__grid">
+        <div class="overview__content" data-reveal>
+          <p class="eyebrow">Roof Repair</p>
+          <h2 class="overview__headline">
+            A leak doesn&rsquo;t always mean you need a new roof.
+          </h2>
+          <p class="overview__body">
+            Some roof problems are isolated: a cracked shingle, a failed seal
+            around a vent, storm damage to one section. Those can usually be
+            repaired without touching the rest of the roof.
+          </p>
+          <p class="overview__body">
+            Other problems are more widespread and may not make sense to keep
+            patching. We inspect the roof first and tell you what we find,
+            rather than assuming it needs to be replaced.
+          </p>
+        </div>
+
+        <div class="overview__media" data-reveal-media>
+          <ResponsiveImage
+            src={overviewImage}
+            alt="Aerial view of a Triple R crew repairing a tile roof."
+            widths={[400, 600, 800, 1200]}
+            sizes="(min-width: 900px) 50vw, 100vw"
+            loading="lazy"
+          />
+        </div>
       </div>
     </Container>
   </section>
-
-  <PhotoBand
-    image={detailImage}
-    imageAlt=""
-  />
 
   <ServiceCoverageList
     eyebrow="What we fix"
@@ -222,8 +229,27 @@ const FAQS = [
 </InteriorLayout>
 
 <style>
+  /* padding-bottom is deliberately tighter than the space-9 top (see the
+     comment near .overview__media below) - ServiceCoverageList's own top
+     padding plus this section's bottom padding would otherwise leave an
+     oversized gap now that the old placeholder PhotoBand (which used to
+     absorb some of that visually) is gone. ServiceCoverageList is shared
+     with Roof Maintenance and Flat Roofing, so the fix lives here on
+     this section's own padding instead of a :global override, which
+     would've leaked into those other pages. */
   .overview {
-    padding-block: var(--space-9);
+    padding-top: var(--space-9);
+    padding-bottom: var(--space-7);
+  }
+
+  /* Stacked (text above photo) on mobile, text-left/photo-right at
+     desktop - same split as Tile Roofing's and Roof Replacement's own
+     overview sections, applied here now that a real photo exists to
+     fill it instead of the old placeholder PhotoBand. */
+  .overview__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
   }
 
   .overview__content {
@@ -240,6 +266,33 @@ const FAQS = [
     font-size: var(--text-body-lg);
     max-width: 62ch;
   }
+
+  /* 4:5, not the source photo's own portrait ratio (1124:2000) - same
+     gentler-crop reasoning as Roof Replacement's own overview photo. */
+  .overview__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--color-charcoal-raised);
+  }
+
+  .overview__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 900px) {
+    .overview__grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--space-8);
+    }
+
+    .overview__content {
+      max-width: none;
+    }
+  }
+
 
   /* ---- Recent work video - replaces this page's ServiceProjectSpotlight
      placeholder with a contained (not full-bleed) 9:16 frame, since that
