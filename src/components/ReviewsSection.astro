@@ -1,0 +1,496 @@
+---
+import Container from "./Container.astro";
+
+// Every review below is real, copied verbatim (not paraphrased or
+// shortened) from screenshots of Triple R Roofing LLC's actual Google
+// Business profile that the client shared directly in this session -
+// not invented. Relative timestamps ("3 months ago") are deliberately
+// left out: they're accurate only at the moment the screenshot was
+// taken and would read as wrong/stale on a site that stays live for
+// months. Star rating is 5 for all six because that's what each of
+// these specific reviews actually showed - not a default/assumption.
+// Two more real 5-star reviews (Daoshan Du, George D) were also shared
+// and aren't used here yet - see the reply in this session for what's
+// still needed (a real "Read all Google reviews" link, and whether to
+// add those two as a 7th/8th).
+const RATING = "4.8";
+// Matches what the client's live Google Business listing showed during
+// this session (95) - TrustSection's own figure (92) was confirmed
+// separately/earlier and is out of scope to change here.
+const REVIEW_COUNT = "95";
+
+const REVIEWS = [
+  {
+    name: "Chris L",
+    quote:
+      "We needed some roof repairs done (tile roof) and got a few quotes. The quotes were all similar. My decision came down to who I thought would do the best job and I chose Triple R. I'm glad I did!! The job was done quickly, thoroughly, and professionally. I especially like how they documented their work in photos. Very nice touch. Communication was excellent - mostly via text (my preference) ... but no issues with phone calls. I have no hesitation recommending Triple R to family and friends.",
+  },
+  {
+    name: "Robert Reiter",
+    quote:
+      "Triple R Roofing LLC is a great company to use. They are family run. They are all so friendly and professional. I had them re-roof my shed. From start to finish, took only 3 hours and they did a fantastic job and cleaned up. The price was reasonable. I would highly recommend this company to anyone!",
+  },
+  {
+    name: "Michael Charak",
+    quote:
+      "I had a great experience with Triple R Roofing. They had reasonable pricing with excellent workmanship. They were very communicative and worked with me on getting all roof repair needs completed. Their documentation and progress photos were excellent as well. I would recommend this company.",
+  },
+  {
+    name: "Maria Duenas-Aboytes",
+    quote:
+      "Triple R was awesome. They got to my home on time. They also cleaned up after themselves. Great communication. They did a maintenance on my roof, cleaned my roof from the pigeons and also cleaned my gutters and my Solar Panels. I will highly recommend them.",
+  },
+  {
+    name: "Susan Bang",
+    quote:
+      "Alejandro and his crews were awesome. Alejandro came out to give me a detailed estimate. Explaining everything that needed to be fixed or addressed such as moss removing and treatment, replacing damaged shingles, etc I decided to hire him for the job. His crew came out the next day. The whole project took 4.5 hours. They were friendly, professional and got everything taken care of in a timely manner. My roof looks brand new after they were done. Will highly recommend them.",
+  },
+  {
+    name: "Ana Bertolucci",
+    quote:
+      "Great work! Fast response to problem/leak. Have recommended to many friends. Price is reasonable. Do not worry about their work when finished. Will use them again in the future. And have used them in the past.",
+  },
+];
+const total = String(REVIEWS.length).padStart(2, "0");
+---
+
+<section id="reviews" class="reviews">
+  <Container>
+    <div class="reviews__intro" data-reveal>
+      <div>
+        <p class="eyebrow">Google Reviews</p>
+        <h2 class="reviews__headline">What homeowners say.</h2>
+        <p class="reviews__rating">
+          <span class="reviews__rating-star" aria-hidden="true">&#9733;</span>
+          <span class="reviews__rating-text">{RATING} &middot; {REVIEW_COUNT} Google reviews</span>
+        </p>
+        <a href="#" class="reviews__more">Read all Google reviews &rarr;</a>
+      </div>
+
+      <div class="reviews__controls">
+        <span class="reviews__count" aria-live="polite" aria-atomic="true">
+          <span data-current-index>01</span> / {total}
+        </span>
+        <div class="reviews__nav">
+          <button
+            class="reviews__nav-btn"
+            type="button"
+            data-nav="prev"
+            aria-label="Previous review"
+          >
+            <span aria-hidden="true">&larr;</span>
+          </button>
+          <button
+            class="reviews__nav-btn"
+            type="button"
+            data-nav="next"
+            aria-label="Next review"
+          >
+            <span aria-hidden="true">&rarr;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </Container>
+
+  <div class="reviews__track" data-reviews-track>
+    {REVIEWS.map((review) => (
+      <figure class="reviews__item" data-reviews-item>
+        <div class="reviews__item-inner">
+          <div class="reviews__stars" aria-label="5 out of 5 stars" data-reveal>
+            &#9733;&#9733;&#9733;&#9733;&#9733;
+          </div>
+          <blockquote class="reviews__quote" data-reveal>{review.quote}</blockquote>
+          <button
+            type="button"
+            class="reviews__read-more"
+            data-read-more
+            aria-expanded="false"
+          >
+            Read more
+          </button>
+          <figcaption class="reviews__attribution" data-reveal>
+            <span class="reviews__name">{review.name}</span>
+            <span class="reviews__source">Google review</span>
+          </figcaption>
+        </div>
+      </figure>
+    ))}
+  </div>
+</section>
+
+<style>
+  .reviews {
+    /* The track below is full-bleed (outside <Container>) so it can
+       scroll past the viewport edge, but its first item still needs to
+       line up with the Container-wrapped heading above - which, past
+       --container-max, is centered with extra auto-margin the track's
+       own padding alone doesn't know about. This reproduces Container's
+       effective left edge at any width: equal to the container padding
+       below max-width, and widening to match the centering margin
+       above it. */
+    --reviews-edge-padding: max(
+      var(--container-padding),
+      calc((100vw - var(--container-max)) / 2 + var(--container-padding))
+    );
+    padding-block: var(--space-9);
+    overflow: hidden;
+  }
+
+  .reviews__intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-8);
+    /* Tightened from the original space-7 at both breakpoints (that
+       read as an oversized gap before the stars row on mobile, and as
+       a disconnected block on desktop) down to a small, deliberate
+       value - see the min-width:900px override below for desktop's
+       own (slightly different) final number. */
+    margin-bottom: var(--space-3);
+  }
+
+  .reviews__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+  }
+
+  .reviews__rating {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+  }
+
+  .reviews__rating-star {
+    color: var(--color-gold);
+  }
+
+  .reviews__more {
+    display: inline-block;
+    margin-top: var(--space-4);
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-accent-strong);
+    border-bottom: 1px solid var(--color-border-gold);
+  }
+
+  .reviews__more:hover {
+    border-bottom-color: var(--color-accent-strong);
+  }
+
+  .reviews__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    flex-shrink: 0;
+  }
+
+  .reviews__count {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+  }
+
+  .reviews__count [data-current-index] {
+    color: var(--color-accent-strong);
+  }
+
+  .reviews__nav {
+    display: none;
+    gap: var(--space-2);
+  }
+
+  .reviews__nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    background: transparent;
+    transition:
+      border-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard),
+      opacity var(--duration-fast) var(--ease-standard);
+  }
+
+  .reviews__nav-btn:hover,
+  .reviews__nav-btn:focus-visible {
+    border-color: var(--color-accent-strong);
+    color: var(--color-accent-strong);
+  }
+
+  .reviews__nav-btn[disabled] {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  /* Same native horizontal scroll-snap mechanics as the Projects
+     carousel (no library, no dots), but a completely different visual
+     anatomy - no photo frame at all, since this is a text-led editorial
+     feature, not a second media carousel. Items size to their own
+     content height (review length varies a lot, 40-120+ words - a
+     fixed/clamped height would either truncate long reviews, which
+     isn't allowed, or leave large dead space under short ones). */
+  .reviews__track {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-7);
+    /* Asymmetric on purpose: the left side matches Container's own
+       effective edge (including its centering margin past max-width) so
+       item 0 lines up with the heading; the right side stays a small
+       fixed margin instead of growing the same way, so each item's slot
+       still reaches almost to the viewport's physical right edge. If
+       both sides grew together, the slot would shrink enough at wide
+       viewports to leave room for the next review to peek in - nothing
+       is actually rendered in that reserved-but-unused right margin,
+       since the visible content is capped by .reviews__item-inner's own
+       max-width regardless of how wide this outer slot is. */
+    padding-inline-start: var(--reviews-edge-padding);
+    padding-inline-end: var(--container-padding);
+    /* Without this, scroll-snap doesn't treat the track's own padding as
+       part of the "safe" viewing area - on load (and whenever snapping
+       back to item 0) the browser scrolls item 0's snap point flush with
+       the scrollport edge, scrolling right PAST the left padding entirely.
+       The visible symptom: review content rendering flush against the
+       screen edge instead of lined up with the heading above it. Matching
+       scroll-padding to the track's own padding keeps item 0 exactly
+       where the padding puts it. */
+    scroll-padding-inline-start: var(--reviews-edge-padding);
+    scroll-padding-inline-end: var(--container-padding);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .reviews__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Exactly one review "slot" per view at every breakpoint - each
+     slot fills the track's full content width (the same container
+     padding as the rest of the site provides the side gutters), so the
+     next/previous review sits entirely past the edge until swiped or
+     navigated, never peeking in. flex-basis 100% resolves against the
+     track's content-box (excluding its own padding), so this doesn't
+     cause any horizontal overflow. The slot itself is just a scroll-
+     snap stop; .reviews__item-inner below is what actually caps the
+     readable width and handles alignment. */
+  .reviews__item {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    margin: 0;
+  }
+
+  /* Readable column, capped well short of the slot's full width on
+     wide desktop viewports - left-aligned within the slot (not
+     centered), so it lines up with the eyebrow/headline above rather
+     than floating in the middle of all that unused horizontal space. */
+  .reviews__item-inner {
+    max-width: 680px;
+  }
+
+  .reviews__stars {
+    color: var(--color-gold);
+    letter-spacing: 0.15em;
+  }
+
+  /* Deliberately NOT the site's gold .quote treatment here - that's
+     tuned for a short one-line emphasis, and these run up to 100+
+     words; a full paragraph in the accent color fights the "gold is
+     an accent, never the dominant color" rule and reads harder at
+     length. Regular ink instead, same as every other body paragraph on
+     the site, with the stars/eyebrow/counter carrying the gold accent. */
+  .reviews__quote {
+    margin: 0;
+    margin-top: var(--space-4);
+    font-size: var(--text-body-lg);
+    line-height: var(--leading-normal);
+    color: var(--color-text);
+    /* Caps readability regardless of the item's own (wider, peek-
+       driven) box width - same reasoning as the site's default `p`
+       measure, just slightly roomier for this larger font size. */
+    max-width: 56ch;
+  }
+
+  /* Mobile only: clamps long reviews to ~6 lines so one review can't
+     turn into a massive section - purely visual (the full text is
+     still in the DOM, never trimmed), and has no effect at all on
+     reviews that already fit in 6 lines. is-expanded (added by the
+     script below, only for reviews it measures as actually truncated)
+     lifts the clamp back off. */
+  .reviews__quote {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    overflow: hidden;
+  }
+
+  .reviews__quote.is-expanded {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+
+  .reviews__read-more {
+    display: none;
+    margin-top: var(--space-3);
+    padding: 0;
+    font: inherit;
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-accent-strong);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--color-border-gold);
+    cursor: pointer;
+  }
+
+  .reviews__read-more.is-shown {
+    display: inline-block;
+  }
+
+  .reviews__read-more:hover,
+  .reviews__read-more:focus-visible {
+    border-bottom-color: var(--color-accent-strong);
+  }
+
+  @media (min-width: 900px) {
+    /* Desktop keeps showing every review in full, as already approved -
+       no clamp, no toggle. */
+    .reviews__quote {
+      display: block;
+      -webkit-line-clamp: unset;
+      overflow: visible;
+    }
+  }
+
+  .reviews__attribution {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-top: var(--space-5);
+  }
+
+  .reviews__name {
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-stretch: var(--stretch-normal);
+  }
+
+  .reviews__source {
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 900px) {
+    .reviews__nav {
+      display: flex;
+    }
+
+    /* A touch tighter than mobile's space-3 - at this width the
+       headline/rating above are visually heavier, so the same pixel
+       gap read as more disconnected; this is what pulls the review
+       content up against the intro row as requested. */
+    .reviews__intro {
+      margin-bottom: var(--space-2);
+    }
+  }
+</style>
+
+<script>
+  const track = document.querySelector<HTMLElement>("[data-reviews-track]");
+  const items = Array.from(document.querySelectorAll<HTMLElement>("[data-reviews-item]"));
+  const counter = document.querySelector<HTMLElement>("#reviews [data-current-index]");
+  const prevBtn = document.querySelector<HTMLButtonElement>('#reviews [data-nav="prev"]');
+  const nextBtn = document.querySelector<HTMLButtonElement>('#reviews [data-nav="next"]');
+
+  if (track && items.length) {
+    let activeIndex = 0;
+
+    const setActive = (index: number) => {
+      activeIndex = index;
+      if (counter) counter.textContent = String(index + 1).padStart(2, "0");
+      prevBtn?.toggleAttribute("disabled", index === 0);
+      nextBtn?.toggleAttribute("disabled", index === items.length - 1);
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const mostVisible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!mostVisible) return;
+        const index = items.indexOf(mostVisible.target as HTMLElement);
+        if (index !== -1) setActive(index);
+      },
+      { root: track, threshold: [0.5, 0.75, 1] },
+    );
+
+    items.forEach((item) => observer.observe(item));
+
+    const scrollToIndex = (index: number) => {
+      const clamped = Math.max(0, Math.min(items.length - 1, index));
+      items[clamped]?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    };
+
+    prevBtn?.addEventListener("click", () => scrollToIndex(activeIndex - 1));
+    nextBtn?.addEventListener("click", () => scrollToIndex(activeIndex + 1));
+  }
+
+  // "Read more" - mobile only, and only shown for reviews actually
+  // truncated by the CSS line-clamp (short reviews never get a button
+  // at all). Clamping/expanding is a pure display toggle, not an
+  // animation, so there's nothing for prefers-reduced-motion to turn
+  // off here.
+  const mobileQuery = window.matchMedia("(max-width: 899px)");
+  let resizeTimer: ReturnType<typeof setTimeout>;
+
+  const refreshReadMore = () => {
+    items.forEach((item) => {
+      const quote = item.querySelector<HTMLElement>(".reviews__quote");
+      const button = item.querySelector<HTMLButtonElement>("[data-read-more]");
+      if (!quote || !button) return;
+
+      if (!mobileQuery.matches) {
+        button.classList.remove("is-shown");
+        return;
+      }
+
+      if (quote.classList.contains("is-expanded")) {
+        button.classList.add("is-shown");
+        return;
+      }
+
+      const isTruncated = quote.scrollHeight > quote.clientHeight + 1;
+      button.classList.toggle("is-shown", isTruncated);
+    });
+  };
+
+  items.forEach((item) => {
+    const quote = item.querySelector<HTMLElement>(".reviews__quote");
+    const button = item.querySelector<HTMLButtonElement>("[data-read-more]");
+    if (!quote || !button) return;
+
+    button.addEventListener("click", () => {
+      const expanded = quote.classList.toggle("is-expanded");
+      button.textContent = expanded ? "Show less" : "Read more";
+      button.setAttribute("aria-expanded", String(expanded));
+    });
+  });
+
+  refreshReadMore();
+  mobileQuery.addEventListener("change", refreshReadMore);
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(refreshReadMore, 150);
+  });
+</script>
