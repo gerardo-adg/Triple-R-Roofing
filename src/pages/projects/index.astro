@@ -79,6 +79,12 @@ const SACRAMENTO_POSTER = `https://image.mux.com/${SACRAMENTO_MUX_ID}/thumbnail.
 const REPLACEMENT_2_MUX_ID = "D2CkNoPYp1cfHCpzS4100jnb2PJuGPegwRG6DMr6gM3o";
 const REPLACEMENT_2_POSTER = `https://image.mux.com/${REPLACEMENT_2_MUX_ID}/thumbnail.jpg?time=3`;
 
+// Sixth real project: the same real drone footage already used on the
+// Tile Roofing service page (horizontal, 16:9 - no aspectRatio override
+// needed). Location/poster time match that page exactly.
+const TILE_MUX_ID = "KnMcBpUJ6oGWLYkFe01BIOSwHQstRnvJkK02lJLSqDAMs";
+const TILE_POSTER = `https://image.mux.com/${TILE_MUX_ID}/thumbnail.jpg?time=15`;
+
 const PROJECTS: Project[] = [
   {
     serviceType: "Roof Replacement",
@@ -132,6 +138,16 @@ const PROJECTS: Project[] = [
       muxPlaybackId: REPLACEMENT_2_MUX_ID,
       // Vertical footage - same reasoning as the Sacramento video above.
       aspectRatio: "9 / 16",
+    },
+  },
+  {
+    serviceType: "Tile Roofing",
+    location: "Sacramento, CA",
+    media: {
+      type: "video",
+      poster: TILE_POSTER,
+      videoAlt: "Drone footage of a Triple R tile roofing project.",
+      muxPlaybackId: TILE_MUX_ID,
     },
   },
 ];
