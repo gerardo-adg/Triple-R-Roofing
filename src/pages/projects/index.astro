@@ -6,6 +6,7 @@ import BeforeAfter from "../../components/BeforeAfter.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
 import ResponsiveImage from "../../components/ResponsiveImage.astro";
 import placeholderPoster from "../../assets/media/placeholder-project-featured.svg";
+import sacramentoReplacementImage2 from "../../assets/media/photo-replacement-sacramento-completed-2.jpg";
 import type { ImageMetadata } from "astro";
 
 // No two real projects should ever imply one matters more than the
@@ -65,6 +66,13 @@ const NORTH_HIGHLANDS_POSTER = `https://image.mux.com/${NORTH_HIGHLANDS_MUX_ID}/
 const SOLAR_CLEANING_MUX_ID = "83p6u26MgEfTmz4Sp1n7j00acOhbRCLZUlvbnNILLGFY";
 const SOLAR_CLEANING_POSTER = `https://image.mux.com/${SOLAR_CLEANING_MUX_ID}/thumbnail.jpg?time=2`;
 
+// Third real project: drone video of the same Sacramento roof
+// replacement the first still photo showed - replaces that photo
+// entirely (not shown alongside it) so the same job isn't listed twice.
+// Poster frame time (11s) is client-confirmed.
+const SACRAMENTO_MUX_ID = "zS3heVPb02oLBsj9tflDaDjMrfCQjmFLncLL00F00bZ7yI";
+const SACRAMENTO_POSTER = `https://image.mux.com/${SACRAMENTO_MUX_ID}/thumbnail.jpg?time=11`;
+
 const PROJECTS: Project[] = [
   {
     serviceType: "Roof Replacement",
@@ -84,6 +92,26 @@ const PROJECTS: Project[] = [
       videoAlt: "The Triple R crew cleaning solar panels.",
       muxPlaybackId: SOLAR_CLEANING_MUX_ID,
       aspectRatio: "9 / 16",
+    },
+  },
+  {
+    serviceType: "Roof Replacement",
+    location: "Sacramento, CA",
+    media: {
+      type: "video",
+      poster: SACRAMENTO_POSTER,
+      videoAlt: "Drone footage of a completed roof replacement in Sacramento, California.",
+      muxPlaybackId: SACRAMENTO_MUX_ID,
+    },
+  },
+  {
+    serviceType: "Roof Replacement",
+    location: "Sacramento, CA",
+    media: {
+      type: "photo",
+      image: sacramentoReplacementImage2,
+      imageAlt: "Aerial view of a second completed roof replacement in Sacramento, California.",
+      aspectRatio: "3 / 4",
     },
   },
 ];
