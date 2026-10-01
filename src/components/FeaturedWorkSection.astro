@@ -76,7 +76,11 @@ const total = String(PROJECTS.length).padStart(2, "0");
 
 <style>
   .featured-work {
-    padding-block: var(--space-9);
+    /* Asymmetric on purpose: top is tightened (the "too much empty
+       black space below the navbar" complaint), bottom keeps the
+       original space-9 rhythm matching the sections around it. */
+    padding-top: var(--space-7);
+    padding-bottom: var(--space-9);
     overflow: hidden;
   }
 
@@ -86,7 +90,7 @@ const total = String(PROJECTS.length).padStart(2, "0");
     align-items: flex-end;
     justify-content: space-between;
     gap: var(--space-4) var(--space-8);
-    margin-bottom: var(--space-7);
+    margin-bottom: var(--space-6);
   }
 
   .featured-work__headline {
@@ -218,8 +222,26 @@ const total = String(PROJECTS.length).padStart(2, "0");
       display: flex;
     }
 
+    /* Narrower than the mobile 90vw, but still vw-based so the next
+       project's peek scales fluidly with viewport width rather than
+       being a fixed pixel sliver. */
     .featured-work__item {
-      flex: 0 0 80vw;
+      flex: 0 0 64vw;
+    }
+
+    /* An explicit clamped height, not aspect-ratio-driven from the (vw-
+       based) item width above - at the old 80vw width, the 3:2 frame
+       below scaled to almost full viewport height (791px at 1440px
+       wide), reading as full-screen rather than one homepage section.
+       Height now stays in a fixed 400-475px band regardless of item
+       width or viewport size; aspect-ratio is dropped here so this
+       height wins outright (the two can't both govern), and the real
+       photography that replaces the placeholders is still never
+       distorted - object-fit: cover (below) just crops to whatever
+       ratio results. */
+    .featured-work__frame {
+      aspect-ratio: auto;
+      height: clamp(440px, 30vw, 475px);
     }
   }
 </style>
