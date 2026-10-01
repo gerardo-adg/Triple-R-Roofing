@@ -7,17 +7,15 @@ import Container from "./Container.astro";
 // not invented. Relative timestamps ("3 months ago") are deliberately
 // left out: they're accurate only at the moment the screenshot was
 // taken and would read as wrong/stale on a site that stays live for
-// months. Star rating is 5 for all six because that's what each of
+// months. Star rating is 5 for all eight because that's what each of
 // these specific reviews actually showed - not a default/assumption.
-// Two more real 5-star reviews (Daoshan Du, George D) were also shared
-// and aren't used here yet - see the reply in this session for what's
-// still needed (a real "Read all Google reviews" link, and whether to
-// add those two as a 7th/8th).
 const RATING = "4.8";
 // Matches what the client's live Google Business listing showed during
 // this session (95) - TrustSection's own figure (92) was confirmed
 // separately/earlier and is out of scope to change here.
 const REVIEW_COUNT = "95";
+// Client-provided link to the business's actual Google reviews.
+const REVIEWS_URL = "https://share.google/thZ2wASKL8GO7bnIW";
 
 const REVIEWS = [
   {
@@ -50,6 +48,19 @@ const REVIEWS = [
     quote:
       "Great work! Fast response to problem/leak. Have recommended to many friends. Price is reasonable. Do not worry about their work when finished. Will use them again in the future. And have used them in the past.",
   },
+  {
+    name: "Daoshan Du",
+    // Two paragraphs in the original review, preserved as-is (see
+    // white-space: pre-line on .reviews__quote) rather than joined into
+    // one block or split apart.
+    quote:
+      "Very professional team with expert experience on roof work. Even from the beginning on inspection, they help me find a lot potential risk I missed. During working, they keep my house and yard clean every day. The management and organization is excellent. They provided an amount of pictures so that you could monitor how the work is going daily. To the flashing valley clean, what they did is more than what I can expect.\n\nI appreciate the work from Triple Roofing.",
+  },
+  {
+    name: "George D",
+    quote:
+      "I originally contacted Triple R roofing to repair a section of rotten wood on my roof but also had them perform a maintenance for my tile roof which included cleaning of all the valleys, flashings, sealing in some areas, patch repair in a couple of spots and replacing broken/slipped tiles. I really appreciated all the detailed drone pictures for the estimate and clear explanation of the work to be performed. Crew arrived on time and performed all the work professionally. I was able to follow along the progress of work thanks to the real time picture updates from the crew. I would highly recommend this company if you are considering roof repairs or maintenance! Thanks Triple R!",
+  },
 ];
 const total = String(REVIEWS.length).padStart(2, "0");
 ---
@@ -64,7 +75,9 @@ const total = String(REVIEWS.length).padStart(2, "0");
           <span class="reviews__rating-star" aria-hidden="true">&#9733;</span>
           <span class="reviews__rating-text">{RATING} &middot; {REVIEW_COUNT} Google reviews</span>
         </p>
-        <a href="#" class="reviews__more">Read all Google reviews &rarr;</a>
+        <a href={REVIEWS_URL} class="reviews__more" target="_blank" rel="noopener noreferrer">
+          Read all Google reviews &rarr;
+        </a>
       </div>
 
       <div class="reviews__controls">
@@ -319,6 +332,12 @@ const total = String(REVIEWS.length).padStart(2, "0");
        driven) box width - same reasoning as the site's default `p`
        measure, just slightly roomier for this larger font size. */
     max-width: 56ch;
+    /* One review (Daoshan Du) has two paragraphs in the original text,
+       preserved as a literal blank line in the data rather than joined
+       into one block - this renders that line break instead of
+       collapsing it like normal HTML whitespace would. Has no effect on
+       every other review, which has no embedded newlines. */
+    white-space: pre-line;
   }
 
   /* Mobile only: clamps long reviews to ~6 lines so one review can't
