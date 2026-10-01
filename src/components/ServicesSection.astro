@@ -98,7 +98,8 @@ const SERVICES = [
             alt=""
             widths={[400, 600, 800, 1000]}
             sizes="(min-width: 900px) 40vw, 100vw"
-            loading={i === 0 ? "eager" : "lazy"}
+            loading="eager"
+            fetchpriority={i === 0 ? "high" : "low"}
             class="services__viewport-image"
             class:list={{ "is-active": i === 0 }}
             data-viewport-image
