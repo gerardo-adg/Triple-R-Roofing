@@ -108,6 +108,9 @@ const PROJECTS: Project[] = [
       poster: SACRAMENTO_POSTER,
       videoAlt: "Drone footage of a completed roof replacement in Sacramento, California.",
       muxPlaybackId: SACRAMENTO_MUX_ID,
+      // Vertical footage - the grid's 16:9 default would crop most of
+      // it away.
+      aspectRatio: "9 / 16",
     },
   },
   {
@@ -127,6 +130,8 @@ const PROJECTS: Project[] = [
       poster: REPLACEMENT_2_POSTER,
       videoAlt: "Drone footage of a completed roof replacement.",
       muxPlaybackId: REPLACEMENT_2_MUX_ID,
+      // Vertical footage - same reasoning as the Sacramento video above.
+      aspectRatio: "9 / 16",
     },
   },
 ];
