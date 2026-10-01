@@ -2,11 +2,9 @@
 import InteriorLayout from "../../layouts/InteriorLayout.astro";
 import Container from "../../components/Container.astro";
 import PageHero from "../../components/PageHero.astro";
+import PlayableVideo from "../../components/PlayableVideo.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
-import ResponsiveImage from "../../components/ResponsiveImage.astro";
 import pageHeroImage from "../../assets/media/placeholder-page-hero-solar.svg";
-import beforeImage from "../../assets/media/placeholder-solar-before.svg";
-import afterImage from "../../assets/media/placeholder-solar-after.svg";
 
 // Confirmed directly by the client: Triple R cleans solar panels, not
 // limited to roofs or panels they previously worked on. Everything else
@@ -17,11 +15,18 @@ import afterImage from "../../assets/media/placeholder-solar-after.svg";
 // licensed/insured/BBB, free estimates - are already covered elsewhere
 // and didn't justify a thin accordion just for consistency with other
 // service pages), no Financing (no evidence it applies to a service
-// this size), no Recent Work spotlight (the Before & After section
-// below serves that role better for this service, same reasoning as
-// Moss Removal). Before/after photos are real completed Triple R work
-// per the client, but not yet delivered - placeholders only, no
-// invented location, panel type, or scope.
+// this size). The Before & After section this page used to reserve for
+// real photos (never delivered) is replaced below by a real client-
+// provided video of the crew cleaning panels - no invented location or
+// scope, same restraint as the rest of this page.
+const SOLAR_VIDEO_MUX_ID = "83p6u26MgEfTmz4Sp1n7j00acOhbRCLZUlvbnNILLGFY";
+const SOLAR_VIDEO_POSTER = `https://image.mux.com/${SOLAR_VIDEO_MUX_ID}/thumbnail.jpg?time=2`;
+
+// Second client-provided clip, same job - poster frame time (14s) is
+// client-confirmed, unlike the first video's (still a placeholder
+// guess pending confirmation).
+const SOLAR_VIDEO_2_MUX_ID = "8aGNK013Aj22CndKpzRsh9niYT6wRoVM6JbNJT1x00008s";
+const SOLAR_VIDEO_2_POSTER = `https://image.mux.com/${SOLAR_VIDEO_2_MUX_ID}/thumbnail.jpg?time=14`;
 ---
 
 <InteriorLayout
@@ -53,41 +58,32 @@ import afterImage from "../../assets/media/placeholder-solar-after.svg";
     </Container>
   </section>
 
-  <section class="before-after">
+  <section class="solar-video">
     <Container>
-      <p class="eyebrow" data-reveal>Before &amp; After</p>
-
-      <div class="before-after__grid">
-        <figure class="before-after__frame" data-reveal-media>
-          <span class="before-after__label">Before</span>
-          <ResponsiveImage
-            src={beforeImage}
-            alt="Placeholder. A real before photo from a completed solar panel cleaning job will replace this image."
-            widths={[480, 640, 960]}
-            sizes="(min-width: 700px) 50vw, 100vw"
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
-
-        <div class="before-after__divider" aria-hidden="true"></div>
-
-        <figure class="before-after__frame" data-reveal-media>
-          <span class="before-after__label">After</span>
-          <ResponsiveImage
-            src={afterImage}
-            alt="Placeholder. A real after photo from a completed solar panel cleaning job will replace this image."
-            widths={[480, 640, 960]}
-            sizes="(min-width: 700px) 50vw, 100vw"
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
+      <div class="solar-video__intro" data-reveal>
+        <p class="eyebrow">Recent work</p>
+        <h2 class="solar-video__headline">See the crew cleaning panels.</h2>
       </div>
 
-      <p class="before-after__caption">
-        Before-and-after photos from a completed job coming soon.
-      </p>
+      <div class="solar-video__grid">
+        <div class="solar-video__frame" data-reveal-media>
+          <PlayableVideo
+            poster={SOLAR_VIDEO_POSTER}
+            alt="The Triple R crew cleaning solar panels."
+            aspectRatio="9 / 16"
+            muxPlaybackId={SOLAR_VIDEO_MUX_ID}
+          />
+        </div>
+
+        <div class="solar-video__frame" data-reveal-media>
+          <PlayableVideo
+            poster={SOLAR_VIDEO_2_POSTER}
+            alt="The Triple R crew cleaning solar panels."
+            aspectRatio="9 / 16"
+            muxPlaybackId={SOLAR_VIDEO_2_MUX_ID}
+          />
+        </div>
+      </div>
     </Container>
   </section>
 
@@ -117,65 +113,59 @@ import afterImage from "../../assets/media/placeholder-solar-after.svg";
     max-width: 62ch;
   }
 
-  /* ---- Before & After ---- */
-  .before-after {
+  /* ---- Recent work (two videos) - stacked single column on mobile,
+     side by side at desktop (two 9:16 frames, not one), per the two
+     separate client-provided clips from the same job. ---- */
+  .solar-video {
     padding-block: var(--space-9);
+    text-align: center;
+    /* Mobile-only: this section's own top padding plus the overview
+       section's bottom padding (96px + 96px) stacked into an oversized
+       gap - same issue already fixed elsewhere (Tile Roofing's
+       overview->ServiceTriad gap). Reset to 0 at 900px, where this
+       section's own desktop padding reduction below already tightens it
+       from the other side. */
+    margin-top: -60px;
   }
 
-  .before-after__grid {
+  .solar-video__intro {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .solar-video__headline {
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+  }
+
+  .solar-video__grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-6);
-    margin-top: var(--space-6);
+    margin-top: var(--space-8);
+    max-width: 300px;
+    margin-inline: auto;
   }
 
-  .before-after__frame {
-    position: relative;
-    margin: 0;
-  }
-
-  .before-after__frame img {
-    display: block;
+  .solar-video__frame {
     width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-  }
-
-  .before-after__label {
-    position: absolute;
-    top: var(--space-3);
-    left: var(--space-3);
-    z-index: 1;
-    font-size: var(--text-body-sm);
-    font-weight: var(--weight-bold);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-text-inverse);
-    background: rgb(10 10 10 / 55%);
-    padding: var(--space-1) var(--space-3);
-  }
-
-  .before-after__divider {
-    display: none;
-  }
-
-  .before-after__caption {
-    margin-top: var(--space-5);
-    font-size: var(--text-body-sm);
-    color: var(--color-text-muted);
   }
 
   @media (min-width: 700px) {
-    .before-after__grid {
-      grid-template-columns: 1fr auto 1fr;
-      align-items: stretch;
+    .solar-video__grid {
+      grid-template-columns: 1fr 1fr;
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .solar-video {
+      padding-block: var(--space-8);
+      margin-top: 0;
     }
 
-    .before-after__divider {
-      display: block;
-      width: 1px;
-      background: var(--color-border);
+    .solar-video__grid {
+      max-width: clamp(560px, 46vw, 760px);
     }
   }
 </style>

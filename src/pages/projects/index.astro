@@ -57,6 +57,14 @@ interface Project {
 const NORTH_HIGHLANDS_MUX_ID = "8G23HDzQ7IbFqq01E9wl8c7lfS9B491xkVCJ00p4Q02sQM";
 const NORTH_HIGHLANDS_POSTER = `https://image.mux.com/${NORTH_HIGHLANDS_MUX_ID}/thumbnail.jpg?time=10`;
 
+// Second real project: the same client-provided solar panel cleaning
+// clip used on the Solar Panel Cleaning service page (vertical, shot on
+// an iPhone, not drone) - no location confirmed, so none is set here.
+// aspectRatio is set explicitly since this tile's own source video is
+// portrait, not the grid's 16:9 default.
+const SOLAR_CLEANING_MUX_ID = "83p6u26MgEfTmz4Sp1n7j00acOhbRCLZUlvbnNILLGFY";
+const SOLAR_CLEANING_POSTER = `https://image.mux.com/${SOLAR_CLEANING_MUX_ID}/thumbnail.jpg?time=2`;
+
 const PROJECTS: Project[] = [
   {
     serviceType: "Roof Replacement",
@@ -66,6 +74,16 @@ const PROJECTS: Project[] = [
       poster: NORTH_HIGHLANDS_POSTER,
       videoAlt: "Drone footage of a completed roof replacement in North Highlands, California.",
       muxPlaybackId: NORTH_HIGHLANDS_MUX_ID,
+    },
+  },
+  {
+    serviceType: "Solar Panel Cleaning",
+    media: {
+      type: "video",
+      poster: SOLAR_CLEANING_POSTER,
+      videoAlt: "The Triple R crew cleaning solar panels.",
+      muxPlaybackId: SOLAR_CLEANING_MUX_ID,
+      aspectRatio: "9 / 16",
     },
   },
 ];
@@ -284,6 +302,15 @@ const PROJECTS: Project[] = [
   @media (min-width: 700px) {
     .project-grid__list {
       grid-template-columns: 1fr 1fr;
+      /* Grid's default align-items:stretch was stretching each
+         .project-tile to match its row's tallest sibling - invisible
+         for same-aspect-ratio tiles, but a portrait (9:16) tile next to
+         a landscape (16:9) one left a large dead gap below the shorter
+         tile's caption. Aligning to each tile's own natural height
+         instead lets differing aspect ratios sit at their real height
+         with no forced blank space, while keeping every tile the same
+         grid-column width (no card reads as more "important"). */
+      align-items: start;
     }
 
     /* The only way a project spans both columns - an explicit,
