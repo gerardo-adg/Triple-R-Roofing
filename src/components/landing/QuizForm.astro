@@ -1,7 +1,7 @@
 ---
 /**
  * Step-by-step quiz version of the client's existing (converting)
- * "Request a FREE Roof Inspection" form - same questions, same fields,
+ * "Request a FREE Roof Inspection" form (reworded here as a free estimate) - same questions, same fields,
  * one question per screen, contact details last.
  *
  * It's ONE real <form> with every field present in the static HTML, so
@@ -59,15 +59,15 @@ const TRACKING_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_conten
 ---
 
 <form
-  name="roof-inspection-quiz"
+  name="free-estimate-quiz"
   method="POST"
   data-netlify="true"
   netlify-honeypot="bot-field"
-  action="/free-roof-inspection/thank-you"
+  action="/free-estimate/thank-you"
   class="quiz"
   data-quiz
 >
-  <input type="hidden" name="form-name" value="roof-inspection-quiz" />
+  <input type="hidden" name="form-name" value="free-estimate-quiz" />
   {TRACKING_FIELDS.map((name) => <input type="hidden" name={name} value="" data-tracking />)}
   <p class="quiz__honeypot" aria-hidden="true">
     <label>
