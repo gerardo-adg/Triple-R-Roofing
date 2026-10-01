@@ -96,7 +96,7 @@ const CREDENTIALS = [
 
 <LandingLayout
   title={`New Roof for $0 Down & 0% Interest | Triple R Roofing`}
-  description={`New roof for $0 down and 0% interest for ${OFFER_MONTHS} months for qualified homeowners. Request a free roof inspection from Triple R Roofing in the Greater Sacramento area.`}
+  description={`New roof for $0 down and 0% interest for ${OFFER_MONTHS} months for qualified homeowners. Request a free roofing estimate from Triple R Roofing in the Greater Sacramento area.`}
 >
   <!-- ---- Hero + quiz ---- -->
   <section class="lp-hero section--inverse">
@@ -117,12 +117,6 @@ const CREDENTIALS = [
           New Roof for <span class="lp-hero__accent">$0 Down</span> &amp;
           <span class="lp-hero__accent">0% Interest</span> for {OFFER_MONTHS} Months.
         </h1>
-        <p class="lp-hero__sub">See if you qualify in under 60 seconds.</p>
-        <ul class="lp-hero__trust">
-          <li><span class="lp-star" aria-hidden="true">&#9733;</span> 4.8 on Google</li>
-          <li>Licensed, bonded &amp; insured</li>
-          <li>GAF &amp; CertainTeed certified</li>
-        </ul>
       </div>
     </Container>
   </section>
@@ -130,11 +124,16 @@ const CREDENTIALS = [
   <section class="lp-quiz" id="quiz">
     <div class="lp-quiz__card">
       <h2 class="lp-quiz__title">
-        Request a <span class="lp-quiz__accent">FREE Roof Inspection</span>
+        Request a <span class="lp-quiz__accent">FREE Estimate</span>
       </h2>
-      <p class="lp-quiz__lead">Answer 5 quick questions to get started with a free inspection and quote.</p>
+      <p class="lp-quiz__lead">Answer 5 quick questions to get your free estimate.</p>
       <QuizForm />
     </div>
+    <ul class="lp-quiz__trust">
+      <li><span class="lp-star" aria-hidden="true">&#9733;</span> 4.8 on Google</li>
+      <li>Licensed, bonded &amp; insured</li>
+      <li>GAF &amp; CertainTeed certified</li>
+    </ul>
   </section>
 
   <!-- ---- Credentials ---- -->
@@ -258,7 +257,7 @@ const CREDENTIALS = [
           $0 down. 0% interest for {OFFER_MONTHS} months.
         </h2>
         <p class="lp-final__body">
-          Find out if you qualify and get a free roof inspection from a Sacramento crew homeowners trust.
+          Find out if you qualify and get a free estimate from a Sacramento crew homeowners trust.
         </p>
         <div class="lp-final__actions">
           <a href="#quiz" class="lp-cta">See If I Qualify &rarr;</a>
@@ -308,8 +307,8 @@ const CREDENTIALS = [
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    padding-top: var(--space-8);
-    padding-bottom: calc(var(--space-9) + var(--space-8));
+    padding-top: var(--space-7);
+    padding-bottom: calc(var(--space-9) + var(--space-5));
     text-align: center;
   }
 
@@ -347,13 +346,7 @@ const CREDENTIALS = [
     color: var(--color-gold);
   }
 
-  .lp-hero__sub {
-    margin: var(--space-5) auto 0;
-    font-size: var(--text-body-lg);
-    color: var(--color-text-inverse);
-  }
-
-  .lp-hero__trust {
+  .lp-quiz__trust {
     list-style: none;
     padding: 0;
     display: flex;
@@ -363,7 +356,7 @@ const CREDENTIALS = [
     margin-top: var(--space-5);
     font-size: var(--text-body-sm);
     font-weight: var(--weight-bold);
-    color: var(--color-text-muted-inverse);
+    color: var(--color-text-muted);
   }
 
   /* ---- Quiz card (overlaps the hero, like the original page) ---- */
@@ -371,7 +364,7 @@ const CREDENTIALS = [
     position: relative;
     z-index: 2;
     padding-inline: var(--space-4);
-    margin-top: calc(-1 * (var(--space-9) + var(--space-6)));
+    margin-top: calc(-1 * var(--space-9));
   }
 
   .lp-quiz__card {
