@@ -1,0 +1,73 @@
+---
+/**
+ * Where the quiz lands after a successful Netlify Forms submission. This
+ * page load is the conversion: it fires the Meta "Lead" event, and its
+ * URL can also be used as a URL-based custom conversion in Ads Manager.
+ */
+import LandingLayout from "../../layouts/LandingLayout.astro";
+import Container from "../../components/Container.astro";
+---
+
+<LandingLayout
+  title="You're All Set | Triple R Roofing"
+  description="Thanks for requesting a free roofing estimate from Triple R Roofing."
+  pixelEvent="Lead"
+>
+  <section class="lp-thanks">
+    <Container width="narrow">
+      <div class="lp-thanks__content">
+        <p class="eyebrow">Request received</p>
+        <h1 class="lp-thanks__headline">You&rsquo;re all set.</h1>
+        <p class="lp-thanks__body">
+          Thanks for requesting your free estimate. A member of the Triple R team will reach
+          out shortly to schedule a time and go over your financing options.
+        </p>
+
+        <ol class="lp-thanks__steps">
+          <li><strong>We call or text you</strong> to confirm a time that works.</li>
+          <li><strong>We inspect your roof</strong> and document everything with photos.</li>
+          <li><strong>You get a clear quote</strong> and see what you qualify for. No obligation.</li>
+        </ol>
+
+        <p class="lp-thanks__body">
+          Need us sooner? Call <a href="tel:+19164205635">(916) 420-5635</a>.
+        </p>
+      </div>
+    </Container>
+  </section>
+</LandingLayout>
+
+<style>
+  .lp-thanks {
+    padding-block: var(--space-9);
+    min-height: 60vh;
+  }
+
+  .lp-thanks__headline {
+    font-size: var(--text-h2);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
+  .lp-thanks__body {
+    font-size: var(--text-body-lg);
+  }
+
+  .lp-thanks__body a {
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+  }
+
+  .lp-thanks__steps {
+    display: grid;
+    gap: var(--space-3);
+    margin: var(--space-6) 0;
+    padding-left: var(--space-5);
+    color: var(--color-text-muted);
+  }
+
+  .lp-thanks__steps li::marker {
+    color: var(--color-accent-strong);
+    font-weight: var(--weight-bold);
+  }
+</style>

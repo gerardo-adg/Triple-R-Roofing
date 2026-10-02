@@ -1,0 +1,166 @@
+---
+/**
+ * Paid-traffic landing pages (Meta ads). Deliberately strips the site's
+ * full Header/Footer down to logo + call button and a one-line footer -
+ * every exit link on an ad landing page is a leak out of the funnel.
+ * Always noindex: these pages duplicate site content and exist only for
+ * ad traffic.
+ *
+ * The Meta Pixel only loads when META_PIXEL_ID is set below - leaving it
+ * empty ships no tracking code at all rather than a broken snippet.
+ */
+import BaseLayout from "./BaseLayout.astro";
+import { Image } from "astro:assets";
+import logoMark from "../assets/media/logo-triple-r-roofing.webp";
+
+// Client's Meta Pixel (Events Manager -> Data sources).
+const META_PIXEL_ID = "2460801741112237";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Standard Meta event fired on load in addition to PageView (e.g. "Lead" on the thank-you page). */
+  pixelEvent?: string;
+}
+
+const { title, description, pixelEvent } = Astro.props;
+const YEAR = new Date().getFullYear();
+---
+
+<BaseLayout title={title} description={description} noindex>
+  <Fragment slot="head">
+    {META_PIXEL_ID && (
+      <script is:inline define:vars={{ META_PIXEL_ID, pixelEvent }}>
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', META_PIXEL_ID);
+        fbq('track', 'PageView');
+        if (pixelEvent) fbq('track', pixelEvent);
+      </script>
+    )}
+  </Fragment>
+
+  {META_PIXEL_ID && (
+    <noscript>
+      <img
+        height="1"
+        width="1"
+        style="display:none"
+        alt=""
+        src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+      />
+    </noscript>
+  )}
+
+  <header class="lp-header section--inverse">
+    <div class="lp-header__inner">
+      <span class="lp-header__logo">
+        <Image class="lp-header__mark" src={logoMark} alt="" width={52} height={45} densities={[2, 3]} />
+        <span class="lp-header__wordmark">Triple R Roofing</span>
+      </span>
+      <a class="lp-header__call" href="tel:+19164205635" data-track="call">
+        <span class="lp-header__call-label">Call Us Today</span>
+        <span class="lp-header__call-number">(916) 420-5635</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <slot />
+  </main>
+
+  <footer class="lp-footer section--inverse">
+    <p>&copy; {YEAR} Triple R Roofing LLC &middot; Licensed, bonded &amp; insured (CSLB #1107574) &middot; Sacramento, CA</p>
+    <p><a href="tel:+19164205635">(916) 420-5635</a></p>
+  </footer>
+</BaseLayout>
+
+<style>
+  .lp-header {
+    border-bottom: 1px solid var(--color-border-inverse);
+  }
+
+  .lp-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding: var(--space-3) var(--container-padding);
+  }
+
+  .lp-header__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .lp-header__wordmark {
+    font-weight: var(--weight-bold);
+    font-size: var(--text-body-sm);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .lp-header__call {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-accent);
+    color: var(--color-text-inverse);
+    text-decoration: none;
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard);
+  }
+
+  .lp-header__call:hover {
+    background: var(--color-accent);
+    color: var(--color-charcoal);
+  }
+
+  .lp-header__call-label {
+    font-size: var(--text-eyebrow);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .lp-header__call:hover .lp-header__call-label {
+    color: var(--color-charcoal);
+  }
+
+  .lp-header__call-number {
+    font-weight: var(--weight-bold);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 479px) {
+    .lp-header__wordmark {
+      display: none;
+    }
+  }
+
+  .lp-footer {
+    padding: var(--space-6) var(--container-padding);
+    text-align: center;
+    font-size: var(--text-body-sm);
+  }
+
+  .lp-footer p {
+    max-width: none;
+    margin-bottom: var(--space-2);
+  }
+
+  .lp-footer a {
+    color: var(--color-text-inverse);
+    font-weight: var(--weight-bold);
+  }
+</style>
