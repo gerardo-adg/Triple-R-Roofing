@@ -13,8 +13,8 @@ import BaseLayout from "./BaseLayout.astro";
 import { Image } from "astro:assets";
 import logoMark from "../assets/media/logo-triple-r-roofing.webp";
 
-// TODO: client's Meta Pixel ID (Events Manager -> Data sources).
-const META_PIXEL_ID = "";
+// Client's Meta Pixel (Events Manager -> Data sources).
+const META_PIXEL_ID = "2460801741112237";
 
 interface Props {
   title: string;
@@ -42,6 +42,18 @@ const YEAR = new Date().getFullYear();
       </script>
     )}
   </Fragment>
+
+  {META_PIXEL_ID && (
+    <noscript>
+      <img
+        height="1"
+        width="1"
+        style="display:none"
+        alt=""
+        src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+      />
+    </noscript>
+  )}
 
   <header class="lp-header section--inverse">
     <div class="lp-header__inner">
