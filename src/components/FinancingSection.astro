@@ -2,13 +2,12 @@
 import Container from "./Container.astro";
 import Button from "./Button.astro";
 
-// Offer terms ($0 down / 0% APR for 24 months) confirmed by the client
-// directly as the current source of truth. (The site previously said 0%
-// interest for 3 months - the client updated the offer; updated
-// everywhere it appeared.) Still flagged: the disclosure line below is
-// intentionally generic (not a fabricated legal/compliance disclosure)
-// and should be replaced with Wisetack's/the lender's actual required
-// wording before launch.
+// Offer terms (0% APR for 24 months) confirmed by the client directly as
+// the current source of truth. (The site previously also led with a $0
+// down figure - the client asked to drop that and lead with 0% APR only.)
+// Still flagged: the disclosure line below is intentionally generic (not
+// a fabricated legal/compliance disclosure) and should be replaced with
+// Wisetack's/the lender's actual required wording before launch.
 ---
 
 <section class="financing section--inverse">
@@ -28,10 +27,6 @@ import Button from "./Button.astro";
 
       <div class="financing__stats">
         <div class="financing__stat">
-          <p class="financing__stat-value">$0</p>
-          <p class="financing__stat-label">Down</p>
-        </div>
-        <div class="financing__stat financing__stat--primary">
           <p class="financing__stat-value">0%</p>
           <p class="financing__stat-label">APR for 24 months*</p>
         </div>
@@ -89,13 +84,6 @@ import Button from "./Button.astro";
     border-top: 1px solid var(--color-border-inverse);
   }
 
-  /* Mobile only: $0 Down and 0% APR sit side by side instead of
-     stacked (same row + wrap + flex-basis: 100% technique desktop
-     already uses to push the disclosure onto its own full-width line
-     below), with a much tighter gap after the divider and before the
-     disclosure than desktop uses - desktop's own layout below is
-     untouched. Typography, color, and copy are unchanged; only spacing
-     and direction move. */
   @media (max-width: 899px) {
     /* Tightens the space above the divider (between "Explore Financing"
        and the border-top below), separate from .financing__stats'
@@ -105,31 +93,7 @@ import Button from "./Button.astro";
     }
 
     .financing__stats {
-      flex-direction: row;
-      flex-wrap: wrap;
-      column-gap: var(--space-6);
-      row-gap: var(--space-3);
       padding-top: var(--space-5);
-    }
-
-    .financing__stat {
-      flex: 1 1 0;
-    }
-
-    /* $0 and 0% already share the same top edge and equal-width columns
-       (confirmed by measuring, not assumed) - the only real misalignment
-       is that 0%'s larger, more-emphasized font (see .financing__stat--
-       primary below) is taller than $0's, which pushes its label down
-       further than DOWN's. Reserving a shared min-height for every value
-       - sized to fit the larger one - means both labels start at the
-       same offset regardless of which value is currently rendering
-       taller, without changing either font size. */
-    .financing__stat-value {
-      min-height: 3.5rem;
-    }
-
-    .financing__disclosure {
-      flex-basis: 100%;
     }
   }
 
@@ -137,16 +101,13 @@ import Button from "./Button.astro";
     font-family: var(--font-display);
     font-weight: var(--weight-black);
     font-stretch: var(--stretch-expanded);
-    font-size: clamp(2.5rem, 1.9rem + 2.4vw, 3.75rem);
+    /* The single remaining stat (0% APR for 24 months) carries the whole
+       offer now, so it keeps the larger of the two sizes this used to
+       split between two stats. */
+    font-size: clamp(3.25rem, 2.3rem + 3.6vw, 5.25rem);
     line-height: 0.95;
     letter-spacing: -0.01em;
     color: var(--color-gold);
-  }
-
-  /* 0% APR for 24 months is the strongest part of the offer — gets
-     more visual weight than $0 down, not just equal billing. */
-  .financing__stat--primary .financing__stat-value {
-    font-size: clamp(3.25rem, 2.3rem + 3.6vw, 5.25rem);
   }
 
   .financing__stat-label {

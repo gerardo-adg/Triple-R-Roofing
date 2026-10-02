@@ -7,13 +7,14 @@ import pageHeroImage from "../assets/media/placeholder-page-hero-financing.svg";
 import FAQSection from "../components/FAQSection.astro";
 import FinalCtaSection from "../components/FinalCtaSection.astro";
 
-// Confirmed facts only: financing is through Wisetack, $0 down / 0%
-// APR for 24 months for qualified borrowers, subject to qualification/
-// credit approval. (Previously 0% interest for 3 months - the client
-// updated the offer to 0% APR for 24 months; updated everywhere it
-// appeared.) No deferred-interest, application-flow, credit-pull, or
-// approval-speed claims - none of that has been confirmed, so none of
-// it appears here or in the FAQ below.
+// Confirmed facts only: financing is through Wisetack, 0% APR for 24
+// months for qualified borrowers, subject to qualification/credit
+// approval. (Previously led with 0% interest for 3 months, then 0% APR
+// for 24 months plus a $0 down figure - the client asked to drop $0 down
+// and lead with 0% APR only; updated everywhere it appeared.) No
+// deferred-interest, application-flow, credit-pull, or approval-speed
+// claims - none of that has been confirmed, so none of it appears here
+// or in the FAQ below.
 const FAQS = [
   {
     question: "Who provides the financing?",
@@ -22,7 +23,7 @@ const FAQS = [
   },
   {
     question: "What is the 0% APR offer?",
-    answer: "Qualified borrowers can get $0 down and 0% APR for 24 months through Wisetack.",
+    answer: "Qualified borrowers can get 0% APR for 24 months through Wisetack.",
   },
   {
     question: "Do I need to qualify?",
@@ -38,11 +39,11 @@ const FAQS = [
 
 <InteriorLayout
   title="Financing | Triple R Roofing"
-  description="Financing for roofing projects in Sacramento, CA, available through Wisetack, including $0 down and 0% APR for 24 months for qualified borrowers."
+  description="Financing for roofing projects in Sacramento, CA, available through Wisetack, including 0% APR for 24 months for qualified borrowers."
 >
   <PageHero
     title="Financing for your roofing project."
-    description="Financing is available through Wisetack, with $0 down and 0% APR for 24 months for qualified borrowers."
+    description="Financing is available through Wisetack, with 0% APR for 24 months for qualified borrowers."
     image={pageHeroImage}
     breadcrumbs={[{ label: "Home", href: "/" }, { label: "Financing" }]}
   />
@@ -53,7 +54,6 @@ const FAQS = [
         <p class="eyebrow">Financing through Wisetack</p>
 
         <div class="offer__lines">
-          <p class="offer__line">$0 DOWN.</p>
           <p class="offer__line offer__line--accent">0% APR.</p>
           <p class="offer__line">FOR 24 MONTHS.</p>
         </div>
