@@ -163,9 +163,20 @@ const remoteSrcset = isRemotePoster
     video.addEventListener("playing", () => video.classList.add(PLAYING_CLASS));
     video.addEventListener("pause", () => video.classList.remove(PLAYING_CLASS));
 
-    video.play().catch(() => {
-      /* Autoplay blocked — poster remains the entire experience, by design. */
-    });
+    const tryPlay = () => {
+      video.play().catch(() => {
+        /* Autoplay blocked — poster remains the entire experience, by design. */
+      });
+    };
+
+    tryPlay();
+    // <mux-video> finishes wiring up its internal player asynchronously
+    // after `playback-id` is set - calling play() the instant the
+    // attribute is assigned can land before that's done and gets silently
+    // dropped (no error, just stuck on the poster forever). This retries
+    // once the element actually reports it has a frame ready, which is a
+    // no-op if the first call already succeeded.
+    video.addEventListener("loadeddata", tryPlay, { once: true });
   }
 
   function pauseVideo(container: HTMLElement) {
