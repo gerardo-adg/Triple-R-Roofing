@@ -205,9 +205,12 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     padding-bottom: calc(clamp(140px, 20vh, 220px) + env(safe-area-inset-bottom));
   }
 
-  /* Brand/message — the strongest element on the page. */
+  /* Brand/message — the strongest element on the page. A soft shadow (not
+     a hard cartoon outline) keeps it legible over real moving footage,
+     which has brighter/busier frames than the old static poster did. */
   .hero__headline {
     color: var(--color-text-inverse);
+    text-shadow: 0 2px 20px rgb(10 10 10 / 50%);
     /* Max stop tuned to match where Container's own max-width (1320px)
        plateaus (~1320px viewport). Past that point the available line
        width stops growing, so letting the font size keep growing toward
@@ -262,6 +265,7 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     font-size: var(--text-body);
     font-weight: var(--weight-medium);
     color: var(--color-text-muted-inverse);
+    text-shadow: 0 1px 12px rgb(10 10 10 / 45%);
     opacity: 0;
     animation: hero-fade-in var(--duration-base) var(--ease-out) forwards;
     animation-delay: 460ms;
