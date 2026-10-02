@@ -106,7 +106,7 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     ) : (
       <>
         {centerHeadline && (
-          <Image class="hero__brand-mark hero__brand-mark--above" src={logoMark} alt="" width={96} height={83} densities={[2, 3]} />
+          <Image class="hero__brand-mark hero__brand-mark--above" src={logoMark} alt="" width={150} height={130} densities={[2, 3]} />
         )}
         <h1 class:list={["hero__headline", centerHeadline && "hero__headline--small"]}>
         <div class="hero__headline-set hero__headline-set--mobile">
@@ -313,7 +313,7 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
 
     .hero__brand-mark--above {
       display: block;
-      width: clamp(80px, 9vw, 120px);
+      width: clamp(100px, 11vw, 150px);
       margin-bottom: var(--space-4);
       opacity: 0;
       animation: hero-fade-in var(--duration-base) var(--ease-out) forwards;
