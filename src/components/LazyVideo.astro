@@ -159,7 +159,7 @@ const remoteSrcset = isRemotePoster
 
   function initVideo(container: HTMLElement) {
     const video = container.querySelector<HTMLVideoElement>(".lazy-video__video");
-    if (!video) return;
+    if (!video) return null;
 
     const src = video.dataset.src;
     const playbackId = video.dataset.playbackId;
@@ -197,6 +197,8 @@ const remoteSrcset = isRemotePoster
     // once the element actually reports it has a frame ready, which is a
     // no-op if the first call already succeeded.
     video.addEventListener("loadeddata", tryPlay, { once: true });
+
+    return tryPlay;
   }
 
   function pauseVideo(container: HTMLElement) {
@@ -212,12 +214,27 @@ const remoteSrcset = isRemotePoster
   // Mux source/poster), CSS-toggled the same way its headline already is;
   // the hidden one is skipped entirely here so its video is never fetched.
   const heroEls = document.querySelectorAll<HTMLElement>("[data-lazy-video][data-hero]");
+  const heroRetries: Array<() => void> = [];
   if (!reducedMotion) {
     heroEls.forEach((el) => {
       if (getComputedStyle(el).display !== "none") {
-        initVideo(el);
+        const retry = initVideo(el);
+        if (retry) heroRetries.push(retry);
       }
     });
+  }
+
+  // Some mobile browsers block autoplay outright even with muted+playsinline
+  // set correctly - iOS Low Power Mode and Chrome's Data Saver both do this,
+  // and there's no way to detect either in advance. Retrying on the very
+  // first touch/scroll/click anywhere on the page (not just a tap on the
+  // video itself) catches it regardless of which policy caused it; a no-op
+  // if the video is already playing.
+  if (heroRetries.length) {
+    const retryOnFirstInteraction = () => heroRetries.forEach((retry) => retry());
+    document.addEventListener("touchstart", retryOnFirstInteraction, { once: true, passive: true });
+    document.addEventListener("scroll", retryOnFirstInteraction, { once: true, passive: true });
+    document.addEventListener("click", retryOnFirstInteraction, { once: true });
   }
 
   const lazyEls = document.querySelectorAll<HTMLElement>(
