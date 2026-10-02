@@ -34,12 +34,15 @@ interface Props {
   mobilePoster?: ImageMetadata | string;
   mobileMuxPlaybackId?: string;
   mobileVideoSrc?: string;
-  /** Test layout: swaps the headline/subheadline for the brand mark +
-   * wordmark, centered, with a single CTA beneath - everything else about
-   * the hero (video, scroll effect, scrim) is unchanged. The headline/
-   * subheadline copy is still required and still rendered, just visually
-   * hidden, so the page keeps a real <h1> and doesn't lose any SEO text. */
+  /** Test layout: swaps the headline/subheadline for the brand mark,
+   * centered, with a single CTA beneath - everything else about the hero
+   * (video, scroll effect, scrim) is unchanged. The headline/subheadline
+   * copy is still required and still rendered, just visually hidden, so
+   * the page keeps a real <h1> and doesn't lose any SEO text. */
   centeredLogo?: boolean;
+  /** Test layout: keeps the real headline/subheadline text (not the logo),
+   * just centered and smaller - independent of centeredLogo above. */
+  centerHeadline?: boolean;
 }
 
 const {
@@ -56,12 +59,13 @@ const {
   mobileMuxPlaybackId,
   mobileVideoSrc,
   centeredLogo = false,
+  centerHeadline = false,
 } = Astro.props;
 
 const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVideoSrc);
 ---
 
-<section class:list={["hero", centeredLogo && "hero--centered"]} data-hero>
+<section class:list={["hero", (centeredLogo || centerHeadline) && "hero--centered"]} data-hero>
   <div class="hero__media" data-hero-media aria-hidden="true">
     <div class="hero__media-inner">
       {hasMobileVariant && (
@@ -97,11 +101,10 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
         <h1 class="visually-hidden">{lines.join(" ")}</h1>
         <div class="hero__brand">
           <Image class="hero__brand-mark" src={logoMark} alt="" width={160} height={138} densities={[2, 3]} />
-          <span class="hero__brand-wordmark">Triple R Roofing</span>
         </div>
       </>
     ) : (
-      <h1 class="hero__headline">
+      <h1 class:list={["hero__headline", centerHeadline && "hero__headline--small"]}>
         <div class="hero__headline-set hero__headline-set--mobile">
           {mobileLines.map((line, i) => (
             <span class="hero__line-mask">
@@ -123,7 +126,11 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
       </h1>
     )}
 
-    {!centeredLogo && <p class="hero__subheadline">{subheadline}</p>}
+    {!centeredLogo && (
+      <p class:list={["hero__subheadline", centerHeadline && "hero__subheadline--small"]}>
+        {subheadline}
+      </p>
+    )}
 
     <div class="hero__actions">
       <Button variant="primary" inverse href={primaryCta.href}>
@@ -267,19 +274,9 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     filter: drop-shadow(0 2px 20px rgb(10 10 10 / 50%));
   }
 
-  .hero__brand-wordmark {
-    font-family: var(--font-display);
-    font-weight: var(--weight-black);
-    font-stretch: var(--stretch-expanded);
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
-    text-shadow: 0 2px 20px rgb(10 10 10 / 50%);
-  }
-
   .hero--centered .hero__actions {
     justify-content: center;
-    margin-top: var(--space-5);
+    margin-top: var(--space-3);
   }
 
   /* Brand/message — the strongest element on the page. A soft shadow (not
@@ -330,6 +327,23 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     .hero__subheadline {
       font-size: var(--text-body-sm);
     }
+  }
+
+  /* Test layout (centerHeadline): small and centered at every width, not
+     just desktop. Compound selector (both classes on one rule, not two
+     chained single-class rules) is load-bearing: the base .hero__headline/
+     .hero__subheadline rules below share the exact same specificity, and
+     the base .hero__subheadline rule in particular comes AFTER this block
+     in the file - with single-class selectors that source order would let
+     it silently win the tie and cancel this override out entirely. */
+  .hero__headline.hero__headline--small {
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+  }
+
+  .hero__subheadline.hero__subheadline--small {
+    font-size: var(--text-body-sm);
+    max-width: 36ch;
+    margin-bottom: var(--space-4);
   }
 
   .hero__line-mask {
