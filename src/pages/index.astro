@@ -14,7 +14,15 @@ import ProcessSection from "../components/ProcessSection.astro";
 import FinancingSection from "../components/FinancingSection.astro";
 import FinalCtaSection from "../components/FinalCtaSection.astro";
 import Footer from "../components/Footer.astro";
-import heroPoster from "../assets/media/placeholder-poster.svg";
+
+// Real client-provided hero footage: a vertically-shot phone clip for
+// mobile, a separate horizontally-shot clip for desktop - a single crop
+// rarely reads well at both aspect ratios, same reasoning as every other
+// mobile/desktop media split on this site.
+const HERO_MOBILE_MUX_ID = "WQbU1fu02qE5fijk1PwcG5blondCoPwk02018PeOmi6hII";
+const HERO_MOBILE_POSTER = `https://image.mux.com/${HERO_MOBILE_MUX_ID}/thumbnail.jpg?time=7`;
+const HERO_DESKTOP_MUX_ID = "3NQqsiesxQ4XeDAnKeYdn003NcOvKIHr7b3XHVmKzYJ8";
+const HERO_DESKTOP_POSTER = `https://image.mux.com/${HERO_DESKTOP_MUX_ID}/thumbnail.jpg?time=15`;
 ---
 
 <BaseLayout
@@ -29,8 +37,11 @@ import heroPoster from "../assets/media/placeholder-poster.svg";
       subheadline="Roof replacements, repairs, and gutter services for homeowners throughout the Sacramento area."
       primaryCta={{ label: "Get a Free Estimate", href: "/contact" }}
       secondaryCta={{ label: "Call (916) 420-5635", href: "tel:+19164205635" }}
-      poster={heroPoster}
-      alt="Placeholder image. Cinematic drone or installation footage will replace this poster once final media is delivered."
+      poster={HERO_DESKTOP_POSTER}
+      muxPlaybackId={HERO_DESKTOP_MUX_ID}
+      mobilePoster={HERO_MOBILE_POSTER}
+      mobileMuxPlaybackId={HERO_MOBILE_MUX_ID}
+      alt="Cinematic footage of a Triple R Roofing roofing project in Sacramento, CA."
     />
     <TrustSection />
     <ServicesSection />

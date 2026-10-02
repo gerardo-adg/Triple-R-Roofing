@@ -20,10 +20,18 @@ interface Props {
   subheadline: string;
   primaryCta: CTA;
   secondaryCta?: CTA;
-  poster: ImageMetadata;
+  /** Used at >=900px, and at every width when no mobile* prop is given. */
+  poster: ImageMetadata | string;
   alt: string;
   muxPlaybackId?: string;
   videoSrc?: string;
+  /** Optional <900px overrides - a vertically-shot phone clip rarely
+   * crops well into the same frame as a horizontal desktop one, same
+   * reasoning as the headline's own mobileLines split above. Omit to use
+   * the desktop media at every width. */
+  mobilePoster?: ImageMetadata | string;
+  mobileMuxPlaybackId?: string;
+  mobileVideoSrc?: string;
 }
 
 const {
@@ -36,12 +44,28 @@ const {
   alt,
   muxPlaybackId,
   videoSrc,
+  mobilePoster,
+  mobileMuxPlaybackId,
+  mobileVideoSrc,
 } = Astro.props;
+
+const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVideoSrc);
 ---
 
 <section class="hero" data-hero>
   <div class="hero__media" data-hero-media aria-hidden="true">
     <div class="hero__media-inner">
+      {hasMobileVariant && (
+        <LazyVideo
+          poster={mobilePoster ?? poster}
+          alt={alt}
+          hero
+          muxPlaybackId={mobileMuxPlaybackId}
+          src={mobileVideoSrc}
+          aspectRatio="auto"
+          class="hero__video hero__video--mobile"
+        />
+      )}
       <LazyVideo
         poster={poster}
         alt={alt}
@@ -49,7 +73,7 @@ const {
         muxPlaybackId={muxPlaybackId}
         src={videoSrc}
         aspectRatio="auto"
-        class="hero__video"
+        class:list={["hero__video", hasMobileVariant && "hero__video--desktop"]}
       />
     </div>
   </div>
@@ -138,6 +162,26 @@ const {
     width: 100%;
     height: 100%;
     aspect-ratio: auto;
+  }
+
+  /* Only present at all when a mobile-specific video was passed in (see
+     hasMobileVariant above) - same breakpoint and "separate DOM, not
+     reflowed" approach as the headline split below. display:none here is
+     load-bearing, not just visual: LazyVideo's own script checks computed
+     display before ever assigning a source, so the hidden one's video is
+     never fetched. */
+  .hero__video--desktop {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .hero__video--mobile {
+      display: none;
+    }
+
+    .hero__video--desktop {
+      display: block;
+    }
   }
 
   /* Neutral near-black scrim — no warm tint. A tinted overlay here was the

@@ -2,23 +2,34 @@
 /**
  * Decorative/cinematic video with a poster-first, lazy-init loading model.
  *
- * - `hero`: loads and attempts to play immediately (use for the one
- *   above-the-fold video on a page, per the "only the hero may initialize
- *   immediately" rule).
+ * - `hero`: initializes immediately rather than waiting on scroll (use for
+ *   the one above-the-fold video on a page). If the element is currently
+ *   hidden by CSS (the mobile/desktop variant not meant for this viewport -
+ *   see Hero.astro), it's skipped entirely so its video is never fetched.
  * - Everything else waits for an IntersectionObserver to bring it near the
- *   viewport before a src is ever assigned, and pauses once it scrolls
+ *   viewport before a source is ever assigned, and pauses once it scrolls
  *   significantly out of view.
  * - `prefers-reduced-motion: reduce` skips video entirely — the poster is
  *   the whole experience for those users, not a fallback bolted on after.
- * - Pass `muxPlaybackId` once real Mux assets exist; `src` remains for a
- *   direct progressive-mp4 fallback. Neither is required yet — the poster
- *   alone is a valid, complete state.
+ * - A Mux-hosted source renders as <mux-video> (this package's sibling to
+ *   @mux/mux-player, used elsewhere for click-to-play videos), not a plain
+ *   <video src="*.m3u8">: only Safari can play HLS natively through a bare
+ *   <video> tag, so Chrome/Firefox would otherwise silently show the poster
+ *   forever. <mux-video> handles that branch internally, with no visible
+ *   player UI, same as a native element. `src` remains for a direct
+ *   progressive-mp4 fallback when there's no Mux asset at all. Neither is
+ *   required yet — the poster alone is a valid, complete state.
+ * - `poster` accepts either a locally-imported image (goes through
+ *   ResponsiveImage/astro:assets) or a remote URL string - a Mux thumbnail
+ *   (https://image.mux.com/<id>/thumbnail.jpg?time=N) doesn't need or
+ *   benefit from Astro's local image pipeline, same reasoning as
+ *   PlayableVideo's own isRemotePoster handling.
  */
 import ResponsiveImage from "./ResponsiveImage.astro";
 import type { ImageMetadata } from "astro";
 
 interface Props {
-  poster: ImageMetadata;
+  poster: ImageMetadata | string;
   alt: string;
   src?: string;
   muxPlaybackId?: string;
@@ -39,9 +50,11 @@ const {
   class: className,
 } = Astro.props;
 
-const videoSrc = muxPlaybackId
-  ? `https://stream.mux.com/${muxPlaybackId}.m3u8`
-  : src;
+const isRemotePoster = typeof poster === "string";
+const remoteWidths = [640, 960, 1280, 1600, 1920];
+const remoteSrcset = isRemotePoster
+  ? remoteWidths.map((w) => `${poster}&width=${w} ${w}w`).join(", ")
+  : undefined;
 ---
 
 <div
@@ -50,29 +63,53 @@ const videoSrc = muxPlaybackId
   data-lazy-video
   data-hero={hero ? "true" : undefined}
 >
-  <ResponsiveImage
-    class="lazy-video__poster"
-    src={poster}
-    alt={alt}
-    widths={[640, 960, 1280, 1600, 1920]}
-    sizes="100vw"
-    loading={hero ? "eager" : "lazy"}
-    fetchpriority={hero ? "high" : "auto"}
-    decoding="async"
-  />
-  {videoSrc && (
-    <video
+  {isRemotePoster ? (
+    <img
+      class="lazy-video__poster"
+      src={`${poster}&width=1280`}
+      srcset={remoteSrcset}
+      sizes="100vw"
+      alt={alt}
+      loading={hero ? "eager" : "lazy"}
+      fetchpriority={hero ? "high" : "auto"}
+      decoding="async"
+    />
+  ) : (
+    <ResponsiveImage
+      class="lazy-video__poster"
+      src={poster}
+      alt={alt}
+      widths={remoteWidths}
+      sizes="100vw"
+      loading={hero ? "eager" : "lazy"}
+      fetchpriority={hero ? "high" : "auto"}
+      decoding="async"
+    />
+  )}
+  {muxPlaybackId ? (
+    <mux-video
       class="lazy-video__video"
       muted
       loop={loop}
       playsinline
-      preload="none"
+      preload={hero ? "auto" : "none"}
       aria-hidden="true"
       tabindex="-1"
-      data-src={hero ? undefined : videoSrc}
-      src={hero ? videoSrc : undefined}
-      autoplay={hero}
+      data-playback-id={muxPlaybackId}
     />
+  ) : (
+    src && (
+      <video
+        class="lazy-video__video"
+        muted
+        loop={loop}
+        playsinline
+        preload={hero ? "auto" : "none"}
+        aria-hidden="true"
+        tabindex="-1"
+        data-src={src}
+      />
+    )
   )}
 </div>
 
@@ -104,6 +141,11 @@ const videoSrc = muxPlaybackId
 </style>
 
 <script>
+  // Registers the <mux-video> custom element - without this import it's
+  // inert markup (no playback, no HLS handling), same reason PlayableVideo
+  // imports @mux/mux-player before using <mux-player>.
+  import "@mux/mux-video";
+
   const PLAYING_CLASS = "is-playing";
 
   function initVideo(container: HTMLElement) {
@@ -111,7 +153,10 @@ const videoSrc = muxPlaybackId
     if (!video) return;
 
     const src = video.dataset.src;
-    if (src && !video.src) {
+    const playbackId = video.dataset.playbackId;
+    if (playbackId && !video.hasAttribute("playback-id")) {
+      video.setAttribute("playback-id", playbackId);
+    } else if (src && !video.src) {
       video.src = src;
     }
 
@@ -130,13 +175,17 @@ const videoSrc = muxPlaybackId
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Hero elements initialize immediately rather than waiting on scroll -
+  // but only the one actually visible for the current viewport. Hero.astro
+  // can render a mobile AND a desktop variant side by side (each its own
+  // Mux source/poster), CSS-toggled the same way its headline already is;
+  // the hidden one is skipped entirely here so its video is never fetched.
   const heroEls = document.querySelectorAll<HTMLElement>("[data-lazy-video][data-hero]");
   if (!reducedMotion) {
     heroEls.forEach((el) => {
-      const video = el.querySelector<HTMLVideoElement>(".lazy-video__video");
-      if (!video) return;
-      video.addEventListener("playing", () => video.classList.add(PLAYING_CLASS));
-      video.play().catch(() => {});
+      if (getComputedStyle(el).display !== "none") {
+        initVideo(el);
+      }
     });
   }
 
