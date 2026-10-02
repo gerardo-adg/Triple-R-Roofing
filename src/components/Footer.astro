@@ -21,13 +21,13 @@ const COMPANY_LINKS = [
 
 const PHONE_DISPLAY = "(916) 420-5635";
 const PHONE_HREF = "tel:+19164205635";
+const LICENSE_NUMBER = "CSLB #1107574";
+const HOURS = "Mon–Sun, 6 AM–7 PM";
 const YEAR = new Date().getFullYear();
 
 // Intentionally not rendered yet - do not invent placeholder values for
 // these. Add each once the client confirms it:
-// - CSLB / contractor license number
 // - Social media links (only if real accounts exist)
-// - Business hours
 // - A more specific service-area list beyond "Sacramento, CA"
 ---
 
@@ -43,6 +43,7 @@ const YEAR = new Date().getFullYear();
           Roof replacement, repair, and gutters in Sacramento, CA.
         </p>
         <a class="site-footer__phone" href={PHONE_HREF}>{PHONE_DISPLAY}</a>
+        <p class="site-footer__meta">{LICENSE_NUMBER} &middot; {HOURS}</p>
       </div>
 
       <nav class="site-footer__nav" aria-label="Services">
@@ -128,6 +129,12 @@ const YEAR = new Date().getFullYear();
 
   .site-footer__phone:hover {
     color: var(--color-gold);
+  }
+
+  .site-footer__meta {
+    margin-top: var(--space-2);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted-inverse);
   }
 
   .site-footer__nav-title {
