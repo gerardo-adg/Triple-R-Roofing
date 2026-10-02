@@ -142,8 +142,14 @@ const YEAR = new Date().getFullYear();
     white-space: nowrap;
   }
 
-  @media (max-width: 479px) {
-    .lp-header__wordmark {
+  /* Mobile: logo + name centered on their own, no call box - phones
+     still have the call button in the closing section and footer. */
+  @media (max-width: 767px) {
+    .lp-header__inner {
+      justify-content: center;
+    }
+
+    .lp-header__call {
       display: none;
     }
   }
