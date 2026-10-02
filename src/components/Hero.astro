@@ -2,6 +2,8 @@
 import Container from "./Container.astro";
 import Button from "./Button.astro";
 import LazyVideo from "./LazyVideo.astro";
+import { Image } from "astro:assets";
+import logoMark from "../assets/media/logo-triple-r-roofing.webp";
 import type { ImageMetadata } from "astro";
 
 interface CTA {
@@ -32,6 +34,12 @@ interface Props {
   mobilePoster?: ImageMetadata | string;
   mobileMuxPlaybackId?: string;
   mobileVideoSrc?: string;
+  /** Test layout: swaps the headline/subheadline for the brand mark +
+   * wordmark, centered, with a single CTA beneath - everything else about
+   * the hero (video, scroll effect, scrim) is unchanged. The headline/
+   * subheadline copy is still required and still rendered, just visually
+   * hidden, so the page keeps a real <h1> and doesn't lose any SEO text. */
+  centeredLogo?: boolean;
 }
 
 const {
@@ -47,12 +55,13 @@ const {
   mobilePoster,
   mobileMuxPlaybackId,
   mobileVideoSrc,
+  centeredLogo = false,
 } = Astro.props;
 
 const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVideoSrc);
 ---
 
-<section class="hero" data-hero>
+<section class:list={["hero", centeredLogo && "hero--centered"]} data-hero>
   <div class="hero__media" data-hero-media aria-hidden="true">
     <div class="hero__media-inner">
       {hasMobileVariant && (
@@ -83,34 +92,44 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
 
   <Container>
   <div class="hero__content">
-    <h1 class="hero__headline">
-      <div class="hero__headline-set hero__headline-set--mobile">
-        {mobileLines.map((line, i) => (
-          <span class="hero__line-mask">
-            <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
-              {line}
+    {centeredLogo ? (
+      <>
+        <h1 class="visually-hidden">{lines.join(" ")}</h1>
+        <div class="hero__brand">
+          <Image class="hero__brand-mark" src={logoMark} alt="" width={96} height={83} densities={[2, 3]} />
+          <span class="hero__brand-wordmark">Triple R Roofing</span>
+        </div>
+      </>
+    ) : (
+      <h1 class="hero__headline">
+        <div class="hero__headline-set hero__headline-set--mobile">
+          {mobileLines.map((line, i) => (
+            <span class="hero__line-mask">
+              <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
+                {line}
+              </span>
             </span>
-          </span>
-        ))}
-      </div>
-      <div class="hero__headline-set hero__headline-set--desktop">
-        {lines.map((line, i) => (
-          <span class="hero__line-mask">
-            <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
-              {line}
+          ))}
+        </div>
+        <div class="hero__headline-set hero__headline-set--desktop">
+          {lines.map((line, i) => (
+            <span class="hero__line-mask">
+              <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
+                {line}
+              </span>
             </span>
-          </span>
-        ))}
-      </div>
-    </h1>
+          ))}
+        </div>
+      </h1>
+    )}
 
-    <p class="hero__subheadline">{subheadline}</p>
+    {!centeredLogo && <p class="hero__subheadline">{subheadline}</p>}
 
     <div class="hero__actions">
       <Button variant="primary" inverse href={primaryCta.href}>
         {primaryCta.label}
       </Button>
-      {secondaryCta && (
+      {!centeredLogo && secondaryCta && (
         <Button variant="text" inverse href={secondaryCta.href}>
           {secondaryCta.label}
         </Button>
@@ -131,6 +150,10 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     overflow: hidden;
     background: var(--color-charcoal);
     color: var(--color-text-inverse);
+  }
+
+  .hero--centered {
+    align-items: center;
   }
 
   /*
@@ -218,6 +241,45 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     width: 100%;
     padding-top: calc(var(--nav-height) + var(--space-6));
     padding-bottom: calc(clamp(140px, 20vh, 220px) + env(safe-area-inset-bottom));
+  }
+
+  .hero--centered .hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-block: var(--space-7);
+  }
+
+  .hero__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    opacity: 0;
+    animation: hero-fade-in var(--duration-slow) var(--ease-out) forwards;
+    animation-delay: 140ms;
+  }
+
+  .hero__brand-mark {
+    width: clamp(64px, 8vw, 96px);
+    height: auto;
+    filter: drop-shadow(0 2px 20px rgb(10 10 10 / 50%));
+  }
+
+  .hero__brand-wordmark {
+    font-family: var(--font-display);
+    font-weight: var(--weight-black);
+    font-stretch: var(--stretch-expanded);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+    text-shadow: 0 2px 20px rgb(10 10 10 / 50%);
+  }
+
+  .hero--centered .hero__actions {
+    justify-content: center;
+    margin-top: var(--space-5);
   }
 
   /* Brand/message — the strongest element on the page. A soft shadow (not
