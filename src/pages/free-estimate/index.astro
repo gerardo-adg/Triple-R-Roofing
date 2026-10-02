@@ -30,10 +30,11 @@ import certainteedLogo from "../../assets/media/cert-certainteed-select-shinglem
 import owensCorningLogo from "../../assets/media/cert-owens-corning-preferred-contractor.png";
 import bbbLogo from "../../assets/media/cert-bbb-accredited-business.png";
 
-// Client-confirmed: 0% interest for 3 months (Wisetack), matching the
-// main site's Financing page. The old ad landing page's "6 months" is
-// out of date - keep this in sync with the ad copy.
-const OFFER_MONTHS = 3;
+// Client-confirmed offer for the ads: 0% interest for 24 months. No
+// down-payment claim anywhere on this page, per the client. (The main
+// site's Financing page still states the older Wisetack offer.) Keep
+// this in sync with the ad copy.
+const OFFER_MONTHS = 24;
 
 const GOOGLE_REVIEWS_URL = "https://share.google/thZ2wASKL8GO7bnIW";
 
@@ -94,8 +95,8 @@ const CREDENTIALS = [
 ---
 
 <LandingLayout
-  title={`New Roof for $0 Down & 0% Interest | Triple R Roofing`}
-  description={`New roof for $0 down and 0% interest for ${OFFER_MONTHS} months for qualified homeowners. Request a free roofing estimate from Triple R Roofing in the Greater Sacramento area.`}
+  title={`New Roof With 0% Interest for ${OFFER_MONTHS} Months | Triple R Roofing`}
+  description={`New roof with 0% interest for ${OFFER_MONTHS} months for qualified homeowners. Request a free roofing estimate from Triple R Roofing in the Greater Sacramento area.`}
 >
   <!-- ---- Hero + quiz ---- -->
   <section class="lp-hero section--inverse">
@@ -113,8 +114,8 @@ const CREDENTIALS = [
       <div class="lp-hero__content">
         <p class="eyebrow">Greater Sacramento Area Roofing Experts</p>
         <h1 class="lp-hero__headline">
-          New Roof for <span class="lp-hero__accent">$0 Down</span> &amp;
-          <span class="lp-hero__accent">0% Interest</span> for {OFFER_MONTHS} Months.
+          New Roof With <span class="lp-hero__accent">0% Interest</span> for
+          <span class="lp-hero__accent">{OFFER_MONTHS} Months.</span>
         </h1>
       </div>
     </Container>
@@ -253,7 +254,7 @@ const CREDENTIALS = [
     <Container>
       <div class="lp-final__inner" data-reveal>
         <h2 class="lp-final__headline">
-          $0 down. 0% interest for {OFFER_MONTHS} months.
+          0% interest for {OFFER_MONTHS} months.
         </h2>
         <p class="lp-final__body">
           Find out if you qualify and get a free estimate from a Sacramento crew homeowners trust.
