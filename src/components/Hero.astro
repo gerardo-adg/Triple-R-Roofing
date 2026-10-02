@@ -171,17 +171,24 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
      reflowed" approach as the headline split below. display:none here is
      load-bearing, not just visual: LazyVideo's own script checks computed
      display before ever assigning a source, so the hidden one's video is
-     never fetched. */
-  .hero__video--desktop {
+     never fetched.
+     :global() is required here, not optional: these classes land on
+     LazyVideo's own root element (a different component/scope), the same
+     reason .hero__media-inner's own rule above needs it - without it,
+     Astro scopes the selector to an attribute that element never carries,
+     so the rule silently never matches. Previously unscoped, so both
+     videos stayed display:block at every width and the later one in DOM
+     order (desktop) visually covered the other up on every viewport. */
+  :global(.hero__video--desktop) {
     display: none;
   }
 
   @media (min-width: 900px) {
-    .hero__video--mobile {
+    :global(.hero__video--mobile) {
       display: none;
     }
 
-    .hero__video--desktop {
+    :global(.hero__video--desktop) {
       display: block;
     }
   }
