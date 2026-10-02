@@ -96,7 +96,7 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
       <>
         <h1 class="visually-hidden">{lines.join(" ")}</h1>
         <div class="hero__brand">
-          <Image class="hero__brand-mark" src={logoMark} alt="" width={96} height={83} densities={[2, 3]} />
+          <Image class="hero__brand-mark" src={logoMark} alt="" width={160} height={138} densities={[2, 3]} />
           <span class="hero__brand-wordmark">Triple R Roofing</span>
         </div>
       </>
@@ -262,7 +262,7 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
   }
 
   .hero__brand-mark {
-    width: clamp(64px, 8vw, 96px);
+    width: clamp(110px, 14vw, 160px);
     height: auto;
     filter: drop-shadow(0 2px 20px rgb(10 10 10 / 50%));
   }
