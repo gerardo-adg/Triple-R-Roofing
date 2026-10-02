@@ -257,6 +257,17 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     .hero__headline-set--desktop {
       display: block;
     }
+
+    /* Smaller on desktop specifically so the headline/subheadline take up
+       less of the frame and the video reads as the main event - mobile
+       sizing above is untouched. */
+    .hero__headline {
+      font-size: clamp(3rem, 2.5rem + 2vw, 4.5rem);
+    }
+
+    .hero__subheadline {
+      font-size: var(--text-body-sm);
+    }
   }
 
   .hero__line-mask {
