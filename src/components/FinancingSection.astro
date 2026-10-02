@@ -2,12 +2,14 @@
 import Container from "./Container.astro";
 import Button from "./Button.astro";
 
-// Offer terms (0% APR for 24 months) confirmed by the client directly as
-// the current source of truth. (The site previously also led with a $0
-// down figure - the client asked to drop that and lead with 0% APR only.)
-// Still flagged: the disclosure line below is intentionally generic (not
-// a fabricated legal/compliance disclosure) and should be replaced with
-// Wisetack's/the lender's actual required wording before launch.
+// Offer terms (0% APR for 24 months) confirmed by the client directly
+// as the current source of truth. No down-payment claim - the client
+// asked for "$0 down" to be removed site-wide. (The site previously
+// said 0% interest for 3 months - the client updated the offer;
+// updated everywhere it appeared.) Still flagged: the disclosure line below is
+// intentionally generic (not a fabricated legal/compliance disclosure)
+// and should be replaced with Wisetack's/the lender's actual required
+// wording before launch.
 ---
 
 <section class="financing section--inverse">
@@ -26,7 +28,7 @@ import Button from "./Button.astro";
       </div>
 
       <div class="financing__stats">
-        <div class="financing__stat">
+        <div class="financing__stat financing__stat--primary">
           <p class="financing__stat-value">0%</p>
           <p class="financing__stat-label">APR for 24 months*</p>
         </div>
@@ -84,6 +86,10 @@ import Button from "./Button.astro";
     border-top: 1px solid var(--color-border-inverse);
   }
 
+  /* Mobile only: a much tighter gap after the divider and before the
+     disclosure than desktop uses (row + wrap + flex-basis: 100% keeps
+     the disclosure on its own full-width line below the stat) -
+     desktop's own layout below is untouched. */
   @media (max-width: 899px) {
     /* Tightens the space above the divider (between "Explore Financing"
        and the border-top below), separate from .financing__stats'
@@ -93,7 +99,19 @@ import Button from "./Button.astro";
     }
 
     .financing__stats {
+      flex-direction: row;
+      flex-wrap: wrap;
+      column-gap: var(--space-6);
+      row-gap: var(--space-3);
       padding-top: var(--space-5);
+    }
+
+    .financing__stat {
+      flex: 1 1 0;
+    }
+
+    .financing__disclosure {
+      flex-basis: 100%;
     }
   }
 
@@ -101,13 +119,15 @@ import Button from "./Button.astro";
     font-family: var(--font-display);
     font-weight: var(--weight-black);
     font-stretch: var(--stretch-expanded);
-    /* The single remaining stat (0% APR for 24 months) carries the whole
-       offer now, so it keeps the larger of the two sizes this used to
-       split between two stats. */
-    font-size: clamp(3.25rem, 2.3rem + 3.6vw, 5.25rem);
+    font-size: clamp(2.5rem, 1.9rem + 2.4vw, 3.75rem);
     line-height: 0.95;
     letter-spacing: -0.01em;
     color: var(--color-gold);
+  }
+
+  /* 0% APR for 24 months is the whole offer - the one big number. */
+  .financing__stat--primary .financing__stat-value {
+    font-size: clamp(3.25rem, 2.3rem + 3.6vw, 5.25rem);
   }
 
   .financing__stat-label {
@@ -135,7 +155,10 @@ import Button from "./Button.astro";
       flex-direction: row;
       flex-wrap: wrap;
       align-items: flex-start;
-      gap: var(--space-8);
+      /* One stat now (no "$0 down" beside it) - keep the disclosure
+         sitting under it instead of stretching to the column's bottom. */
+      align-content: flex-start;
+      gap: var(--space-5) var(--space-8);
       padding-top: 0;
       border-top: none;
       border-left: 1px solid var(--color-border-inverse);
