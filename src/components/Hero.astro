@@ -64,6 +64,7 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
           src={mobileVideoSrc}
           aspectRatio="auto"
           class="hero__video hero__video--mobile"
+          initialBandwidthEstimateKbps={1200}
         />
       )}
       <LazyVideo
@@ -74,6 +75,7 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
         src={videoSrc}
         aspectRatio="auto"
         class:list={["hero__video", hasMobileVariant && "hero__video--desktop"]}
+        initialBandwidthEstimateKbps={1800}
       />
     </div>
   </div>
@@ -186,7 +188,12 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
 
   /* Neutral near-black scrim — no warm tint. A tinted overlay here was the
      biggest single reason the previous version read brown/espresso instead
-     of true black. */
+     of true black. The two gradients alone faded to fully transparent
+     across the middle of the frame (24%-34% from the top), which was fine
+     over the old static placeholder but let a bright/busy stretch of real
+     video show through right where the headline sits. The flat wash
+     underneath keeps a baseline darkness everywhere, with the gradients
+     layered on top of it for the stronger cinematic falloff at the edges. */
   .hero__scrim {
     position: absolute;
     inset: 0;
@@ -194,7 +201,8 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     pointer-events: none;
     background:
       linear-gradient(to bottom, rgb(10 10 10 / 55%) 0%, rgb(10 10 10 / 0%) 24%),
-      linear-gradient(to top, rgb(10 10 10 / 70%) 0%, rgb(10 10 10 / 20%) 34%, rgb(10 10 10 / 0%) 58%);
+      linear-gradient(to top, rgb(10 10 10 / 70%) 0%, rgb(10 10 10 / 20%) 34%, rgb(10 10 10 / 0%) 58%),
+      rgb(10 10 10 / 30%);
   }
 
   .hero__content {

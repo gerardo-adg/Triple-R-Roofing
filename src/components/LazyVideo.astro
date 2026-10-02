@@ -37,6 +37,13 @@ interface Props {
   hero?: boolean;
   loop?: boolean;
   class?: string;
+  /** Mux-only: skips hls.js's default guess (derived from the first
+   * segment's own download, which TCP slow-start can make inaccurate) so
+   * playback starts at a safe, fast-loading rendition immediately instead
+   * of possibly reaching too high and stalling. Matters most for `hero`,
+   * where time-to-first-frame matters more than starting at peak quality -
+   * ABR still ramps it up within seconds either way. */
+  initialBandwidthEstimateKbps?: number;
 }
 
 const {
@@ -48,6 +55,7 @@ const {
   hero = false,
   loop = true,
   class: className,
+  initialBandwidthEstimateKbps,
 } = Astro.props;
 
 const isRemotePoster = typeof poster === "string";
@@ -96,6 +104,7 @@ const remoteSrcset = isRemotePoster
       aria-hidden="true"
       tabindex="-1"
       data-playback-id={muxPlaybackId}
+      initial-bandwidth-estimate-kbps={initialBandwidthEstimateKbps}
     />
   ) : (
     src && (
