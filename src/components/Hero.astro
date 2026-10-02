@@ -65,7 +65,7 @@ const {
 const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVideoSrc);
 ---
 
-<section class:list={["hero", (centeredLogo || centerHeadline) && "hero--centered"]} data-hero>
+<section class:list={["hero", centeredLogo && "hero--centered", centerHeadline && "hero--text-centered"]} data-hero>
   <div class="hero__media" data-hero-media aria-hidden="true">
     <div class="hero__media-inner">
       {hasMobileVariant && (
@@ -104,7 +104,11 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
         </div>
       </>
     ) : (
-      <h1 class:list={["hero__headline", centerHeadline && "hero__headline--small"]}>
+      <>
+        {centerHeadline && (
+          <Image class="hero__brand-mark hero__brand-mark--above" src={logoMark} alt="" width={96} height={83} densities={[2, 3]} />
+        )}
+        <h1 class:list={["hero__headline", centerHeadline && "hero__headline--small"]}>
         <div class="hero__headline-set hero__headline-set--mobile">
           {mobileLines.map((line, i) => (
             <span class="hero__line-mask">
@@ -124,6 +128,7 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
           ))}
         </div>
       </h1>
+      </>
     )}
 
     {!centeredLogo && (
@@ -279,6 +284,42 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     margin-top: var(--space-3);
   }
 
+  /* Test layout (centerHeadline): desktop only - mobile keeps the
+     original left-aligned, no-logo hero exactly as it was before this
+     was ever added. A separate class from .hero--centered above (which
+     still serves centeredLogo, unaffected, at every width) so this
+     toggle can't accidentally change that other layout's behavior. */
+  .hero__brand-mark--above {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .hero--text-centered {
+      align-items: center;
+    }
+
+    .hero--text-centered .hero__content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-block: var(--space-7);
+    }
+
+    .hero--text-centered .hero__actions {
+      justify-content: center;
+      margin-top: var(--space-3);
+    }
+
+    .hero__brand-mark--above {
+      display: block;
+      width: clamp(80px, 9vw, 120px);
+      margin-bottom: var(--space-4);
+      opacity: 0;
+      animation: hero-fade-in var(--duration-base) var(--ease-out) forwards;
+    }
+  }
+
   /* Brand/message — the strongest element on the page. A soft shadow (not
      a hard cartoon outline) keeps it legible over real moving footage,
      which has brighter/busier frames than the old static poster did. */
@@ -329,21 +370,24 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     }
   }
 
-  /* Test layout (centerHeadline): small and centered at every width, not
-     just desktop. Compound selector (both classes on one rule, not two
+  /* Test layout (centerHeadline): desktop only, same as the centering
+     rules above - mobile keeps the original full-size headline/
+     subheadline. Compound selector (both classes on one rule, not two
      chained single-class rules) is load-bearing: the base .hero__headline/
-     .hero__subheadline rules below share the exact same specificity, and
-     the base .hero__subheadline rule in particular comes AFTER this block
-     in the file - with single-class selectors that source order would let
-     it silently win the tie and cancel this override out entirely. */
-  .hero__headline.hero__headline--small {
-    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
-  }
+     .hero__subheadline rules share the exact same specificity, and the
+     base .hero__subheadline rule in particular comes AFTER this block in
+     the file - with single-class selectors that source order would let it
+     silently win the tie and cancel this override out entirely. */
+  @media (min-width: 900px) {
+    .hero__headline.hero__headline--small {
+      font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+    }
 
-  .hero__subheadline.hero__subheadline--small {
-    font-size: var(--text-body-sm);
-    max-width: 36ch;
-    margin-bottom: var(--space-4);
+    .hero__subheadline.hero__subheadline--small {
+      font-size: var(--text-body-sm);
+      max-width: 36ch;
+      margin-bottom: var(--space-4);
+    }
   }
 
   .hero__line-mask {
