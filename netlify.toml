@@ -4,25 +4,3 @@
 
 [build.environment]
   NODE_VERSION = "22"
-
-# ---- book.triplerroofs.com: Meta ads landing page ----
-# book.triplerroofs.com is a domain alias on this same Netlify site.
-# Its homepage serves the quiz landing page (src/pages/free-estimate)
-# as a rewrite (200), so the address bar stays book.triplerroofs.com.
-# force = true is required because dist/index.html (the main site's
-# homepage) exists at "/" and would otherwise win. Assets (/_astro/*)
-# and the form's /free-estimate/thank-you target are real files, so they
-# work on the alias with no extra rules.
-[[redirects]]
-  from = "https://book.triplerroofs.com/"
-  to = "/free-estimate/"
-  status = 200
-  force = true
-
-# Short, clean thank-you URL on the ad domain (handy for a URL-based
-# conversion in Ads Manager); the form itself posts to the full path.
-[[redirects]]
-  from = "https://book.triplerroofs.com/thank-you"
-  to = "/free-estimate/thank-you/"
-  status = 200
-  force = true

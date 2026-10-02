@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /design-system
+
+Sitemap: https://triplerroofs.com/sitemap-index.xml

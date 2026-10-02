@@ -19,6 +19,42 @@ interface Props {
 
 const { title, description, canonical, noindex = false } = Astro.props;
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site);
+
+// Every value here is either client-confirmed directly (phone, license
+// number, hours, the 4.8/95 Google figure) or structural (name/url) -
+// nothing invented. No street address or sameAs/social links yet since
+// neither has been provided - omitted rather than guessed; add both
+// once the client gives them. Rendered site-wide (not per-page) since
+// it describes the one business, not the current page.
+const businessSchema = {
+  "@context": "https://schema.org",
+  "@type": "RoofingContractor",
+  name: "Triple R Roofing",
+  url: Astro.site?.toString(),
+  image: new URL("/favicon.svg", Astro.site).toString(),
+  telephone: "+19164205635",
+  areaServed: "Sacramento, CA and surrounding areas",
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ],
+    opens: "06:00",
+    closes: "19:00",
+  },
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.8",
+    reviewCount: "95",
+    bestRating: "5",
+  },
+};
 ---
 
 <!doctype html>
@@ -33,6 +69,14 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site);
       href={archivoLatinWoff2}
       crossorigin
     />
+    <!--
+      Warms up the connection to Mux's servers before the hero video's own
+      script even runs, so the DNS lookup/TLS handshake isn't sitting on
+      the critical path of its first request. Harmless on pages with no
+      video - an unused preconnect is just dropped after a few seconds.
+    -->
+    <link rel="preconnect" href="https://stream.mux.com" crossorigin />
+    <link rel="preconnect" href="https://image.mux.com" crossorigin />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonicalURL} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
@@ -44,6 +88,8 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(businessSchema)} />
 
     <!-- Page-specific head tags (e.g. the ad landing page's Meta Pixel). -->
     <slot name="head" />

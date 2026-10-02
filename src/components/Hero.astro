@@ -2,6 +2,8 @@
 import Container from "./Container.astro";
 import Button from "./Button.astro";
 import LazyVideo from "./LazyVideo.astro";
+import { Image } from "astro:assets";
+import logoMark from "../assets/media/logo-triple-r-roofing.webp";
 import type { ImageMetadata } from "astro";
 
 interface CTA {
@@ -20,10 +22,27 @@ interface Props {
   subheadline: string;
   primaryCta: CTA;
   secondaryCta?: CTA;
-  poster: ImageMetadata;
+  /** Used at >=900px, and at every width when no mobile* prop is given. */
+  poster: ImageMetadata | string;
   alt: string;
   muxPlaybackId?: string;
   videoSrc?: string;
+  /** Optional <900px overrides - a vertically-shot phone clip rarely
+   * crops well into the same frame as a horizontal desktop one, same
+   * reasoning as the headline's own mobileLines split above. Omit to use
+   * the desktop media at every width. */
+  mobilePoster?: ImageMetadata | string;
+  mobileMuxPlaybackId?: string;
+  mobileVideoSrc?: string;
+  /** Test layout: swaps the headline/subheadline for the brand mark,
+   * centered, with a single CTA beneath - everything else about the hero
+   * (video, scroll effect, scrim) is unchanged. The headline/subheadline
+   * copy is still required and still rendered, just visually hidden, so
+   * the page keeps a real <h1> and doesn't lose any SEO text. */
+  centeredLogo?: boolean;
+  /** Test layout: keeps the real headline/subheadline text (not the logo),
+   * just centered and smaller - independent of centeredLogo above. */
+  centerHeadline?: boolean;
 }
 
 const {
@@ -36,12 +55,31 @@ const {
   alt,
   muxPlaybackId,
   videoSrc,
+  mobilePoster,
+  mobileMuxPlaybackId,
+  mobileVideoSrc,
+  centeredLogo = false,
+  centerHeadline = false,
 } = Astro.props;
+
+const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVideoSrc);
 ---
 
-<section class="hero" data-hero>
+<section class:list={["hero", centeredLogo && "hero--centered", centerHeadline && "hero--text-centered"]} data-hero>
   <div class="hero__media" data-hero-media aria-hidden="true">
     <div class="hero__media-inner">
+      {hasMobileVariant && (
+        <LazyVideo
+          poster={mobilePoster ?? poster}
+          alt={alt}
+          hero
+          muxPlaybackId={mobileMuxPlaybackId}
+          src={mobileVideoSrc}
+          aspectRatio="auto"
+          class="hero__video hero__video--mobile"
+          initialBandwidthEstimateKbps={1200}
+        />
+      )}
       <LazyVideo
         poster={poster}
         alt={alt}
@@ -49,7 +87,8 @@ const {
         muxPlaybackId={muxPlaybackId}
         src={videoSrc}
         aspectRatio="auto"
-        class="hero__video"
+        class:list={["hero__video", hasMobileVariant && "hero__video--desktop"]}
+        initialBandwidthEstimateKbps={1800}
       />
     </div>
   </div>
@@ -57,34 +96,52 @@ const {
 
   <Container>
   <div class="hero__content">
-    <h1 class="hero__headline">
-      <div class="hero__headline-set hero__headline-set--mobile">
-        {mobileLines.map((line, i) => (
-          <span class="hero__line-mask">
-            <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
-              {line}
+    {centeredLogo ? (
+      <>
+        <h1 class="visually-hidden">{lines.join(" ")}</h1>
+        <div class="hero__brand">
+          <Image class="hero__brand-mark" src={logoMark} alt="" width={160} height={138} densities={[2, 3]} />
+        </div>
+      </>
+    ) : (
+      <>
+        {centerHeadline && (
+          <Image class="hero__brand-mark hero__brand-mark--above" src={logoMark} alt="" width={150} height={130} densities={[2, 3]} />
+        )}
+        <h1 class:list={["hero__headline", centerHeadline && "hero__headline--small"]}>
+        <div class="hero__headline-set hero__headline-set--mobile">
+          {mobileLines.map((line, i) => (
+            <span class="hero__line-mask">
+              <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
+                {line}
+              </span>
             </span>
-          </span>
-        ))}
-      </div>
-      <div class="hero__headline-set hero__headline-set--desktop">
-        {lines.map((line, i) => (
-          <span class="hero__line-mask">
-            <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
-              {line}
+          ))}
+        </div>
+        <div class="hero__headline-set hero__headline-set--desktop">
+          {lines.map((line, i) => (
+            <span class="hero__line-mask">
+              <span class="hero__line" style={`animation-delay: ${140 + i * 110}ms`}>
+                {line}
+              </span>
             </span>
-          </span>
-        ))}
-      </div>
-    </h1>
+          ))}
+        </div>
+      </h1>
+      </>
+    )}
 
-    <p class="hero__subheadline">{subheadline}</p>
+    {!centeredLogo && (
+      <p class:list={["hero__subheadline", centerHeadline && "hero__subheadline--small"]}>
+        {subheadline}
+      </p>
+    )}
 
     <div class="hero__actions">
       <Button variant="primary" inverse href={primaryCta.href}>
         {primaryCta.label}
       </Button>
-      {secondaryCta && (
+      {!centeredLogo && secondaryCta && (
         <Button variant="text" inverse href={secondaryCta.href}>
           {secondaryCta.label}
         </Button>
@@ -105,6 +162,10 @@ const {
     overflow: hidden;
     background: var(--color-charcoal);
     color: var(--color-text-inverse);
+  }
+
+  .hero--centered {
+    align-items: center;
   }
 
   /*
@@ -140,9 +201,41 @@ const {
     aspect-ratio: auto;
   }
 
+  /* Only present at all when a mobile-specific video was passed in (see
+     hasMobileVariant above) - same breakpoint and "separate DOM, not
+     reflowed" approach as the headline split below. display:none here is
+     load-bearing, not just visual: LazyVideo's own script checks computed
+     display before ever assigning a source, so the hidden one's video is
+     never fetched.
+     :global() is required here, not optional: these classes land on
+     LazyVideo's own root element (a different component/scope), the same
+     reason .hero__media-inner's own rule above needs it - without it,
+     Astro scopes the selector to an attribute that element never carries,
+     so the rule silently never matches. Previously unscoped, so both
+     videos stayed display:block at every width and the later one in DOM
+     order (desktop) visually covered the other up on every viewport. */
+  :global(.hero__video--desktop) {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    :global(.hero__video--mobile) {
+      display: none;
+    }
+
+    :global(.hero__video--desktop) {
+      display: block;
+    }
+  }
+
   /* Neutral near-black scrim — no warm tint. A tinted overlay here was the
      biggest single reason the previous version read brown/espresso instead
-     of true black. */
+     of true black. The two gradients alone faded to fully transparent
+     across the middle of the frame (24%-34% from the top), which was fine
+     over the old static placeholder but let a bright/busy stretch of real
+     video show through right where the headline sits. The flat wash
+     underneath keeps a baseline darkness everywhere, with the gradients
+     layered on top of it for the stronger cinematic falloff at the edges. */
   .hero__scrim {
     position: absolute;
     inset: 0;
@@ -150,7 +243,8 @@ const {
     pointer-events: none;
     background:
       linear-gradient(to bottom, rgb(10 10 10 / 55%) 0%, rgb(10 10 10 / 0%) 24%),
-      linear-gradient(to top, rgb(10 10 10 / 70%) 0%, rgb(10 10 10 / 20%) 34%, rgb(10 10 10 / 0%) 58%);
+      linear-gradient(to top, rgb(10 10 10 / 70%) 0%, rgb(10 10 10 / 20%) 34%, rgb(10 10 10 / 0%) 58%),
+      rgb(10 10 10 / 30%);
   }
 
   .hero__content {
@@ -161,9 +255,77 @@ const {
     padding-bottom: calc(clamp(140px, 20vh, 220px) + env(safe-area-inset-bottom));
   }
 
-  /* Brand/message — the strongest element on the page. */
+  .hero--centered .hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-block: var(--space-7);
+  }
+
+  .hero__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    opacity: 0;
+    animation: hero-fade-in var(--duration-slow) var(--ease-out) forwards;
+    animation-delay: 140ms;
+  }
+
+  .hero__brand-mark {
+    width: clamp(110px, 14vw, 160px);
+    height: auto;
+    filter: drop-shadow(0 2px 20px rgb(10 10 10 / 50%));
+  }
+
+  .hero--centered .hero__actions {
+    justify-content: center;
+    margin-top: var(--space-3);
+  }
+
+  /* Test layout (centerHeadline): desktop only - mobile keeps the
+     original left-aligned, no-logo hero exactly as it was before this
+     was ever added. A separate class from .hero--centered above (which
+     still serves centeredLogo, unaffected, at every width) so this
+     toggle can't accidentally change that other layout's behavior. */
+  .hero__brand-mark--above {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .hero--text-centered {
+      align-items: center;
+    }
+
+    .hero--text-centered .hero__content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-block: var(--space-7);
+    }
+
+    .hero--text-centered .hero__actions {
+      justify-content: center;
+      margin-top: var(--space-3);
+    }
+
+    .hero__brand-mark--above {
+      display: block;
+      width: clamp(100px, 11vw, 150px);
+      margin-bottom: var(--space-4);
+      opacity: 0;
+      animation: hero-fade-in var(--duration-base) var(--ease-out) forwards;
+    }
+  }
+
+  /* Brand/message — the strongest element on the page. A soft shadow (not
+     a hard cartoon outline) keeps it legible over real moving footage,
+     which has brighter/busier frames than the old static poster did. */
   .hero__headline {
     color: var(--color-text-inverse);
+    text-shadow: 0 2px 20px rgb(10 10 10 / 50%);
     /* Max stop tuned to match where Container's own max-width (1320px)
        plateaus (~1320px viewport). Past that point the available line
        width stops growing, so letting the font size keep growing toward
@@ -195,6 +357,37 @@ const {
     .hero__headline-set--desktop {
       display: block;
     }
+
+    /* Smaller on desktop specifically so the headline/subheadline take up
+       less of the frame and the video reads as the main event - mobile
+       sizing above is untouched. */
+    .hero__headline {
+      font-size: clamp(3rem, 2.5rem + 2vw, 4.5rem);
+    }
+
+    .hero__subheadline {
+      font-size: var(--text-body-sm);
+    }
+  }
+
+  /* Test layout (centerHeadline): desktop only, same as the centering
+     rules above - mobile keeps the original full-size headline/
+     subheadline. Compound selector (both classes on one rule, not two
+     chained single-class rules) is load-bearing: the base .hero__headline/
+     .hero__subheadline rules share the exact same specificity, and the
+     base .hero__subheadline rule in particular comes AFTER this block in
+     the file - with single-class selectors that source order would let it
+     silently win the tie and cancel this override out entirely. */
+  @media (min-width: 900px) {
+    .hero__headline.hero__headline--small {
+      font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+    }
+
+    .hero__subheadline.hero__subheadline--small {
+      font-size: var(--text-body-sm);
+      max-width: 36ch;
+      margin-bottom: var(--space-4);
+    }
   }
 
   .hero__line-mask {
@@ -218,6 +411,7 @@ const {
     font-size: var(--text-body);
     font-weight: var(--weight-medium);
     color: var(--color-text-muted-inverse);
+    text-shadow: 0 1px 12px rgb(10 10 10 / 45%);
     opacity: 0;
     animation: hero-fade-in var(--duration-base) var(--ease-out) forwards;
     animation-delay: 460ms;

@@ -58,8 +58,7 @@ const SERVICE_GROUPS = [
 // Gutters and Solar share a column since each is short on its own.
 const SERVICE_COLUMNS = [[SERVICE_GROUPS[0]], [SERVICE_GROUPS[1]], [SERVICE_GROUPS[2], SERVICE_GROUPS[3]]];
 
-// Sourced from public directory listings (BBB/Yelp) during the Phase 1
-// audit — pending the client's explicit confirmation before launch.
+// Confirmed correct by the client directly.
 const PHONE_DISPLAY = "(916) 420-5635";
 const PHONE_HREF = "tel:+19164205635";
 ---
@@ -108,7 +107,7 @@ const PHONE_HREF = "tel:+19164205635";
 
     <div class="header__actions">
       <a class="header__phone" href={PHONE_HREF}>{PHONE_DISPLAY}</a>
-      <Button variant="primary" href="/contact" class="header__cta" inverse={!alwaysSolid}>
+      <Button variant="primary" href="/contact" class="header__cta" inverse>
         Free Estimate
       </Button>
       <button
@@ -208,37 +207,21 @@ const PHONE_HREF = "tel:+19164205635";
       color var(--duration-base) var(--ease-standard);
   }
 
+  /* Solid state now matches the footer's own dark surface (--color-bg-
+     inverse/--color-text-inverse) instead of a light bar - reads as one
+     continuous black/gold interface with the transparent-over-hero state
+     instead of flashing white on scroll. */
   .header--scrolled,
   .header--solid-init {
-    color: var(--color-text);
-    background: var(--color-bg-raised);
-    border-bottom-color: var(--color-border);
+    color: var(--color-text-inverse);
+    background: var(--color-bg-inverse);
+    border-bottom-color: var(--color-border-inverse);
   }
 
   .header--menu-open {
     color: var(--color-text-inverse);
     background: transparent;
     border-bottom-color: transparent;
-  }
-
-  /*
-    The CTA is rendered with `inverse` styling once, at build time, so it
-    reads correctly over the dark hero. Scroll state is a runtime class on
-    <header>, not an Astro prop, so it can't re-render the button — instead
-    the scrolled state overrides the button's own (child-component) classes
-    directly via :global(), the same way any header-specific button
-    treatment would.
-  */
-  .header--scrolled :global(.header__cta.btn--inverse) {
-    background: var(--color-charcoal);
-    border-color: var(--color-charcoal);
-    color: var(--color-paper);
-  }
-
-  .header--scrolled :global(.header__cta.btn--inverse:hover) {
-    background: var(--color-accent-strong);
-    border-color: var(--color-accent-strong);
-    color: var(--color-charcoal);
   }
 
   .header__inner {
