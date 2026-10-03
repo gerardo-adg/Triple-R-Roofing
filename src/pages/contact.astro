@@ -126,6 +126,11 @@ const SERVICE_GROUPS = [
           <Button variant="primary" type="submit" class="contact-form__submit">
             Request Estimate &rarr;
           </Button>
+
+          <p class="contact-form__privacy">
+            By submitting this form, you agree to our
+            <a href="/privacy-policy/">Privacy Policy</a>.
+          </p>
         </form>
       </div>
     </div>
@@ -314,6 +319,19 @@ const SERVICE_GROUPS = [
     width: 100%;
     justify-content: center;
     margin-top: var(--space-2);
+  }
+
+  /* Secondary to the button above it - small, muted, centered under it. */
+  .contact-form__privacy {
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+    text-align: center;
+    max-width: none;
+    margin-top: calc(var(--space-2) * -1);
+  }
+
+  .contact-form__privacy a {
+    color: inherit;
   }
 
   /* ---- Aside panel (dark) ---- */
