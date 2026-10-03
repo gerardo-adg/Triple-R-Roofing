@@ -38,7 +38,14 @@ const YEAR = new Date().getFullYear();
         document,'script','https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', META_PIXEL_ID);
         fbq('track', 'PageView');
-        if (pixelEvent) fbq('track', pixelEvent);
+        if (pixelEvent) {
+          // Same event ID the quiz sent to the server (Conversions API),
+          // so Meta merges this browser Lead with the server's Lead.
+          var eventID = null;
+          try { eventID = sessionStorage.getItem('tr_lead_event_id'); } catch (e) {}
+          if (eventID) fbq('track', pixelEvent, {}, { eventID: eventID });
+          else fbq('track', pixelEvent);
+        }
       </script>
     )}
   </Fragment>
