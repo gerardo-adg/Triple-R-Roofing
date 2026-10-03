@@ -56,6 +56,12 @@ const TOTAL_STEPS = 5;
 // Ad attribution - copied from the landing URL into the lead so each
 // submission in Netlify shows which campaign/ad it came from.
 const TRACKING_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid"];
+
+// Filled at submit for the Meta Conversions API (see
+// netlify/functions/submission-created.mjs): one event ID shared by the
+// browser pixel's Lead and the server's Lead so Meta counts them once,
+// plus Meta's own browser cookies (_fbp/_fbc) for ad-click matching.
+const META_FIELDS = ["event_id", "fbp", "fbc"];
 ---
 
 <form
@@ -69,6 +75,7 @@ const TRACKING_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_conten
 >
   <input type="hidden" name="form-name" value="free-estimate-quiz" />
   {TRACKING_FIELDS.map((name) => <input type="hidden" name={name} value="" data-tracking />)}
+  {META_FIELDS.map((name) => <input type="hidden" name={name} value="" />)}
   <p class="quiz__honeypot" aria-hidden="true">
     <label>
       Leave this field blank
@@ -312,6 +319,29 @@ const TRACKING_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_conten
         else next();
         return;
       }
+      // Meta Conversions API: shared event ID + Meta's browser cookies.
+      // The thank-you page reads the ID back so its pixel Lead and the
+      // server's Lead deduplicate into one conversion.
+      const cookie = (name: string) =>
+        document.cookie.split("; ").find((c) => c.startsWith(`${name}=`))?.slice(name.length + 1) ?? "";
+      const eventId =
+        typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const fbclid = params.get("fbclid");
+      const setField = (name: string, value: string) => {
+        const input = form.querySelector<HTMLInputElement>(`input[name="${name}"]`);
+        if (input) input.value = value;
+      };
+      setField("event_id", eventId);
+      setField("fbp", cookie("_fbp"));
+      setField("fbc", cookie("_fbc") || (fbclid ? `fb.1.${Date.now()}.${fbclid}` : ""));
+      try {
+        sessionStorage.setItem("tr_lead_event_id", eventId);
+      } catch {
+        // Storage blocked - the pixel Lead still fires, just without dedup.
+      }
+
       const submit = step.querySelector<HTMLButtonElement>("[type=submit]");
       if (submit) {
         submit.disabled = true;
