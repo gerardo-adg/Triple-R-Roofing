@@ -2,10 +2,11 @@
 import Container from "./Container.astro";
 import Button from "./Button.astro";
 
-// Offer terms ($0 down / 0% interest for 3 months) confirmed by the client
-// directly as the current source of truth. (The site briefly said 6
-// months - the client corrected this back to 3 months; updated
-// everywhere it appeared.) Still flagged: the disclosure line below is
+// Offer terms (0% APR for 24 months) confirmed by the client directly
+// as the current source of truth. No down-payment claim - the client
+// asked for "$0 down" to be removed site-wide. (The site previously
+// said 0% interest for 3 months - the client updated the offer;
+// updated everywhere it appeared.) Still flagged: the disclosure line below is
 // intentionally generic (not a fabricated legal/compliance disclosure)
 // and should be replaced with Wisetack's/the lender's actual required
 // wording before launch.
@@ -18,8 +19,8 @@ import Button from "./Button.astro";
         <p class="eyebrow">Financing</p>
         <h2 class="financing__lead">Get the roof you need. Pay over time.</h2>
         <p class="financing__copy">
-          Financing options available through Wisetack, including 0% interest
-          for 3 months for qualified borrowers.
+          Financing options available through Wisetack, including 0% APR
+          for 24 months for qualified borrowers.
         </p>
         <Button variant="text" inverse href="/financing">
           Explore Financing
@@ -27,13 +28,9 @@ import Button from "./Button.astro";
       </div>
 
       <div class="financing__stats">
-        <div class="financing__stat">
-          <p class="financing__stat-value">$0</p>
-          <p class="financing__stat-label">Down</p>
-        </div>
         <div class="financing__stat financing__stat--primary">
           <p class="financing__stat-value">0%</p>
-          <p class="financing__stat-label">Interest for 3 months*</p>
+          <p class="financing__stat-label">APR for 24 months*</p>
         </div>
         <p class="financing__disclosure">
           *For qualified borrowers. Subject to credit approval. Terms
@@ -89,13 +86,10 @@ import Button from "./Button.astro";
     border-top: 1px solid var(--color-border-inverse);
   }
 
-  /* Mobile only: $0 Down and 0% Interest sit side by side instead of
-     stacked (same row + wrap + flex-basis: 100% technique desktop
-     already uses to push the disclosure onto its own full-width line
-     below), with a much tighter gap after the divider and before the
-     disclosure than desktop uses - desktop's own layout below is
-     untouched. Typography, color, and copy are unchanged; only spacing
-     and direction move. */
+  /* Mobile only: a much tighter gap after the divider and before the
+     disclosure than desktop uses (row + wrap + flex-basis: 100% keeps
+     the disclosure on its own full-width line below the stat) -
+     desktop's own layout below is untouched. */
   @media (max-width: 899px) {
     /* Tightens the space above the divider (between "Explore Financing"
        and the border-top below), separate from .financing__stats'
@@ -116,18 +110,6 @@ import Button from "./Button.astro";
       flex: 1 1 0;
     }
 
-    /* $0 and 0% already share the same top edge and equal-width columns
-       (confirmed by measuring, not assumed) - the only real misalignment
-       is that 0%'s larger, more-emphasized font (see .financing__stat--
-       primary below) is taller than $0's, which pushes its label down
-       further than DOWN's. Reserving a shared min-height for every value
-       - sized to fit the larger one - means both labels start at the
-       same offset regardless of which value is currently rendering
-       taller, without changing either font size. */
-    .financing__stat-value {
-      min-height: 3.5rem;
-    }
-
     .financing__disclosure {
       flex-basis: 100%;
     }
@@ -143,8 +125,7 @@ import Button from "./Button.astro";
     color: var(--color-gold);
   }
 
-  /* 0% interest for 3 months is the strongest part of the offer — gets
-     more visual weight than $0 down, not just equal billing. */
+  /* 0% APR for 24 months is the whole offer - the one big number. */
   .financing__stat--primary .financing__stat-value {
     font-size: clamp(3.25rem, 2.3rem + 3.6vw, 5.25rem);
   }
@@ -174,7 +155,10 @@ import Button from "./Button.astro";
       flex-direction: row;
       flex-wrap: wrap;
       align-items: flex-start;
-      gap: var(--space-8);
+      /* One stat now (no "$0 down" beside it) - keep the disclosure
+         sitting under it instead of stretching to the column's bottom. */
+      align-content: flex-start;
+      gap: var(--space-5) var(--space-8);
       padding-top: 0;
       border-top: none;
       border-left: 1px solid var(--color-border-inverse);
