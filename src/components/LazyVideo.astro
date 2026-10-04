@@ -172,13 +172,31 @@ const remoteSrcset = isRemotePoster
     video.addEventListener("playing", () => video.classList.add(PLAYING_CLASS));
     video.addEventListener("pause", () => video.classList.remove(PLAYING_CLASS));
 
-    // Belt-and-suspenders restart: the `loop` attribute reaches <mux-video>
-    // as a string (Astro doesn't know it's a native boolean attribute on a
-    // custom element the way it does for a plain <video>), which isn't
-    // guaranteed to be read the same way internally - explicitly restarting
-    // on `ended` works regardless of whether that attribute was honored.
+    // <mux-video> doesn't reliably forward the `loop` attribute to its own
+    // internal real <video> (confirmed in its source - it only explicitly
+    // proxies a handful of properties, muted among them, not loop). It
+    // does expose that internal element directly as `.nativeEl` though, so
+    // setting `loop` there is genuine browser-native looping - the decoder
+    // handles the restart itself with no JS/seeking involved, which is
+    // what actually avoids a flash/rebuffer at the loop point. Falls back
+    // to the element itself for a plain <video> (the non-Mux src case),
+    // which already supports `loop` natively on its own.
+    // Reads the already-rendered `loop` attribute rather than the Astro
+    // prop directly - this script runs in the browser with no visibility
+    // into frontmatter variables, and hasAttribute sidesteps relying on
+    // any particular element's own property reflection being correct.
+    const shouldLoop = video.hasAttribute("loop");
+    const nativeVideo =
+      (video as unknown as { nativeEl?: HTMLVideoElement }).nativeEl ?? video;
+    nativeVideo.loop = shouldLoop;
+
+    // Defensive fallback only: native `loop` suppresses the `ended` event
+    // entirely, so this never fires once the above actually takes - kept
+    // in case a future player version stops exposing `.nativeEl`, so
+    // playback degrades to "restarts, no fancy footwork" instead of just
+    // freezing on the last frame.
     video.addEventListener("ended", () => {
-      if (video.loop === false) return;
+      if (!shouldLoop) return;
       video.currentTime = 0;
       video.play().catch(() => {});
     });

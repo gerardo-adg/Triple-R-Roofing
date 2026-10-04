@@ -77,7 +77,6 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
           src={mobileVideoSrc}
           aspectRatio="auto"
           class="hero__video hero__video--mobile"
-          initialBandwidthEstimateKbps={1200}
         />
       )}
       <LazyVideo
@@ -88,7 +87,6 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
         src={videoSrc}
         aspectRatio="auto"
         class:list={["hero__video", hasMobileVariant && "hero__video--desktop"]}
-        initialBandwidthEstimateKbps={1800}
       />
     </div>
   </div>
