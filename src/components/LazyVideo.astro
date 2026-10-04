@@ -251,7 +251,44 @@ const remoteSrcset = isRemotePoster
       });
     };
 
-    tryPlay();
+    // The hero clips have a cross-dissolve transition a couple of seconds
+    // in (confirmed by extracting frames from a screen recording - two
+    // scenes visibly double-exposed together) that plays smoothly once
+    // the file is already cached, such as on the native loop restart, but
+    // looks janky on the very first play if the browser is still actively
+    // fetching segments right as it reaches that blend. Giving only the
+    // very first play a small buffer cushion (not the loadeddata/
+    // interaction retries below, which stay instant) means that
+    // transition is more likely to already be downloaded by the time
+    // playback gets there. Bounded so a slow connection still autoplays
+    // rather than stalling - best-effort smoothing, not a guarantee.
+    const isHero = container.hasAttribute("data-hero");
+    const BUFFER_AHEAD_SECONDS = 3;
+    const MAX_BUFFER_WAIT_MS = 1200;
+
+    const playOnceBuffered = () => {
+      const deadline = Date.now() + MAX_BUFFER_WAIT_MS;
+      const check = () => {
+        let bufferedEnough = false;
+        try {
+          bufferedEnough = video.buffered.length > 0 && video.buffered.end(0) >= BUFFER_AHEAD_SECONDS;
+        } catch {
+          bufferedEnough = true;
+        }
+        if (bufferedEnough || Date.now() >= deadline) {
+          tryPlay();
+        } else {
+          requestAnimationFrame(check);
+        }
+      };
+      check();
+    };
+
+    if (isHero) {
+      playOnceBuffered();
+    } else {
+      tryPlay();
+    }
     // <mux-video> finishes wiring up its internal player asynchronously
     // after `playback-id` is set - calling play() the instant the
     // attribute is assigned can land before that's done and gets silently
