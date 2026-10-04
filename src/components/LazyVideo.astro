@@ -137,6 +137,15 @@ const remoteSrcset = isRemotePoster
     width: 100%;
     height: 100%;
     object-fit: cover;
+    /* <mux-video> isn't a native replaced element, so the object-fit
+       above never reaches its real internal <video> (which lives in
+       shadow DOM) - that one reads object-fit from this custom property
+       instead, which inherits through the shadow boundary same as any
+       other CSS variable, and defaults to "contain" (letterboxed) when
+       unset. Without this, mux-video content pillarboxes instead of
+       filling/cropping the frame; the plain <video> fallback (no Mux
+       asset) ignores this and just uses the object-fit above directly. */
+    --media-object-fit: cover;
   }
 
   .lazy-video__video {
@@ -189,11 +198,21 @@ const remoteSrcset = isRemotePoster
     // set, so this is both wrapped in try/catch and re-attempted inside
     // tryPlay below (not just once up front) - a failure here must never
     // be able to stop video.play() from being called.
-    const applyNativeLoop = () => {
+    // Same reasoning applies to `muted`: Safari specifically requires the
+    // `muted` IDL property (not just the attribute) to already be true at
+    // the exact moment play() is called, or it silently refuses to
+    // autoplay. <mux-video> does explicitly forward muted from its own
+    // attribute, but that forwarding's timing relative to this script
+    // isn't something to take on faith - setting it directly, right
+    // before every play() attempt, removes that as a possible cause of
+    // "only plays after I touch the screen" with no error ever shown.
+    const applyNativeProps = () => {
       try {
         const nativeVideo =
           (video as unknown as { nativeEl?: HTMLVideoElement }).nativeEl ?? video;
         nativeVideo.loop = shouldLoop;
+        nativeVideo.muted = true;
+        video.muted = true;
       } catch {
         /* Best-effort only - worst case the ended-based fallback below still restarts it. */
       }
@@ -211,7 +230,7 @@ const remoteSrcset = isRemotePoster
     });
 
     const tryPlay = () => {
-      applyNativeLoop();
+      applyNativeProps();
       video.play().catch(() => {
         /* Autoplay blocked — poster remains the entire experience, by design. */
       });
