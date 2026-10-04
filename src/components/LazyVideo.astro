@@ -153,6 +153,19 @@ const remoteSrcset = isRemotePoster
   .lazy-video__video {
     opacity: 0;
     transition: opacity var(--duration-slow) var(--ease-out);
+    /* Browsers typically promote a video element to its own GPU-
+       composited layer only once it starts actually rendering decoded
+       frames (not just sitting there as a poster) - that one-time
+       promotion can itself cause a single visible repaint right at the
+       moment playback begins, which matches "only the first few
+       seconds, clean on every loop restart after" better than anything
+       quality/ABR-related (ABR explanations were ruled out directly -
+       pinning to one fixed rendition didn't change it). Forcing the
+       layer to exist from the start, while this is still just an
+       invisible (opacity: 0) element doing nothing, moves that
+       promotion earlier than the point where it'd actually be visible. */
+    transform: translateZ(0);
+    will-change: opacity;
   }
 
   .lazy-video__video.is-playing {
