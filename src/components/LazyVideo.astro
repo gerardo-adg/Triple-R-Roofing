@@ -264,12 +264,31 @@ const remoteSrcset = isRemotePoster
   // the hidden one is skipped entirely here so its video is never fetched.
   const heroEls = document.querySelectorAll<HTMLElement>("[data-lazy-video][data-hero]");
   const heroRetries: Array<() => void> = [];
-  if (!reducedMotion) {
+  const heroInitialized = new Set<HTMLElement>();
+
+  const initVisibleHeroEls = () => {
     heroEls.forEach((el) => {
-      if (getComputedStyle(el).display !== "none") {
+      if (!heroInitialized.has(el) && getComputedStyle(el).display !== "none") {
+        heroInitialized.add(el);
         const retry = initVideo(el);
         if (retry) heroRetries.push(retry);
       }
+    });
+  };
+
+  if (!reducedMotion) {
+    initVisibleHeroEls();
+
+    // Resizing the window (or rotating a device) across the mobile/desktop
+    // breakpoint flips which variant Hero.astro's CSS shows - without this,
+    // the one skipped above at load (since it started hidden) never gets a
+    // source or a play() call at all, so it just sits blank/frozen once CSS
+    // later reveals it instead of playing. Debounced since resize fires
+    // continuously while dragging a window edge.
+    let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(initVisibleHeroEls, 200);
     });
   }
 
