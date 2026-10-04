@@ -82,6 +82,7 @@ const YEAR = new Date().getFullYear();
   <footer class="lp-footer section--inverse">
     <p>&copy; {YEAR} Triple R Roofing LLC &middot; Licensed, bonded &amp; insured (CSLB #1107574) &middot; Sacramento, CA</p>
     <p><a href="tel:+19164205635">(916) 420-5635</a></p>
+    <p><a href="/privacy-policy/" class="lp-footer__legal">Privacy Policy</a></p>
   </footer>
 </BaseLayout>
 
@@ -175,5 +176,13 @@ const YEAR = new Date().getFullYear();
   .lp-footer a {
     color: var(--color-text-inverse);
     font-weight: var(--weight-bold);
+  }
+
+  /* Quieter than the phone link above - required, not a funnel exit. */
+  .lp-footer a.lp-footer__legal {
+    color: var(--color-text-muted-inverse);
+    font-weight: var(--weight-body);
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-inverse);
   }
 </style>

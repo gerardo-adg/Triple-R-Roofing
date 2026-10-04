@@ -1,0 +1,374 @@
+---
+import InteriorLayout from "../layouts/InteriorLayout.astro";
+import Container from "../components/Container.astro";
+
+// Every disclosure below is based on what the site actually does, not a
+// template: Netlify (hosting + Netlify Forms, which records IP/user
+// agent/referrer with each submission), Zapier -> Jobber (form
+// submissions forwarded to the CRM - client-confirmed, configured outside
+// this repo), Mux (video hosting + Mux Data playback analytics, which is
+// on by default and sets the `muxData` cookie), and Meta - the Pixel in
+// LandingLayout plus the Conversions API in
+// netlify/functions/submission-created.mjs, both limited to the
+// /free-estimate pages and quiz. No other analytics or trackers exist in
+// the codebase. If any of that changes, this page needs to change with
+// it - and bump the date.
+// Contact is phone-only because that's the only verified method; swap in
+// a dedicated privacy email once the client has one.
+const EFFECTIVE_DATE = "October 1, 2026";
+---
+
+<InteriorLayout
+  title="Privacy Policy | Triple R Roofing"
+  description="How Triple R Roofing collects, uses, and shares information submitted through this website."
+  headerAlwaysSolid
+>
+  <article class="policy">
+    <Container width="narrow">
+      <header class="policy__header">
+        <p class="eyebrow">Privacy</p>
+        <h1 class="policy__title">Privacy Policy</h1>
+        <p class="policy__date">Effective Date: {EFFECTIVE_DATE}</p>
+      </header>
+
+      <div class="policy__body">
+        <p>
+          This policy explains what information Triple R Roofing collects
+          through this website, how we use it, and who helps us handle it.
+          We&rsquo;re a roofing company serving Sacramento, California and
+          the surrounding areas.
+        </p>
+
+        <h2>Information We Collect</h2>
+        <p>
+          <strong>Information you give us.</strong> When you request a free
+          estimate through our contact form, we collect:
+        </p>
+        <ul>
+          <li>your name</li>
+          <li>your phone number</li>
+          <li>your email address, if you choose to provide it</li>
+          <li>the address of the property you need help with</li>
+          <li>the service you need</li>
+          <li>any message you include</li>
+        </ul>
+        <p>
+          On our free estimate landing page, our short questionnaire collects
+          your first and last name, phone number, email address, city, the
+          services you&rsquo;re interested in, how you plan to pay (financing,
+          cash, insurance, or not sure yet), and any project details you add.
+        </p>
+        <p>You don&rsquo;t have to use either form; you can always call us instead.</p>
+        <p>
+          <strong>Information collected with your request.</strong> When you
+          submit a form, our form provider also records your IP address,
+          browser type, and the page you submitted it from. If you reached our
+          landing page by clicking one of our ads, we also record which ad
+          campaign the link came from.
+        </p>
+        <p>
+          <strong>Information collected automatically.</strong> Like most
+          websites, our hosting provider automatically receives basic
+          technical information when you visit. That includes your IP
+          address, browser and device type, and the pages you request. This
+          is needed to deliver the site and keep it secure.
+        </p>
+        <p>
+          Some pages include videos hosted by Mux. When a video loads or
+          plays, Mux collects information about playback: whether it loaded
+          and played smoothly, plus your device, browser, approximate
+          location based on your IP address, and a random viewer ID. This
+          helps measure and improve video performance. It&rsquo;s described
+          in more detail under Cookies below.
+        </p>
+        <p>
+          Our free estimate landing pages use the Meta Pixel, an advertising
+          tool from Meta (the company behind Facebook and Instagram). It&rsquo;s
+          described under How We Share Information. The rest of our website
+          doesn&rsquo;t use advertising pixels or third-party analytics like
+          Google Analytics.
+        </p>
+
+        <h2>How We Use Your Information</h2>
+        <p>We use the information you submit to:</p>
+        <ul>
+          <li>respond to your estimate or service request</li>
+          <li>contact you about your request by phone, text message, or email</li>
+          <li>schedule inspections, estimates, or roofing work</li>
+          <li>provide customer service</li>
+          <li>keep appropriate business records</li>
+          <li>operate and improve our website and services</li>
+          <li>
+            measure how well our advertising works, including which ads lead
+            to estimate requests
+          </li>
+        </ul>
+
+        <h2>How We Share Information</h2>
+        <p>
+          We don&rsquo;t sell your personal information for money. We share
+          it with service providers that help us run the website and our
+          business, and we use Meta&rsquo;s advertising tools as described
+          below:
+        </p>
+        <ul>
+          <li>
+            <strong>Netlify</strong> hosts this website. It also receives,
+            stores, and filters spam from contact form submissions.
+          </li>
+          <li>
+            <strong>Zapier</strong> automatically passes contact form
+            submissions from our website to our customer management system.
+          </li>
+          <li>
+            <strong>Jobber</strong> is the customer management system we use
+            to keep track of customer requests, contact details, and
+            scheduling for estimates and roofing work.
+          </li>
+          <li>
+            <strong>Mux</strong> hosts and streams the videos on this website
+            and collects video playback information as described above.
+          </li>
+          <li>
+            <strong>Meta</strong> provides the advertising tools we use for our
+            ads on Facebook and Instagram. When you visit our free estimate
+            landing pages, the Meta Pixel sends Meta information about your
+            visit, such as the pages you view, your progress through the
+            questionnaire, and your IP address and browser information. If you
+            submit the questionnaire, we also send Meta a record of your
+            request. That record includes your email address, phone number,
+            name, and city in hashed (coded) form, plus your IP address,
+            browser information, the services you selected, and how you plan
+            to pay. Meta uses this to match your request to our ads and
+            measure their results. Meta may also use information it receives
+            under its own terms and privacy policy, including to improve its
+            advertising services.
+          </li>
+        </ul>
+        <p>
+          We may also disclose information if required by law, or to protect
+          our rights, our customers, or others.
+        </p>
+
+        <h2>Cookies</h2>
+        <p>
+          The main pages of our website don&rsquo;t use advertising cookies.
+          Two services set cookies:
+        </p>
+        <ul>
+          <li>
+            <strong>Mux</strong> sets a cookie called <code>muxData</code> when
+            a video loads. It holds a random viewer ID and session information
+            so Mux can measure video performance, and it expires after one
+            year.
+          </li>
+          <li>
+            <strong>Meta</strong> sets its own cookies (such as
+            <code>_fbp</code> and <code>_fbc</code>) on our free estimate
+            landing pages to recognize your browser and connect your visit to
+            our ads.
+          </li>
+        </ul>
+        <p>
+          When you submit the questionnaire, we also save a temporary ID in
+          your browser&rsquo;s session storage so the same request isn&rsquo;t
+          counted twice. It&rsquo;s cleared when you close the tab.
+        </p>
+        <p>
+          You can block or delete cookies in your browser settings, and you
+          can manage how Meta uses your information for ads in your Facebook
+          or Instagram ad settings.
+        </p>
+
+        <h2>Third-Party Services and Links</h2>
+        <ul>
+          <li>
+            <strong>Netlify</strong> (website hosting and form handling): see
+            Netlify&rsquo;s privacy policy.
+          </li>
+          <li>
+            <strong>Zapier</strong> (form automation): see Zapier&rsquo;s
+            privacy policy.
+          </li>
+          <li>
+            <strong>Jobber</strong> (customer management): see Jobber&rsquo;s
+            privacy policy.
+          </li>
+          <li>
+            <strong>Mux</strong> (video hosting): see Mux&rsquo;s privacy
+            policy for how it handles playback data.
+          </li>
+          <li>
+            <strong>Meta</strong> (advertising): see Meta&rsquo;s privacy
+            policy.
+          </li>
+          <li>
+            <strong>Wisetack</strong> (financing): our website doesn&rsquo;t
+            collect financing applications or send any information to
+            Wisetack. If you apply for financing through Wisetack, your
+            application goes to Wisetack and is covered by Wisetack&rsquo;s
+            own privacy policy and terms.
+          </li>
+          <li>
+            <strong>Google reviews</strong>: our link to our Google reviews
+            takes you to Google&rsquo;s website, which is covered by
+            Google&rsquo;s privacy policy.
+          </li>
+        </ul>
+        <p>We&rsquo;re not responsible for the privacy practices of websites we link to.</p>
+
+        <h2>Do Not Track</h2>
+        <p>
+          Some browsers can send a &ldquo;Do Not Track&rdquo; signal.
+          There&rsquo;s no common standard for responding to these signals,
+          and this website doesn&rsquo;t currently change its behavior when
+          it receives one.
+        </p>
+        <p>
+          On our free estimate landing pages, Meta may collect information
+          about your online activity over time and across different websites
+          through the Meta Pixel and its cookies. The rest of our website
+          doesn&rsquo;t allow third parties to collect information for that
+          purpose.
+        </p>
+
+        <h2>Data Security</h2>
+        <p>
+          We use reasonable measures to protect the information you send us,
+          including encrypted (HTTPS) connections to this website. No method
+          of sending or storing information over the internet is completely
+          secure, so we can&rsquo;t guarantee absolute security.
+        </p>
+
+        <h2>Data Retention</h2>
+        <p>
+          We keep the information you submit only as long as reasonably
+          needed for the purposes described in this policy. That includes
+          responding to your request, providing services, and keeping records
+          as our business and legal obligations require.
+        </p>
+
+        <h2>Your Choices</h2>
+        <p>
+          You can call us to ask to see, correct, or delete the information
+          you submitted through our website. We&rsquo;ll respond as required
+          by applicable law. We may need to verify your identity, and we may
+          keep certain information when we&rsquo;re legally required or
+          permitted to.
+        </p>
+
+        <h2>Children&rsquo;s Privacy</h2>
+        <p>
+          This website is for people looking for roofing and home services.
+          It isn&rsquo;t directed to children under 13, and we don&rsquo;t
+          knowingly collect personal information from children under 13. If
+          you believe a child has sent us information, call us and we&rsquo;ll
+          delete it.
+        </p>
+
+        <h2>Changes to This Privacy Policy</h2>
+        <p>
+          We may update this policy from time to time. When we do, we&rsquo;ll
+          post the updated version here and change the effective date at the
+          top.
+        </p>
+
+        <h2>Contact Us</h2>
+        <p>
+          If you have questions about this policy or your information, contact
+          Triple R Roofing:
+        </p>
+        <p class="policy__contact">
+          <strong>Phone:</strong> <a href="tel:+19164205635">(916) 420-5635</a><br />
+          <strong>Hours:</strong> Mon&ndash;Sun, 6 AM&ndash;7 PM
+        </p>
+      </div>
+    </Container>
+  </article>
+</InteriorLayout>
+
+<style>
+  /* A plain reading page - no cards, rules, or icons. Hierarchy comes
+     from type alone, on the site's own cream background. */
+  .policy {
+    background: var(--color-bg);
+    padding-top: calc(var(--nav-height) + var(--space-9));
+    padding-bottom: var(--space-9);
+  }
+
+  @media (max-width: 899px) {
+    .policy {
+      padding-top: calc(var(--nav-height) + var(--space-7));
+      padding-bottom: var(--space-8);
+    }
+  }
+
+  .policy__header {
+    margin-bottom: var(--space-8);
+  }
+
+  .policy__title {
+    font-size: var(--text-h2);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .policy__date {
+    font-size: var(--text-body-sm);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .policy__body {
+    max-width: 68ch;
+  }
+
+  .policy__body h2 {
+    font-size: var(--text-h5);
+    font-weight: var(--weight-bold);
+    font-stretch: var(--stretch-normal);
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+
+  .policy__body p,
+  .policy__body li {
+    line-height: var(--leading-normal);
+    color: var(--color-text-muted);
+  }
+
+  .policy__body p {
+    max-width: none;
+  }
+
+  .policy__body ul {
+    padding-left: var(--space-5);
+    margin-bottom: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .policy__body li::marker {
+    color: var(--color-accent-strong);
+  }
+
+  .policy__body code {
+    font-family: inherit;
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+  }
+
+  .policy__body a {
+    color: var(--color-text);
+    font-weight: var(--weight-bold);
+  }
+
+  .policy__contact {
+    margin-top: var(--space-4);
+  }
+</style>
