@@ -1,0 +1,83 @@
+---
+/**
+ * Embeds the client's ProjectMap It widget - a third-party service
+ * (https://projectmapit.com) that plots completed jobs on a map so a
+ * homeowner can see work done near their own address. The embed itself
+ * is entirely out of our control: it's the client's existing account,
+ * tied to a specific map id, and works by having its own external
+ * script inject an iframe/canvas into the div below at runtime. The
+ * script tag below is reproduced exactly as the client provided it
+ * (is:inline so Astro ships it untouched, rather than trying to bundle
+ * or type-check someone else's third-party snippet) - do not "clean up"
+ * the window.__PMI_*__ globals or the script's own structure, since a
+ * future embed.js version is only guaranteed to work with this exact
+ * shape.
+ */
+import Container from "./Container.astro";
+---
+
+<section class="project-map">
+  <Container>
+    <div class="project-map__intro" data-reveal>
+      <p class="eyebrow">Our Work Near You</p>
+      <h2 class="project-map__lead">See completed projects in your neighborhood.</h2>
+      <p class="project-map__description">
+        Browse the map below to see roofing and gutter projects we've completed around
+        Sacramento.
+      </p>
+    </div>
+
+    <div class="project-map__embed" data-reveal>
+      <div id="__pmiembed"></div>
+    </div>
+  </Container>
+</section>
+
+<script is:inline>
+  (function (w) {
+    /* Change this values to set the size of the embed map. */
+
+    w.__PMI_WIDTH__ = "100%";
+    w.__PMI_HEIGHT__ = "665px";
+
+    /* ---- Do not edit below this line ---- */
+
+    w.__PMISRC__ = "https://projectmapit.com/triple-r-roofing-llc/map?map=67a0bf513338fd4b5d02a0ba";
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://projectmapit.com/static/js/embed.js";
+    document.head.appendChild(s);
+  })(window);
+</script>
+
+<style>
+  .project-map {
+    padding-block: var(--space-9);
+  }
+
+  .project-map__intro {
+    max-width: 48rem;
+    margin-bottom: var(--space-6);
+  }
+
+  .project-map__lead {
+    font-size: var(--text-h2);
+    margin-top: var(--space-2);
+  }
+
+  .project-map__description {
+    color: var(--color-text-muted);
+    margin-top: var(--space-3);
+  }
+
+  .project-map__embed {
+    /* Matches __PMI_HEIGHT__ in the embed script below - the external
+       script needs a moment to inject the actual map, and without this
+       the container has zero height (its child is just an empty div)
+       until it does, which reads as a layout jump into view. */
+    min-height: 665px;
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    background: var(--color-bg-raised);
+  }
+</style>
