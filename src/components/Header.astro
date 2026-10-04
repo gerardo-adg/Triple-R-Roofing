@@ -183,10 +183,23 @@ const PHONE_HREF = "tel:+19164205635";
 
 <style>
   .header {
-    position: fixed;
+    /* `fixed` (not `sticky`) used to pin this to the viewport, but iOS
+       Safari visibly glitches a fixed-position element during the ~1s
+       window its address bar auto-collapses after load on a tall page -
+       a gray/white tear flashes across the header and icons briefly drop
+       out mid-transition, confirmed from a screen recording of the live
+       site. `sticky` elements are normal in-flow boxes the browser
+       repaints along with the rest of scrollable content instead of as
+       an independently-composited layer, which is what avoids the glitch
+       - but sticky still occupies its own nav-height of flow space, so
+       the negative margin below pulls the very next element up to
+       overlap it, reproducing the old "transparent floating bar over the
+       hero" look with no layout change required anywhere else (every
+       other page already adds its own padding-top: nav-height to clear
+       this bar, exactly as it did when the bar was `fixed`). */
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
+    margin-bottom: calc(-1 * var(--nav-height));
     z-index: var(--z-nav);
     height: var(--nav-height);
     /* Container (a shared component used all over the site) has no
