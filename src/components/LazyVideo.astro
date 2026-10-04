@@ -95,6 +95,14 @@ const remoteSrcset = isRemotePoster
     />
   )}
   {muxPlaybackId ? (
+    // A floor, not a pin (no max-resolution) - a pin was tried and reverted
+    // earlier since it didn't fix what turned out to be a separate bug (a
+    // cross-dissolve in the footage rendering janky on the first play,
+    // fixed via buffering ahead before that first play - see the script
+    // below). This floor targets the other, genuinely ABR-related
+    // symptom: visibly sharpening over the first several seconds. Mobile
+    // already looks right without it, so this is low-risk there too - a
+    // floor can only ever raise a rendition that's already below it.
     <mux-video
       class="lazy-video__video"
       muted
@@ -106,6 +114,7 @@ const remoteSrcset = isRemotePoster
       tabindex="-1"
       data-playback-id={muxPlaybackId}
       initial-bandwidth-estimate-kbps={initialBandwidthEstimateKbps}
+      min-resolution={hero ? "1080p" : undefined}
     />
   ) : (
     src && (
