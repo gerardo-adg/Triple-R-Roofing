@@ -240,9 +240,9 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     z-index: 1;
     pointer-events: none;
     background:
-      linear-gradient(to bottom, rgb(10 10 10 / 55%) 0%, rgb(10 10 10 / 0%) 24%),
-      linear-gradient(to top, rgb(10 10 10 / 70%) 0%, rgb(10 10 10 / 20%) 34%, rgb(10 10 10 / 0%) 58%),
-      rgb(10 10 10 / 30%);
+      linear-gradient(to bottom, rgb(10 10 10 / 65%) 0%, rgb(10 10 10 / 0%) 24%),
+      linear-gradient(to top, rgb(10 10 10 / 78%) 0%, rgb(10 10 10 / 30%) 34%, rgb(10 10 10 / 0%) 58%),
+      rgb(10 10 10 / 42%);
   }
 
   .hero__content {
@@ -318,12 +318,16 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     }
   }
 
-  /* Brand/message — the strongest element on the page. A soft shadow (not
-     a hard cartoon outline) keeps it legible over real moving footage,
-     which has brighter/busier frames than the old static poster did. */
+  /* Brand/message — the strongest element on the page. Two layers: a
+     tight, strong contact shadow right at the letterforms for crisp edge
+     definition, plus a larger soft one for separation from the footage
+     behind it - stronger than a single soft glow alone without reading as
+     a hard cartoon outline. */
   .hero__headline {
     color: var(--color-text-inverse);
-    text-shadow: 0 2px 20px rgb(10 10 10 / 50%);
+    text-shadow:
+      0 1px 3px rgb(10 10 10 / 85%),
+      0 4px 28px rgb(10 10 10 / 65%);
     /* Max stop tuned to match where Container's own max-width (1320px)
        plateaus (~1320px viewport). Past that point the available line
        width stops growing, so letting the font size keep growing toward
@@ -409,7 +413,9 @@ const hasMobileVariant = Boolean(mobilePoster || mobileMuxPlaybackId || mobileVi
     font-size: var(--text-body);
     font-weight: var(--weight-medium);
     color: var(--color-text-muted-inverse);
-    text-shadow: 0 1px 12px rgb(10 10 10 / 45%);
+    text-shadow:
+      0 1px 2px rgb(10 10 10 / 80%),
+      0 2px 16px rgb(10 10 10 / 55%);
     opacity: 0;
     animation: hero-fade-in var(--duration-base) var(--ease-out) forwards;
     animation-delay: 460ms;
