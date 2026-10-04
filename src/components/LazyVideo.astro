@@ -95,12 +95,6 @@ const remoteSrcset = isRemotePoster
     />
   )}
   {muxPlaybackId ? (
-    // Equal min/max (both filters Mux applies server-side to the manifest
-    // it serves, not a local JS constraint) leaves exactly one rendition
-    // to choose from, not just a floor - a floor alone still left several
-    // renditions above it for ABR to switch between during the first few
-    // seconds before settling on one, which looked identical to the
-    // low-quality-ramp flicker this was meant to fix in the first place.
     <mux-video
       class="lazy-video__video"
       muted
@@ -112,8 +106,6 @@ const remoteSrcset = isRemotePoster
       tabindex="-1"
       data-playback-id={muxPlaybackId}
       initial-bandwidth-estimate-kbps={initialBandwidthEstimateKbps}
-      min-resolution={hero ? "1080p" : undefined}
-      max-resolution={hero ? "1080p" : undefined}
     />
   ) : (
     src && (
