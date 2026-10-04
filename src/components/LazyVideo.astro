@@ -172,23 +172,32 @@ const remoteSrcset = isRemotePoster
     video.addEventListener("playing", () => video.classList.add(PLAYING_CLASS));
     video.addEventListener("pause", () => video.classList.remove(PLAYING_CLASS));
 
+    // Reads the already-rendered `loop` attribute rather than the Astro
+    // prop directly - this script runs in the browser with no visibility
+    // into frontmatter variables, and hasAttribute sidesteps relying on
+    // any particular element's own property reflection being correct.
+    const shouldLoop = video.hasAttribute("loop");
+
     // <mux-video> doesn't reliably forward the `loop` attribute to its own
     // internal real <video> (confirmed in its source - it only explicitly
     // proxies a handful of properties, muted among them, not loop). It
     // does expose that internal element directly as `.nativeEl` though, so
     // setting `loop` there is genuine browser-native looping - the decoder
     // handles the restart itself with no JS/seeking involved, which is
-    // what actually avoids a flash/rebuffer at the loop point. Falls back
-    // to the element itself for a plain <video> (the non-Mux src case),
-    // which already supports `loop` natively on its own.
-    // Reads the already-rendered `loop` attribute rather than the Astro
-    // prop directly - this script runs in the browser with no visibility
-    // into frontmatter variables, and hasAttribute sidesteps relying on
-    // any particular element's own property reflection being correct.
-    const shouldLoop = video.hasAttribute("loop");
-    const nativeVideo =
-      (video as unknown as { nativeEl?: HTMLVideoElement }).nativeEl ?? video;
-    nativeVideo.loop = shouldLoop;
+    // what actually avoids a flash/rebuffer at the loop point. `.nativeEl`
+    // is undocumented and not guaranteed ready the instant playback-id is
+    // set, so this is both wrapped in try/catch and re-attempted inside
+    // tryPlay below (not just once up front) - a failure here must never
+    // be able to stop video.play() from being called.
+    const applyNativeLoop = () => {
+      try {
+        const nativeVideo =
+          (video as unknown as { nativeEl?: HTMLVideoElement }).nativeEl ?? video;
+        nativeVideo.loop = shouldLoop;
+      } catch {
+        /* Best-effort only - worst case the ended-based fallback below still restarts it. */
+      }
+    };
 
     // Defensive fallback only: native `loop` suppresses the `ended` event
     // entirely, so this never fires once the above actually takes - kept
@@ -202,6 +211,7 @@ const remoteSrcset = isRemotePoster
     });
 
     const tryPlay = () => {
+      applyNativeLoop();
       video.play().catch(() => {
         /* Autoplay blocked — poster remains the entire experience, by design. */
       });
