@@ -132,7 +132,8 @@ const SERVICES = [
                 alt=""
                 widths={[480, 640, 900]}
                 sizes="100vw"
-                loading="lazy"
+                loading="eager"
+                fetchpriority={i === 0 ? "high" : "low"}
               />
             </div>
             <p class="services__description">{service.description}</p>
