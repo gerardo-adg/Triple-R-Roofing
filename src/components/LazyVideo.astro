@@ -106,6 +106,7 @@ const remoteSrcset = isRemotePoster
       tabindex="-1"
       data-playback-id={muxPlaybackId}
       initial-bandwidth-estimate-kbps={initialBandwidthEstimateKbps}
+      min-resolution={hero ? "720p" : undefined}
     />
   ) : (
     src && (
