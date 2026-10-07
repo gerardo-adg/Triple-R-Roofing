@@ -9,9 +9,13 @@ import FinalCtaSection from "../../components/FinalCtaSection.astro";
 // photography this band otherwise holds - there's no photo that captures
 // a cross-company partnership the way a logo lockup does. Sunrun's logo
 // came from the client cropped tight and keyed to transparent from its
-// original white-background file; Triple R's mark reuses the same tight
-// crop already generated for the site's favicon.
-import detailImage from "../../assets/media/photo-roofing-solar-partner-strip.jpg";
+// original white-background file (then recolored to white for use on a
+// dark background); Triple R's mark reuses the same tight crop already
+// generated for the site's favicon. Transparent PNG, not JPG, so it sits
+// on PhotoBand's own background with no visible seam in fit="contain"
+// mode (see that prop's own comment for why this image needs contain,
+// not PhotoBand's usual cover).
+import detailImage from "../../assets/media/photo-roofing-solar-partner-strip.png";
 
 // A combined offering, not a standard single service - shaped around the
 // homeowner scenario (needing a roof and considering solar at the same
@@ -104,6 +108,7 @@ const FAQS = [
   <PhotoBand
     image={detailImage}
     imageAlt="Triple R Roofing and Sunrun logos."
+    fit="contain"
   />
 
   <FAQSection
