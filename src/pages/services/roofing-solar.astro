@@ -4,7 +4,14 @@ import Container from "../../components/Container.astro";
 import PhotoBand from "../../components/PhotoBand.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
-import detailImage from "../../assets/media/placeholder-detail-roofing-solar.svg";
+// A composed graphic (Triple R's own mark + Sunrun's wordmark, built from
+// each party's real logo, not a photo) rather than the usual real-jobsite
+// photography this band otherwise holds - there's no photo that captures
+// a cross-company partnership the way a logo lockup does. Sunrun's logo
+// came from the client cropped tight and keyed to transparent from its
+// original white-background file; Triple R's mark reuses the same tight
+// crop already generated for the site's favicon.
+import detailImage from "../../assets/media/photo-roofing-solar-partner-strip.jpg";
 
 // A combined offering, not a standard single service - shaped around the
 // homeowner scenario (needing a roof and considering solar at the same
@@ -96,7 +103,7 @@ const FAQS = [
 
   <PhotoBand
     image={detailImage}
-    imageAlt=""
+    imageAlt="Triple R Roofing and Sunrun logos."
   />
 
   <FAQSection
