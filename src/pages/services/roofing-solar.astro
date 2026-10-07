@@ -2,6 +2,7 @@
 import InteriorLayout from "../../layouts/InteriorLayout.astro";
 import Container from "../../components/Container.astro";
 import PhotoBand from "../../components/PhotoBand.astro";
+import Button from "../../components/Button.astro";
 import FAQSection from "../../components/FAQSection.astro";
 import FinalCtaSection from "../../components/FinalCtaSection.astro";
 // A composed graphic (Triple R's own mark + Sunrun's wordmark, built from
@@ -16,6 +17,13 @@ import FinalCtaSection from "../../components/FinalCtaSection.astro";
 // mode (see that prop's own comment for why this image needs contain,
 // not PhotoBand's usual cover).
 import detailImage from "../../assets/media/photo-roofing-solar-partner-strip.png";
+
+// Client-provided Sunrun referral link - homeowners who click through
+// land directly on Sunrun's own signup flow, pre-attributed to this
+// account via the token in the URL. Opens in a new tab automatically
+// (Button treats any http(s) href as external).
+const SUNRUN_REFERRAL_URL =
+  "https://sunrun.my.site.com/sunrunPublicAuraSite/s/new-customer?token=3340818911";
 
 // A combined offering, not a standard single service - shaped around the
 // homeowner scenario (needing a roof and considering solar at the same
@@ -100,6 +108,9 @@ const FAQS = [
             For the solar side, we work with Sunrun to help coordinate
             the project.
           </p>
+          <Button variant="text" href={SUNRUN_REFERRAL_URL} class="roofing-solar-split__cta">
+            Get a free solar quote from Sunrun
+          </Button>
         </div>
       </div>
     </Container>
@@ -228,6 +239,10 @@ const FAQS = [
   .roofing-solar-split__body {
     max-width: 46ch;
     color: var(--color-text-muted);
+  }
+
+  .roofing-solar-split__cta {
+    margin-top: var(--space-4);
   }
 
   @media (min-width: 900px) {
