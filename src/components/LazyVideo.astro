@@ -197,6 +197,24 @@ const remoteSrcset = isRemotePoster
     const src = video.dataset.src;
     const playbackId = video.dataset.playbackId;
     if (playbackId && !video.hasAttribute("playback-id")) {
+      // hls.js only keeps ~8s of already-played data in memory by
+      // default, trimming anything further back to save memory - once a
+      // loop plays past that, the segment covering time 0 is gone, so
+      // the native loop below has to re-fetch it instead of seeking
+      // instantly, which is the ~1s stall at the loop point. Disabling
+      // that trim keeps the whole video buffered, so looping never has
+      // to reload anything. Must be set before playback-id triggers
+      // hls.js's own setup, or it's too late to take effect; harmless on
+      // the plain <video> fallback, which doesn't read this property at
+      // all. mux-video forwards it straight through to Hls.Config
+      // (confirmed in its source), so it's not guaranteed stable across
+      // major version bumps - a config pass-through, not a documented
+      // public API.
+      try {
+        (video as unknown as { _hlsConfig?: object })._hlsConfig = { backBufferLength: Infinity };
+      } catch {
+        /* Best-effort only - worst case the loop just stalls as before. */
+      }
       video.setAttribute("playback-id", playbackId);
     } else if (src && !video.src) {
       video.src = src;
