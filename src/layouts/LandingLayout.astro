@@ -6,15 +6,16 @@
  * Always noindex: these pages duplicate site content and exist only for
  * ad traffic.
  *
- * The Meta Pixel only loads when META_PIXEL_ID is set below - leaving it
- * empty ships no tracking code at all rather than a broken snippet.
+ * The Meta Pixel's base snippet (init + PageView) now loads site-wide via
+ * BaseLayout, not here - this layout only fires one extra, more specific
+ * event (pixelEvent, e.g. "Lead" on the thank-you page) on top of that
+ * PageView, assuming fbq already exists by the time this runs (BaseLayout
+ * loads it earlier in <head>, before this layout's own slot="head"
+ * content).
  */
 import BaseLayout from "./BaseLayout.astro";
 import { Image } from "astro:assets";
 import logoMark from "../assets/media/logo-triple-r-roofing.webp";
-
-// Client's Meta Pixel (Events Manager -> Data sources).
-const META_PIXEL_ID = "2460801741112237";
 
 interface Props {
   title: string;
@@ -29,16 +30,9 @@ const YEAR = new Date().getFullYear();
 
 <BaseLayout title={title} description={description} noindex>
   <Fragment slot="head">
-    {META_PIXEL_ID && (
-      <script is:inline define:vars={{ META_PIXEL_ID, pixelEvent }}>
-        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-        document,'script','https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', META_PIXEL_ID);
-        fbq('track', 'PageView');
-        if (pixelEvent) {
+    {pixelEvent && (
+      <script is:inline define:vars={{ pixelEvent }}>
+        if (window.fbq) {
           // Same event ID the quiz sent to the server (Conversions API),
           // so Meta merges this browser Lead with the server's Lead.
           var eventID = null;
@@ -49,18 +43,6 @@ const YEAR = new Date().getFullYear();
       </script>
     )}
   </Fragment>
-
-  {META_PIXEL_ID && (
-    <noscript>
-      <img
-        height="1"
-        width="1"
-        style="display:none"
-        alt=""
-        src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
-      />
-    </noscript>
-  )}
 
   <header class="lp-header section--inverse">
     <div class="lp-header__inner">

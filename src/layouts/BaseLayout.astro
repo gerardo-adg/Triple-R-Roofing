@@ -20,6 +20,15 @@ interface Props {
 const { title, description, canonical, noindex = false } = Astro.props;
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site);
 
+// Client's Meta Pixel (Events Manager -> Data sources). Site-wide as of
+// this change - previously only loaded on the /free-estimate ad funnel
+// via LandingLayout, which now relies on this copy instead of carrying
+// its own (firing only its own extra, more specific event in addition
+// to the PageView this one already tracks - see that layout's own
+// comment). Loads on every page, noindex ones included, since the goal
+// is a fuller picture of real visitor behavior, not just ad traffic.
+const META_PIXEL_ID = "2460801741112237";
+
 // Every value here is either client-confirmed directly (phone, license
 // number, hours, the 4.8/95 Google figure) or structural (name/url) -
 // nothing invented. No street address or sameAs/social links yet since
@@ -99,7 +108,19 @@ const businessSchema = {
 
     <script type="application/ld+json" set:html={JSON.stringify(businessSchema)} />
 
-    <!-- Page-specific head tags (e.g. the ad landing page's Meta Pixel). -->
+    {META_PIXEL_ID && (
+      <script is:inline define:vars={{ META_PIXEL_ID }}>
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', META_PIXEL_ID);
+        fbq('track', 'PageView');
+      </script>
+    )}
+
+    <!-- Page-specific head tags (e.g. the ad landing page's extra Lead event, fired after the PageView above). -->
     <slot name="head" />
 
     <!--
@@ -122,6 +143,17 @@ const businessSchema = {
     </script>
   </head>
   <body>
+    {META_PIXEL_ID && (
+      <noscript>
+        <img
+          height="1"
+          width="1"
+          style="display:none"
+          alt=""
+          src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+        />
+      </noscript>
+    )}
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
 
