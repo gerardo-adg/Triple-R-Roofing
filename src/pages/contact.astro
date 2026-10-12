@@ -107,7 +107,7 @@ const SERVICE_GROUPS = [
 
           <div class="contact-form__field contact-form__field--full">
             <label for="service">Service Needed</label>
-            <select id="service" name="service" required>
+            <select id="service" name="service" required data-service-select>
               <option value="" disabled selected>Select one</option>
               {SERVICE_GROUPS.map((group) => (
                 <optgroup label={group.name}>
@@ -116,6 +116,11 @@ const SERVICE_GROUPS = [
               ))}
               <option value="Other">Other</option>
             </select>
+            <p class="contact-form__notice" data-replacement-notice hidden>
+              We&rsquo;re currently booking roof replacements for spring and
+              aren&rsquo;t scheduling new replacement jobs for the rest of
+              this year. We&rsquo;ll still follow up to go over timing.
+            </p>
           </div>
 
           <div class="contact-form__field contact-form__field--full">
@@ -158,6 +163,23 @@ const SERVICE_GROUPS = [
     </div>
   </section>
 </InteriorLayout>
+
+<script>
+  // Client-requested notice: roof replacements specifically are booked
+  // out through spring - shown only for that exact option, not the whole
+  // Roofing group, so a repair/tile/flat lead (no such delay) never sees
+  // it. Draft/preview only.
+  const select = document.querySelector<HTMLSelectElement>("[data-service-select]");
+  const notice = document.querySelector<HTMLElement>("[data-replacement-notice]");
+
+  if (select && notice) {
+    const update = () => {
+      notice.hidden = select.value !== "Roof Replacement";
+    };
+    select.addEventListener("change", update);
+    update();
+  }
+</script>
 
 <style>
   /* ---- Split composition - one full-width section, two edge-to-edge
@@ -308,6 +330,14 @@ const SERVICE_GROUPS = [
   .contact-form__field textarea {
     resize: vertical;
     min-height: 72px;
+  }
+
+  .contact-form__notice {
+    font-size: var(--text-body-sm);
+    color: var(--color-text);
+    background: var(--color-accent-tint);
+    border-left: 3px solid var(--color-accent-strong);
+    padding: var(--space-3) var(--space-4);
   }
 
   .contact-form__submit {
