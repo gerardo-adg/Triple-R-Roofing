@@ -112,6 +112,11 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
         </label>
       ))}
     </div>
+    <p class="quiz__notice" data-replacement-notice hidden>
+      We&rsquo;re currently booking roof replacements for spring and
+      aren&rsquo;t scheduling new replacement jobs for the rest of this
+      year. We&rsquo;ll still follow up to go over timing.
+    </p>
     <p class="quiz__error" data-quiz-error hidden>Pick at least one to continue.</p>
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
@@ -220,6 +225,22 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     const currentLabel = form.querySelector<HTMLElement>("[data-quiz-current]")!;
     const back = form.querySelector<HTMLButtonElement>("[data-quiz-back]")!;
     let current = 0;
+
+    // Client-requested: roof replacements specifically are booked out
+    // through spring - shown only when that exact checkbox is checked,
+    // not any of the other project types, so a repair/gutter/maintenance
+    // lead (no such delay) never sees it.
+    const replacementNotice = form.querySelector<HTMLElement>("[data-replacement-notice]");
+    const replacementCheckbox = form.querySelector<HTMLInputElement>(
+      'input[name="services[]"][value="Roof Replacement"]'
+    );
+    if (replacementNotice && replacementCheckbox) {
+      const updateReplacementNotice = () => {
+        replacementNotice.hidden = !replacementCheckbox.checked;
+      };
+      replacementCheckbox.addEventListener("change", updateReplacementNotice);
+      updateReplacementNotice();
+    }
 
     // Carry ad attribution from the landing URL into the lead.
     const params = new URLSearchParams(window.location.search);
@@ -468,6 +489,15 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     margin-top: var(--space-2);
     margin-bottom: var(--space-5);
     font-size: var(--text-body-sm);
+  }
+
+  .quiz__notice {
+    font-size: var(--text-body-sm);
+    color: var(--color-text);
+    background: var(--color-accent-tint);
+    border-left: 3px solid var(--color-accent-strong);
+    padding: var(--space-3) var(--space-4);
+    margin-top: var(--space-4);
   }
 
   /* ---- Option tiles ---- */
