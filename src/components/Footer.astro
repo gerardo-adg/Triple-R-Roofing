@@ -68,6 +68,7 @@ const YEAR = new Date().getFullYear();
 
     <div class="site-footer__bottom">
       <p>&copy; {YEAR} Triple R Roofing. All rights reserved.</p>
+      <a href="/privacy-policy/" class="site-footer__legal">Privacy Policy</a>
     </div>
   </Container>
 </footer>
@@ -177,7 +178,26 @@ const YEAR = new Date().getFullYear();
   }
 
   .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-3) var(--space-5);
     padding-top: var(--space-6);
+  }
+
+  /* Deliberately as quiet as the copyright line beside it - reachable
+     from every page, never competing with the real navigation above. */
+  .site-footer__legal {
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted-inverse);
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-inverse);
+  }
+
+  .site-footer__legal:hover {
+    color: var(--color-text-inverse);
+    text-decoration-color: currentColor;
   }
 
   .site-footer__bottom p {
