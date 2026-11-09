@@ -1,8 +1,9 @@
 ---
 /**
- * Step-by-step quiz version of the client's existing (converting)
- * "Request a FREE Roof Inspection" form (reworded here as a free estimate) - same questions, same fields,
- * one question per screen, contact details last.
+ * Step-by-step quiz for the roof-repair ad funnel (/free-estimate): one
+ * question per screen, contact details last. The client no longer takes
+ * roof replacements, so the questions are built around repairs - what's
+ * wrong with the roof and what kind of roof it is.
  *
  * It's ONE real <form> with every field present in the static HTML, so
  * Netlify Forms detects all of them at deploy time and a visitor without
@@ -11,19 +12,28 @@
  * screen. Nothing is submitted until the final step.
  */
 
-// Same options, same order as the live landing page's form.
-const SERVICES = [
-  "Roof Repair",
-  "Roof Replacement",
-  "Gutter Replacement",
-  "Roof Maintenance",
-  "Solar Panel Cleaning",
-  "Roof Moss Removal",
-  "Other",
+// Repair problems, not a service menu - roof replacement is no longer
+// offered. Still submitted as `services[]` so the Netlify form's existing
+// column and the Conversions API function keep working unchanged.
+const ROOF_ISSUES = [
+  "Roof Leak",
+  "Missing or Damaged Shingles",
+  "Broken or Slipped Tiles",
+  "Storm or Wind Damage",
+  "Flat Roof Problem",
+  "Roof Maintenance / Tune-Up",
+  "Not Sure - Need an Inspection",
+];
+
+const ROOF_TYPES = [
+  { value: "Shingle", hint: "Asphalt / composition shingles" },
+  { value: "Tile", hint: "Clay or concrete tiles" },
+  { value: "Flat", hint: "Low-slope or flat roof" },
+  { value: "Not Sure", hint: "We'll figure it out on site" },
 ];
 
 const PAYMENT = [
-  { value: "Financing", hint: "0% interest options for qualified homeowners" },
+  { value: "Financing", hint: "0% APR for 24 months for qualified borrowers" },
   { value: "Cash", hint: "Paying out of pocket" },
   { value: "Insurance", hint: "Storm or damage claim" },
   { value: "Not Sure Yet", hint: "We'll walk you through options" },
@@ -51,7 +61,7 @@ const CITIES = [
   "El Dorado Hills",
 ];
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 // Ad attribution - copied from the landing URL into the lead so each
 // submission in Netlify shows which campaign/ad it came from.
@@ -97,33 +107,50 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     </div>
   </div>
 
-  <!-- 1. Project type (multi-select, like the original) -->
+  <!-- 1. What's wrong (multi-select) -->
   <fieldset class="quiz__step" data-step data-required-group="services[]">
-    <legend class="quiz__question" tabindex="-1">What can we help you with?</legend>
+    <legend class="quiz__question" tabindex="-1">What&rsquo;s going on with your roof?</legend>
     <p class="quiz__hint">Select all that apply.</p>
     <div class="quiz__options quiz__options--grid">
-      {SERVICES.map((service) => (
+      {ROOF_ISSUES.map((issue) => (
         <label class="quiz__option">
-          <input type="checkbox" name="services[]" value={service} />
+          <input type="checkbox" name="services[]" value={issue} />
           <span class="quiz__option-box">
             <span class="quiz__check" aria-hidden="true"></span>
-            <span class="quiz__option-label">{service}</span>
+            <span class="quiz__option-label">{issue}</span>
           </span>
         </label>
       ))}
     </div>
-    <p class="quiz__notice" data-replacement-notice hidden>
-      We&rsquo;re currently booking roof replacements for spring and
-      aren&rsquo;t scheduling new replacement jobs for the rest of this
-      year. We&rsquo;ll still follow up to go over timing.
-    </p>
     <p class="quiz__error" data-quiz-error hidden>Pick at least one to continue.</p>
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
 
-  <!-- 2. Payment (single choice - auto-advances on tap) -->
+  <!-- 2. Roof type (single choice - auto-advances on tap) -->
+  <fieldset class="quiz__step" data-step data-required-group="roof_type" data-auto-advance>
+    <legend class="quiz__question" tabindex="-1">What type of roof do you have?</legend>
+    <p class="quiz__hint">It helps us bring the right materials for the repair.</p>
+    <div class="quiz__options">
+      {ROOF_TYPES.map((option) => (
+        <label class="quiz__option">
+          <input type="radio" name="roof_type" value={option.value} />
+          <span class="quiz__option-box">
+            <span class="quiz__check quiz__check--radio" aria-hidden="true"></span>
+            <span class="quiz__option-text">
+              <span class="quiz__option-label">{option.value}</span>
+              <span class="quiz__option-hint">{option.hint}</span>
+            </span>
+          </span>
+        </label>
+      ))}
+    </div>
+    <p class="quiz__error" data-quiz-error hidden>Pick one to continue.</p>
+    <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
+  </fieldset>
+
+  <!-- 3. Payment (single choice - auto-advances on tap) -->
   <fieldset class="quiz__step" data-step data-required-group="payment" data-auto-advance>
-    <legend class="quiz__question" tabindex="-1">How do you plan to pay for this project?</legend>
+    <legend class="quiz__question" tabindex="-1">How do you plan to pay for the repair?</legend>
     <p class="quiz__hint">No commitment &mdash; this just helps us prepare your quote.</p>
     <div class="quiz__options">
       {PAYMENT.map((option) => (
@@ -143,7 +170,7 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
 
-  <!-- 3. City -->
+  <!-- 4. City -->
   <fieldset class="quiz__step" data-step>
     <legend class="quiz__question" tabindex="-1">What city is the property in?</legend>
     <p class="quiz__hint">We serve the Greater Sacramento area.</p>
@@ -166,25 +193,25 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
 
-  <!-- 4. Details (optional) -->
+  <!-- 5. Details (optional) -->
   <fieldset class="quiz__step" data-step>
     <legend class="quiz__question" tabindex="-1">Anything else we should know?</legend>
-    <p class="quiz__hint">Leaks, storm damage, roof age &mdash; optional, but it helps.</p>
+    <p class="quiz__hint">Where the leak or damage is, when it started, roof age &mdash; optional, but it helps.</p>
     <div class="quiz__field">
       <label for="quiz-details" class="visually-hidden">Additional details about your project</label>
       <textarea
         id="quiz-details"
         name="details"
         rows="4"
-        placeholder="e.g. Leak over the garage after the last storm, roof is about 20 years old."
+        placeholder="e.g. Water stain on the bedroom ceiling since the last storm, a few tiles slipped near the chimney."
       ></textarea>
     </div>
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
 
-  <!-- 5. Contact -->
+  <!-- 6. Contact -->
   <fieldset class="quiz__step" data-step>
-    <legend class="quiz__question" tabindex="-1">Last step: who should we contact to schedule your free estimate?</legend>
+    <legend class="quiz__question" tabindex="-1">Last step: who should we contact to schedule your free repair estimate?</legend>
     <p class="quiz__hint">We&rsquo;ll call or text you to set up a time to come look at your roof. No obligation.</p>
     <div class="quiz__row">
       <div class="quiz__field">
@@ -206,7 +233,7 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     </div>
     <p class="quiz__error" data-quiz-error hidden>Please fill in all fields with a valid phone and email.</p>
     <button type="submit" class="quiz__next quiz__submit">
-      Request My Free Estimate <span aria-hidden="true">&rarr;</span>
+      Request My Free Repair Estimate <span aria-hidden="true">&rarr;</span>
     </button>
     <p class="quiz__fineprint">
       By submitting, you agree Triple R Roofing may contact you by phone, text, or email about your
@@ -225,22 +252,6 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     const currentLabel = form.querySelector<HTMLElement>("[data-quiz-current]")!;
     const back = form.querySelector<HTMLButtonElement>("[data-quiz-back]")!;
     let current = 0;
-
-    // Client-requested: roof replacements specifically are booked out
-    // through spring - shown only when that exact checkbox is checked,
-    // not any of the other project types, so a repair/gutter/maintenance
-    // lead (no such delay) never sees it.
-    const replacementNotice = form.querySelector<HTMLElement>("[data-replacement-notice]");
-    const replacementCheckbox = form.querySelector<HTMLInputElement>(
-      'input[name="services[]"][value="Roof Replacement"]'
-    );
-    if (replacementNotice && replacementCheckbox) {
-      const updateReplacementNotice = () => {
-        replacementNotice.hidden = !replacementCheckbox.checked;
-      };
-      replacementCheckbox.addEventListener("change", updateReplacementNotice);
-      updateReplacementNotice();
-    }
 
     // Carry ad attribution from the landing URL into the lead.
     const params = new URLSearchParams(window.location.search);
@@ -489,15 +500,6 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     margin-top: var(--space-2);
     margin-bottom: var(--space-5);
     font-size: var(--text-body-sm);
-  }
-
-  .quiz__notice {
-    font-size: var(--text-body-sm);
-    color: var(--color-text);
-    background: var(--color-accent-tint);
-    border-left: 3px solid var(--color-accent-strong);
-    padding: var(--space-3) var(--space-4);
-    margin-top: var(--space-4);
   }
 
   /* ---- Option tiles ---- */

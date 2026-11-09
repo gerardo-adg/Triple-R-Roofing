@@ -81,7 +81,9 @@ export function buildLeadEvent(payload) {
     user_data: userData,
     custom_data: {
       content_name: "Free Estimate Quiz",
+      // The quiz's roof problems (still submitted as `services[]`).
       services: Array.isArray(services) ? services.join(", ") : nonEmpty(services),
+      roof_type: nonEmpty(data.roof_type),
       payment: nonEmpty(data.payment),
     },
   };

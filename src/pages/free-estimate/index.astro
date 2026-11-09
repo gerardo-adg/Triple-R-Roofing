@@ -1,10 +1,11 @@
 ---
 /**
- * Meta ads landing page - quiz-funnel version of the client's existing,
- * already-converting /roof-inspection-request page. Same section order
- * and the same offer as that page (headline offer -> form -> reviews ->
- * projects -> services), rebuilt in this site's design system, with the
- * long form replaced by a one-question-per-screen quiz (QuizForm).
+ * Meta ads landing page for ROOF REPAIRS - the client no longer takes
+ * roof replacements, so everything here (headline, quiz, reviews, recent
+ * work, services) is built around repairs. Section order follows the
+ * client's original converting ad page (offer headline -> form ->
+ * reviews -> work -> services), in this site's design system, with a
+ * one-question-per-screen quiz (QuizForm) instead of a long form.
  *
  * Not linked from the site's navigation and noindex (LandingLayout) - it
  * exists only for ad traffic.
@@ -13,75 +14,71 @@ import LandingLayout from "../../layouts/LandingLayout.astro";
 import Container from "../../components/Container.astro";
 import ResponsiveImage from "../../components/ResponsiveImage.astro";
 import QuizForm from "../../components/landing/QuizForm.astro";
+import PlayableVideo from "../../components/PlayableVideo.astro";
 import { Image } from "astro:assets";
 
-import heroImage from "../../assets/media/photo-home-services-roof-replacement-mobile.jpg";
-import reviewsPhoto from "../../assets/media/photo-contact-tile-repair.jpg";
-import projectReplacement from "../../assets/media/photo-replacement-sacramento-completed-2.jpg";
-import projectTile from "../../assets/media/photo-tile-roof-tearoff-crew.jpg";
-import projectReplacement2 from "../../assets/media/photo-home-services-roof-replacement-desktop.jpg";
-import projectRepair from "../../assets/media/photo-repair-tile-tearoff-crew.jpg";
-import serviceRepair from "../../assets/media/photo-home-services-roof-repair-mobile.jpg";
-import serviceReplacement from "../../assets/media/photo-replacement-shingle-install.jpg";
-import serviceMaintenance from "../../assets/media/photo-maintenance-crew-aerial.jpg";
+import heroImage from "../../assets/media/photo-maintenance-crew-aerial.jpg";
+import reviewsPhoto from "../../assets/media/photo-tile-roof-tearoff-crew.jpg";
+import serviceLeak from "../../assets/media/photo-repair-tile-tearoff-crew.jpg";
+import serviceTileShingle from "../../assets/media/photo-home-services-roof-repair-mobile.jpg";
+import serviceMaintenance from "../../assets/media/photo-contact-tile-repair.jpg";
 
 import gafLogo from "../../assets/media/cert-gaf-certified-plus.png";
 import certainteedLogo from "../../assets/media/cert-certainteed-select-shinglemaster.png";
 import owensCorningLogo from "../../assets/media/cert-owens-corning-preferred-contractor.png";
 import bbbLogo from "../../assets/media/cert-bbb-accredited-business.png";
 
-// Client-confirmed offer for the ads: 0% interest for 24 months. No
-// down-payment claim anywhere on this page, per the client. (The main
-// site's Financing page still states the older Wisetack offer.) Keep
-// this in sync with the ad copy.
+// Client-confirmed offer, now applied to repairs: 0% APR for 24 months
+// through Wisetack for qualified borrowers. No down-payment claim
+// anywhere on this page, per the client. Keep in sync with the ad copy.
 const OFFER_MONTHS = 24;
+
+// The same real leak-repair clip used on the Roof Repair service page.
+const REPAIR_VIDEO_MUX_ID = "tyzo1wJhg8kM1ktkrpswjEBF00D02umT2p3cCLOZ24U8I";
+const REPAIR_VIDEO_POSTER = `https://image.mux.com/${REPAIR_VIDEO_MUX_ID}/thumbnail.jpg?time=2`;
 
 const GOOGLE_REVIEWS_URL = "https://share.google/thZ2wASKL8GO7bnIW";
 
-// Verbatim from the client's live landing page.
+// Real Google reviews, verbatim, each about a repair (storm damage, a
+// tile repair, a leak) - from the client's original ad page (Yamel) and
+// the homepage's ReviewsSection (Chris, Ana).
 const REVIEWS = [
-  {
-    name: "Zakary R.",
-    quote:
-      "Honest, experienced, Informative company. Fair pricing and straight forward services. Best thing is they take pics during the job so you know what's going on. Will definitely have them back when we can move forward with more cleaning and certification.",
-  },
-  {
-    name: "Allison N.",
-    quote:
-      "Rogelio and his team did a great job on my family's roof replacement (shingle)/seamless gutters! He went above & beyond to help us find cost effective options and offered best price & value. He was thorough, detailed, and followed through. He was informative, responsive, and shared status updates, arrival time, and pictures.\n\nRogelio and his team worked hard and were careful and reliable. Shout out to Triple R Roofing for providing affordable pricing, excellent customer service (patiently answered all questions), positive attitude, timely work, and good craftsmanship & warranty!",
-  },
   {
     name: "Yamel H.",
     quote:
       "I had some serious issues with my roof after a recent storm, and I'm so glad I found Triple R. They showed up on time, explained everything clearly, and got the job done quickly without cutting corners. The crew was super respectful of my property and cleaned up after themselves really well. You can tell they take pride in their work. My roof looks great now, and I feel confident it'll hold up for years. Definitely a company you can trust!",
   },
-];
-
-const PROJECTS = [
-  { image: projectReplacement, label: "Roof Replacement", alt: "Aerial view of a completed roof replacement in Sacramento, California." },
-  { image: projectTile, label: "Tile Roofing", alt: "A Triple R crew tearing off and replacing a tile roof." },
-  { image: projectReplacement2, label: "Roof Replacement", alt: "Aerial view of a completed shingle roof replacement." },
-  { image: projectRepair, label: "Roof Repair", alt: "Aerial view of a Triple R crew repairing a tile roof." },
-];
-
-// Repair/replacement copy is the client's own, from the live landing page.
-const SERVICES = [
   {
-    title: "Roof Repairs",
-    image: serviceRepair,
-    alt: "A Triple R crew member tearing off damaged tiles during a roof repair.",
-    body: "Our roof repair services are designed to keep your home safe, dry, and protected year-round. Whether you're dealing with missing shingles, leaks, storm damage, or general wear and tear, our experienced team provides fast, reliable solutions that restore your roof's strength and extend its lifespan.",
+    name: "Chris L.",
+    quote:
+      "We needed some roof repairs done (tile roof) and got a few quotes. The quotes were all similar. My decision came down to who I thought would do the best job and I chose Triple R. I'm glad I did!! The job was done quickly, thoroughly, and professionally. I especially like how they documented their work in photos. Very nice touch. Communication was excellent - mostly via text (my preference) ... but no issues with phone calls. I have no hesitation recommending Triple R to family and friends.",
   },
   {
-    title: "Roof Replacements",
-    image: serviceReplacement,
-    alt: "A Triple R crew member installing shingles during a roof replacement.",
-    body: "When repairs aren't enough, a full roof replacement is the best way to protect your home and increase its value. We install durable, energy-efficient roofing systems built to stand up to harsh weather and last for decades, and guide you through every step from materials to final installation.",
+    name: "Ana B.",
+    quote:
+      "Great work! Fast response to problem/leak. Have recommended to many friends. Price is reasonable. Do not worry about their work when finished. Will use them again in the future. And have used them in the past.",
+  },
+];
+
+// First card's copy is adapted from the client's own Roof Repairs text
+// on their original ad page.
+const SERVICES = [
+  {
+    title: "Leak & Storm Damage Repair",
+    image: serviceLeak,
+    alt: "Aerial view of a Triple R crew repairing a tile roof.",
+    body: "Our roof repair services are designed to keep your home safe, dry, and protected year-round. Whether you're dealing with leaks, storm damage, or general wear and tear, our experienced team finds the source of the problem and fixes it right.",
+  },
+  {
+    title: "Shingle & Tile Repair",
+    image: serviceTileShingle,
+    alt: "A Triple R crew member tearing off damaged tiles during a roof repair.",
+    body: "Missing shingles, cracked or slipped tiles, worn flashing - we replace the damaged pieces and seal everything around them, so the repair blends in with the rest of your roof and holds up to the weather.",
   },
   {
     title: "Roof Maintenance",
     image: serviceMaintenance,
-    alt: "Aerial view of the Triple R crew performing roof maintenance.",
+    alt: "A Triple R Roofing crew member repairing a broken tile roof in Elk Grove, California.",
     body: "Regular maintenance catches small problems before they become expensive ones. We clean valleys and gutters, replace broken or slipped tiles, reseal flashings, and patch trouble spots, with photos of everything we do so you always know the condition of your roof.",
   },
 ];
@@ -95,8 +92,8 @@ const CREDENTIALS = [
 ---
 
 <LandingLayout
-  title={`New Roof With 0% Interest for ${OFFER_MONTHS} Months | Triple R Roofing`}
-  description={`New roof with 0% interest for ${OFFER_MONTHS} months for qualified homeowners. Request a free roofing estimate from Triple R Roofing in the Greater Sacramento area.`}
+  title={`Roof Repairs With 0% APR for ${OFFER_MONTHS} Months | Triple R Roofing`}
+  description={`Roof leak or damage? Get it fixed with 0% APR financing for ${OFFER_MONTHS} months for qualified borrowers. Request a free roof repair estimate from Triple R Roofing in the Greater Sacramento area.`}
 >
   <!-- ---- Hero + quiz ---- -->
   <section class="lp-hero section--inverse">
@@ -112,9 +109,9 @@ const CREDENTIALS = [
     </div>
     <Container>
       <div class="lp-hero__content">
-        <p class="eyebrow">Greater Sacramento Area Roofing Experts</p>
+        <p class="eyebrow">Sacramento Roof Repair Experts</p>
         <h1 class="lp-hero__headline">
-          New Roof With <span class="lp-hero__accent">0% Interest</span> for
+          Roof Repairs With <span class="lp-hero__accent">0% APR</span> for
           <span class="lp-hero__accent">{OFFER_MONTHS} Months.</span>
         </h1>
       </div>
@@ -124,9 +121,9 @@ const CREDENTIALS = [
   <section class="lp-quiz" id="quiz">
     <div class="lp-quiz__card">
       <h2 class="lp-quiz__title">
-        Request a <span class="lp-quiz__accent">FREE Estimate</span>
+        Request a <span class="lp-quiz__accent">FREE Repair Estimate</span>
       </h2>
-      <p class="lp-quiz__lead">Answer 5 quick questions to request your free estimate.</p>
+      <p class="lp-quiz__lead">Answer 6 quick questions to request your free repair estimate.</p>
       <QuizForm />
     </div>
     <ul class="lp-quiz__trust">
@@ -184,7 +181,7 @@ const CREDENTIALS = [
         <div class="lp-reviews__photo" data-reveal-media>
           <ResponsiveImage
             src={reviewsPhoto}
-            alt="A Triple R Roofing crew member repairing a broken tile roof in Elk Grove, California."
+            alt="The Triple R crew working on a tile roof."
             widths={[480, 768, 1024]}
             sizes="(min-width: 900px) 45vw, 100vw"
             loading="lazy"
@@ -194,28 +191,27 @@ const CREDENTIALS = [
     </Container>
   </section>
 
-  <!-- ---- Projects ---- -->
-  <section class="lp-projects">
+  <!-- ---- Recent work: real leak repair ---- -->
+  <section class="lp-work">
     <Container>
-      <div class="lp-section-head" data-reveal>
-        <p class="eyebrow">Recent work</p>
-        <h2 class="lp-section-head__title">Our projects.</h2>
-      </div>
-      <div class="lp-projects__grid">
-        {PROJECTS.map((project) => (
-          <figure class="lp-project" data-reveal-media>
-            <div class="lp-project__frame">
-              <ResponsiveImage
-                src={project.image}
-                alt={project.alt}
-                widths={[400, 640, 900]}
-                sizes="(min-width: 1024px) 25vw, (min-width: 600px) 50vw, 100vw"
-                loading="lazy"
-              />
-            </div>
-            <figcaption class="lp-project__label">{project.label}</figcaption>
-          </figure>
-        ))}
+      <div class="lp-work__split">
+        <div class="lp-work__text" data-reveal>
+          <p class="eyebrow">Recent work</p>
+          <h2 class="lp-section-head__title">Patching a roof leak.</h2>
+          <p class="lp-work__body">
+            See how the Triple R crew tracks down and fixes a roof leak on a real job. We
+            photograph every repair, so you see exactly what was wrong and what we fixed.
+          </p>
+          <a href="#quiz" class="lp-cta lp-work__cta">Get My Free Repair Estimate &rarr;</a>
+        </div>
+        <div class="lp-work__frame" data-reveal-media>
+          <PlayableVideo
+            poster={REPAIR_VIDEO_POSTER}
+            alt="A Triple R crew member patches a roof leak on an active job."
+            aspectRatio="9 / 16"
+            muxPlaybackId={REPAIR_VIDEO_MUX_ID}
+          />
+        </div>
       </div>
     </Container>
   </section>
@@ -225,7 +221,7 @@ const CREDENTIALS = [
     <Container>
       <div class="lp-section-head" data-reveal>
         <p class="eyebrow">What we do</p>
-        <h2 class="lp-section-head__title">Professional &amp; trusted roofing solutions.</h2>
+        <h2 class="lp-section-head__title">Roof repairs done right.</h2>
       </div>
       <div class="lp-services__grid">
         {SERVICES.map((service) => (
@@ -254,10 +250,11 @@ const CREDENTIALS = [
     <Container>
       <div class="lp-final__inner" data-reveal>
         <h2 class="lp-final__headline">
-          0% interest for {OFFER_MONTHS} months.
+          Fix your roof now. 0% APR for {OFFER_MONTHS} months.
         </h2>
         <p class="lp-final__body">
-          Find out if you qualify and get a free estimate from a Sacramento crew homeowners trust.
+          Don&rsquo;t let a small leak turn into a big repair. Find out if you qualify and get a
+          free repair estimate from a Sacramento crew homeowners trust.
         </p>
         <div class="lp-final__actions">
           <a href="#quiz" class="lp-cta">See If I Qualify &rarr;</a>
@@ -520,41 +517,51 @@ const CREDENTIALS = [
     margin-top: var(--space-3);
   }
 
-  /* ---- Projects ---- */
-  .lp-projects {
+  /* ---- Recent work (repair video) ---- */
+  .lp-work {
     padding-block: var(--space-8);
     background: var(--color-bg-raised);
   }
 
-  .lp-projects__grid {
+  .lp-work__split {
     display: grid;
-    gap: var(--space-4);
-    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+    align-items: center;
   }
 
-  @media (min-width: 1024px) {
-    .lp-projects__grid {
-      grid-template-columns: repeat(4, 1fr);
+  @media (min-width: 900px) {
+    .lp-work__split {
+      grid-template-columns: 1fr auto;
+      gap: var(--space-9);
     }
   }
 
-  .lp-project__frame {
-    aspect-ratio: 4 / 5;
-    overflow: hidden;
+  .lp-work__body {
+    margin-top: var(--space-4);
+    font-size: var(--text-body-lg);
   }
 
-  .lp-project__frame :global(img) {
+  .lp-work__cta {
+    margin-top: var(--space-5);
+  }
+
+  /* On this light section the default hover (paper fill) would vanish. */
+  .lp-work__cta:hover {
+    background: var(--color-charcoal);
+    border-color: var(--color-charcoal);
+    color: var(--color-gold);
+  }
+
+  .lp-work__frame {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 300px;
+    margin-inline: auto;
   }
 
-  .lp-project__label {
-    margin-top: var(--space-2);
-    font-size: var(--text-body-sm);
-    font-weight: var(--weight-bold);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
+  @media (min-width: 900px) {
+    .lp-work__frame {
+      max-width: clamp(320px, 26vw, 400px);
+    }
   }
 
   /* ---- Services ---- */
