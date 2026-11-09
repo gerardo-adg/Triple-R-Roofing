@@ -339,6 +339,15 @@ const CREDENTIALS = [
     margin-top: var(--space-4);
   }
 
+  /* Phones: the full "Roof Repairs & Maintenance..." headline ran 5-6
+     lines at the h2 size; 2.125rem (34px) holds it to 4 lines at every
+     common phone width (360-430px). */
+  @media (max-width: 479px) {
+    .lp-hero__headline {
+      font-size: 2.125rem;
+    }
+  }
+
   .lp-hero__accent {
     color: var(--color-gold);
   }
