@@ -531,7 +531,9 @@ const CREDENTIALS = [
 
   @media (min-width: 900px) {
     .lp-work__split {
-      grid-template-columns: 1fr auto;
+      /* Explicit video column width - an `auto` column sized to a child
+         that is itself width: 100% resolves to 0 and hides the video. */
+      grid-template-columns: 1fr clamp(320px, 26vw, 400px);
       gap: var(--space-9);
     }
   }
@@ -556,12 +558,6 @@ const CREDENTIALS = [
     width: 100%;
     max-width: 300px;
     margin-inline: auto;
-  }
-
-  @media (min-width: 900px) {
-    .lp-work__frame {
-      max-width: clamp(320px, 26vw, 400px);
-    }
   }
 
   /* ---- Services ---- */
