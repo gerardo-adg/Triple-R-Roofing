@@ -193,7 +193,7 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
 
-  <!-- 5. Contact + property address (city comes from step 4) -->
+  <!-- 5. Contact + street address (city comes from step 4) -->
   <fieldset class="quiz__step" data-step>
     <legend class="quiz__question" tabindex="-1">Last step: who should we contact to schedule your free estimate?</legend>
     <p class="quiz__hint">We&rsquo;ll call or text you to set up a time to come look at your roof. No obligation.</p>
@@ -215,26 +215,11 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
       <label for="quiz-email">Email</label>
       <input id="quiz-email" name="email" type="email" inputmode="email" autocomplete="email" required />
     </div>
-    <div class="quiz__row quiz__row--address">
-      <div class="quiz__field">
-        <label for="quiz-street">Street Address</label>
-        <input id="quiz-street" name="street_address" type="text" autocomplete="street-address" required />
-      </div>
-      <div class="quiz__field">
-        <label for="quiz-zip">ZIP Code</label>
-        <input
-          id="quiz-zip"
-          name="zip"
-          type="text"
-          inputmode="numeric"
-          autocomplete="postal-code"
-          pattern="[0-9]{5}(-[0-9]{4})?"
-          maxlength="10"
-          required
-        />
-      </div>
+    <div class="quiz__field">
+      <label for="quiz-street">Street Address</label>
+      <input id="quiz-street" name="street_address" type="text" autocomplete="street-address" required />
     </div>
-    <p class="quiz__error" data-quiz-error hidden>Please fill in all fields with a valid phone, email and ZIP code.</p>
+    <p class="quiz__error" data-quiz-error hidden>Please fill in all fields with a valid phone and email.</p>
     <button type="submit" class="quiz__next quiz__submit">
       Request My Free Estimate <span aria-hidden="true">&rarr;</span>
     </button>
@@ -610,11 +595,6 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
   @media (min-width: 600px) {
     .quiz__row {
       grid-template-columns: 1fr 1fr;
-    }
-
-    /* Street address gets the room; ZIP only needs a few digits. */
-    .quiz__row--address {
-      grid-template-columns: 2fr 1fr;
     }
   }
 

@@ -61,8 +61,6 @@ export function buildLeadEvent(payload) {
     fn: hashed(data.first_name),
     ln: hashed(data.last_name),
     ct: hashed(data.city, normalizeCity),
-    // Meta wants US ZIPs as the first 5 digits only.
-    zp: hashed(data.zip, (v) => v.replace(/\D/g, "").slice(0, 5)),
     st: hashed("ca"),
     country: hashed("us"),
     client_ip_address: nonEmpty(data.ip),
