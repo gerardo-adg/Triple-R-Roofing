@@ -19,7 +19,7 @@
 const SERVICES = [
   { value: "Roof Repair", hint: "Leaks, damaged shingles or tiles, storm damage" },
   { value: "Roof Maintenance", hint: "Cleaning, resealing and a full roof check-up" },
-  { value: "Something Else", hint: "We'll talk it through when we call" },
+  { value: "Something Else", hint: "Tell us what you need on a later step" },
 ];
 
 const ROOF_TYPES = [
@@ -34,28 +34,6 @@ const PAYMENT = [
   { value: "Cash", hint: "Paying out of pocket" },
   { value: "Insurance", hint: "Storm or damage claim" },
   { value: "Not Sure Yet", hint: "We'll walk you through options" },
-];
-
-// Autocomplete suggestions only - any city can still be typed.
-const CITIES = [
-  "Sacramento",
-  "Elk Grove",
-  "Roseville",
-  "Citrus Heights",
-  "Folsom",
-  "Rancho Cordova",
-  "Carmichael",
-  "Fair Oaks",
-  "North Highlands",
-  "Antelope",
-  "Rocklin",
-  "Natomas",
-  "West Sacramento",
-  "Davis",
-  "Orangevale",
-  "Granite Bay",
-  "Lincoln",
-  "El Dorado Hills",
 ];
 
 const TOTAL_STEPS = 5;
@@ -170,30 +148,23 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
 
-  <!-- 4. City -->
+  <!-- 4. Details (optional) -->
   <fieldset class="quiz__step" data-step>
-    <legend class="quiz__question" tabindex="-1">What city is the property in?</legend>
-    <p class="quiz__hint">We serve the Greater Sacramento area.</p>
+    <legend class="quiz__question" tabindex="-1">Anything else we should know?</legend>
+    <p class="quiz__hint">Where the leak or damage is, when it started, roof age &mdash; optional, but it helps.</p>
     <div class="quiz__field">
-      <label for="quiz-city" class="visually-hidden">City</label>
-      <input
-        id="quiz-city"
-        name="city"
-        type="text"
-        list="quiz-cities"
-        autocomplete="address-level2"
-        placeholder="e.g. Elk Grove"
-        required
-      />
-      <datalist id="quiz-cities">
-        {CITIES.map((city) => <option value={city} />)}
-      </datalist>
+      <label for="quiz-details" class="visually-hidden">Additional details about your project</label>
+      <textarea
+        id="quiz-details"
+        name="details"
+        rows="4"
+        placeholder="e.g. Water stain on the bedroom ceiling since the last storm, a few tiles slipped near the chimney."
+      ></textarea>
     </div>
-    <p class="quiz__error" data-quiz-error hidden>Enter your city to continue.</p>
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
 
-  <!-- 5. Contact + street address (city comes from step 4) -->
+  <!-- 5. Contact + full property address -->
   <fieldset class="quiz__step" data-step>
     <legend class="quiz__question" tabindex="-1">Last step: who should we contact to schedule your free estimate?</legend>
     <p class="quiz__hint">We&rsquo;ll call or text you to set up a time to come look at your roof. No obligation.</p>
@@ -216,8 +187,15 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
       <input id="quiz-email" name="email" type="email" inputmode="email" autocomplete="email" required />
     </div>
     <div class="quiz__field">
-      <label for="quiz-street">Street Address</label>
-      <input id="quiz-street" name="street_address" type="text" autocomplete="street-address" required />
+      <label for="quiz-address">Property Address</label>
+      <input
+        id="quiz-address"
+        name="address"
+        type="text"
+        autocomplete="street-address"
+        placeholder="Street, city"
+        required
+      />
     </div>
     <p class="quiz__error" data-quiz-error hidden>Please fill in all fields with a valid phone and email.</p>
     <button type="submit" class="quiz__next quiz__submit">
@@ -257,7 +235,7 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
       if (group) {
         return step.querySelector(`input[name="${group}"]:checked`) !== null;
       }
-      const fields = Array.from(step.querySelectorAll<HTMLInputElement>("input"));
+      const fields = Array.from(step.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea"));
       return fields.every((field) => {
         if (field.type === "tel" && field.value.replace(/\D/g, "").length < 10) return false;
         return field.checkValidity();
@@ -620,7 +598,8 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     text-transform: uppercase;
   }
 
-  .quiz__field input {
+  .quiz__field input,
+  .quiz__field textarea {
     font-family: var(--font-body);
     font-size: 1rem;
     min-height: 52px;
@@ -632,8 +611,14 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     transition: border-color var(--duration-fast) var(--ease-standard);
   }
 
-  .quiz__field input:focus-visible {
+  .quiz__field input:focus-visible,
+  .quiz__field textarea:focus-visible {
     border-color: var(--color-accent-strong);
+  }
+
+  .quiz__field textarea {
+    resize: vertical;
+    min-height: 110px;
   }
 
   .quiz__error {
