@@ -700,6 +700,11 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     margin-bottom: 0;
   }
 
+  /* .quiz__field's display: flex would otherwise override [hidden]. */
+  .quiz__other[hidden] {
+    display: none;
+  }
+
   .quiz__other textarea {
     min-height: 90px;
   }
