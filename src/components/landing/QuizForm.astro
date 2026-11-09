@@ -19,7 +19,7 @@
 const SERVICES = [
   { value: "Roof Repair", hint: "Leaks, damaged shingles or tiles, storm damage" },
   { value: "Roof Maintenance", hint: "Cleaning, resealing and a full roof check-up" },
-  { value: "Something Else", hint: "Tell us what you need on a later step" },
+  { value: "Something Else", hint: "We'll talk it through when we call" },
 ];
 
 const ROOF_TYPES = [
@@ -58,7 +58,7 @@ const CITIES = [
   "El Dorado Hills",
 ];
 
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 5;
 
 // Ad attribution - copied from the landing URL into the lead so each
 // submission in Netlify shows which campaign/ad it came from.
@@ -193,23 +193,7 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
 
-  <!-- 5. Details (optional) -->
-  <fieldset class="quiz__step" data-step>
-    <legend class="quiz__question" tabindex="-1">Anything else we should know?</legend>
-    <p class="quiz__hint">Where the leak or damage is, when it started, roof age &mdash; optional, but it helps.</p>
-    <div class="quiz__field">
-      <label for="quiz-details" class="visually-hidden">Additional details about your project</label>
-      <textarea
-        id="quiz-details"
-        name="details"
-        rows="4"
-        placeholder="e.g. Water stain on the bedroom ceiling since the last storm, a few tiles slipped near the chimney."
-      ></textarea>
-    </div>
-    <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
-  </fieldset>
-
-  <!-- 6. Contact -->
+  <!-- 5. Contact + property address (city comes from step 4) -->
   <fieldset class="quiz__step" data-step>
     <legend class="quiz__question" tabindex="-1">Last step: who should we contact to schedule your free estimate?</legend>
     <p class="quiz__hint">We&rsquo;ll call or text you to set up a time to come look at your roof. No obligation.</p>
@@ -231,7 +215,26 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
       <label for="quiz-email">Email</label>
       <input id="quiz-email" name="email" type="email" inputmode="email" autocomplete="email" required />
     </div>
-    <p class="quiz__error" data-quiz-error hidden>Please fill in all fields with a valid phone and email.</p>
+    <div class="quiz__row quiz__row--address">
+      <div class="quiz__field">
+        <label for="quiz-street">Street Address</label>
+        <input id="quiz-street" name="street_address" type="text" autocomplete="street-address" required />
+      </div>
+      <div class="quiz__field">
+        <label for="quiz-zip">ZIP Code</label>
+        <input
+          id="quiz-zip"
+          name="zip"
+          type="text"
+          inputmode="numeric"
+          autocomplete="postal-code"
+          pattern="[0-9]{5}(-[0-9]{4})?"
+          maxlength="10"
+          required
+        />
+      </div>
+    </div>
+    <p class="quiz__error" data-quiz-error hidden>Please fill in all fields with a valid phone, email and ZIP code.</p>
     <button type="submit" class="quiz__next quiz__submit">
       Request My Free Estimate <span aria-hidden="true">&rarr;</span>
     </button>
@@ -269,7 +272,7 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
       if (group) {
         return step.querySelector(`input[name="${group}"]:checked`) !== null;
       }
-      const fields = Array.from(step.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea"));
+      const fields = Array.from(step.querySelectorAll<HTMLInputElement>("input"));
       return fields.every((field) => {
         if (field.type === "tel" && field.value.replace(/\D/g, "").length < 10) return false;
         return field.checkValidity();
@@ -608,6 +611,11 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     .quiz__row {
       grid-template-columns: 1fr 1fr;
     }
+
+    /* Street address gets the room; ZIP only needs a few digits. */
+    .quiz__row--address {
+      grid-template-columns: 2fr 1fr;
+    }
   }
 
   .quiz__field {
@@ -632,8 +640,7 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     text-transform: uppercase;
   }
 
-  .quiz__field input,
-  .quiz__field textarea {
+  .quiz__field input {
     font-family: var(--font-body);
     font-size: 1rem;
     min-height: 52px;
@@ -645,14 +652,8 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     transition: border-color var(--duration-fast) var(--ease-standard);
   }
 
-  .quiz__field input:focus-visible,
-  .quiz__field textarea:focus-visible {
+  .quiz__field input:focus-visible {
     border-color: var(--color-accent-strong);
-  }
-
-  .quiz__field textarea {
-    resize: vertical;
-    min-height: 110px;
   }
 
   .quiz__error {
