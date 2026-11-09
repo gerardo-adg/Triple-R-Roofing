@@ -1,8 +1,9 @@
 ---
 /**
- * Step-by-step quiz version of the client's existing (converting)
- * "Request a FREE Roof Inspection" form (reworded here as a free estimate) - same questions, same fields,
- * one question per screen, contact details last.
+ * Step-by-step quiz for the roof-repair ad funnel (/free-estimate): one
+ * question per screen, contact details last. The client no longer takes
+ * roof replacements, so the questions are built around repairs - what's
+ * wrong with the roof and what kind of roof it is.
  *
  * It's ONE real <form> with every field present in the static HTML, so
  * Netlify Forms detects all of them at deploy time and a visitor without
@@ -11,44 +12,28 @@
  * screen. Nothing is submitted until the final step.
  */
 
-// Same options, same order as the live landing page's form.
+// The two services the client offers through this funnel (no roof
+// replacements), plus a catch-all. Single choice. Still submitted as
+// `services[]` so the Netlify form's existing column and the Conversions
+// API function keep working unchanged.
 const SERVICES = [
-  "Roof Repair",
-  "Roof Replacement",
-  "Gutter Replacement",
-  "Roof Maintenance",
-  "Solar Panel Cleaning",
-  "Roof Moss Removal",
-  "Other",
+  { value: "Roof Repair", hint: "Leaks, damaged shingles or tiles, storm damage" },
+  { value: "Roof Maintenance", hint: "Cleaning, resealing and a full roof check-up" },
+  { value: "Something Else", hint: "Tell us what you need" },
+];
+
+const ROOF_TYPES = [
+  { value: "Shingle", hint: "Asphalt / composition shingles" },
+  { value: "Tile", hint: "Clay or concrete tiles" },
+  { value: "Flat", hint: "Low-slope or flat roof" },
+  { value: "Not Sure", hint: "We'll figure it out on site" },
 ];
 
 const PAYMENT = [
-  { value: "Financing", hint: "0% interest options for qualified homeowners" },
+  { value: "Financing", hint: "0% APR for 24 months for qualified borrowers" },
   { value: "Cash", hint: "Paying out of pocket" },
   { value: "Insurance", hint: "Storm or damage claim" },
   { value: "Not Sure Yet", hint: "We'll walk you through options" },
-];
-
-// Autocomplete suggestions only - any city can still be typed.
-const CITIES = [
-  "Sacramento",
-  "Elk Grove",
-  "Roseville",
-  "Citrus Heights",
-  "Folsom",
-  "Rancho Cordova",
-  "Carmichael",
-  "Fair Oaks",
-  "North Highlands",
-  "Antelope",
-  "Rocklin",
-  "Natomas",
-  "West Sacramento",
-  "Davis",
-  "Orangevale",
-  "Granite Bay",
-  "Lincoln",
-  "El Dorado Hills",
 ];
 
 const TOTAL_STEPS = 5;
@@ -97,33 +82,64 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     </div>
   </div>
 
-  <!-- 1. Project type (multi-select, like the original) -->
-  <fieldset class="quiz__step" data-step data-required-group="services[]">
-    <legend class="quiz__question" tabindex="-1">What can we help you with?</legend>
-    <p class="quiz__hint">Select all that apply.</p>
-    <div class="quiz__options quiz__options--grid">
-      {SERVICES.map((service) => (
+  <!-- 1. Service (single choice - auto-advances on tap) -->
+  <fieldset class="quiz__step" data-step data-required-group="services[]" data-auto-advance>
+    <legend class="quiz__question" tabindex="-1">What service are you interested in?</legend>
+    <p class="quiz__hint">Pick the one that fits best.</p>
+    <div class="quiz__options">
+      {SERVICES.map((option) => (
         <label class="quiz__option">
-          <input type="checkbox" name="services[]" value={service} />
+          <input type="radio" name="services[]" value={option.value} />
           <span class="quiz__option-box">
-            <span class="quiz__check" aria-hidden="true"></span>
-            <span class="quiz__option-label">{service}</span>
+            <span class="quiz__check quiz__check--radio" aria-hidden="true"></span>
+            <span class="quiz__option-text">
+              <span class="quiz__option-label">{option.value}</span>
+              <span class="quiz__option-hint">{option.hint}</span>
+            </span>
           </span>
         </label>
       ))}
     </div>
-    <p class="quiz__notice" data-replacement-notice hidden>
-      We&rsquo;re currently booking roof replacements for spring and
-      aren&rsquo;t scheduling new replacement jobs for the rest of this
-      year. We&rsquo;ll still follow up to go over timing.
-    </p>
-    <p class="quiz__error" data-quiz-error hidden>Pick at least one to continue.</p>
+    <!-- Shown (and required) only when "Something Else" is picked. Visible
+         by default so the no-JS long form still offers it. -->
+    <div class="quiz__field quiz__other" data-other-box>
+      <label for="quiz-other">What do you need help with?</label>
+      <textarea
+        id="quiz-other"
+        name="service_other"
+        rows="3"
+        placeholder="e.g. Gutter cleaning, skylight leak, solar panel cleaning..."
+      ></textarea>
+    </div>
+    <p class="quiz__error" data-quiz-error hidden>Pick one to continue.</p>
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
 
-  <!-- 2. Payment (single choice - auto-advances on tap) -->
+  <!-- 2. Roof type (single choice - auto-advances on tap) -->
+  <fieldset class="quiz__step" data-step data-required-group="roof_type" data-auto-advance>
+    <legend class="quiz__question" tabindex="-1">What type of roof do you have?</legend>
+    <p class="quiz__hint">It helps us bring the right materials.</p>
+    <div class="quiz__options">
+      {ROOF_TYPES.map((option) => (
+        <label class="quiz__option">
+          <input type="radio" name="roof_type" value={option.value} />
+          <span class="quiz__option-box">
+            <span class="quiz__check quiz__check--radio" aria-hidden="true"></span>
+            <span class="quiz__option-text">
+              <span class="quiz__option-label">{option.value}</span>
+              <span class="quiz__option-hint">{option.hint}</span>
+            </span>
+          </span>
+        </label>
+      ))}
+    </div>
+    <p class="quiz__error" data-quiz-error hidden>Pick one to continue.</p>
+    <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
+  </fieldset>
+
+  <!-- 3. Payment (single choice - auto-advances on tap) -->
   <fieldset class="quiz__step" data-step data-required-group="payment" data-auto-advance>
-    <legend class="quiz__question" tabindex="-1">How do you plan to pay for this project?</legend>
+    <legend class="quiz__question" tabindex="-1">How do you plan to pay for the work?</legend>
     <p class="quiz__hint">No commitment &mdash; this just helps us prepare your quote.</p>
     <div class="quiz__options">
       {PAYMENT.map((option) => (
@@ -143,46 +159,23 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
 
-  <!-- 3. City -->
-  <fieldset class="quiz__step" data-step>
-    <legend class="quiz__question" tabindex="-1">What city is the property in?</legend>
-    <p class="quiz__hint">We serve the Greater Sacramento area.</p>
-    <div class="quiz__field">
-      <label for="quiz-city" class="visually-hidden">City</label>
-      <input
-        id="quiz-city"
-        name="city"
-        type="text"
-        list="quiz-cities"
-        autocomplete="address-level2"
-        placeholder="e.g. Elk Grove"
-        required
-      />
-      <datalist id="quiz-cities">
-        {CITIES.map((city) => <option value={city} />)}
-      </datalist>
-    </div>
-    <p class="quiz__error" data-quiz-error hidden>Enter your city to continue.</p>
-    <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
-  </fieldset>
-
   <!-- 4. Details (optional) -->
   <fieldset class="quiz__step" data-step>
     <legend class="quiz__question" tabindex="-1">Anything else we should know?</legend>
-    <p class="quiz__hint">Leaks, storm damage, roof age &mdash; optional, but it helps.</p>
+    <p class="quiz__hint">Where the leak or damage is, when it started, roof age &mdash; optional, but it helps.</p>
     <div class="quiz__field">
       <label for="quiz-details" class="visually-hidden">Additional details about your project</label>
       <textarea
         id="quiz-details"
         name="details"
         rows="4"
-        placeholder="e.g. Leak over the garage after the last storm, roof is about 20 years old."
+        placeholder="e.g. Water stain on the bedroom ceiling since the last storm, a few tiles slipped near the chimney."
       ></textarea>
     </div>
     <button type="button" class="quiz__next" data-quiz-next>Continue <span aria-hidden="true">&rarr;</span></button>
   </fieldset>
 
-  <!-- 5. Contact -->
+  <!-- 5. Contact + full property address -->
   <fieldset class="quiz__step" data-step>
     <legend class="quiz__question" tabindex="-1">Last step: who should we contact to schedule your free estimate?</legend>
     <p class="quiz__hint">We&rsquo;ll call or text you to set up a time to come look at your roof. No obligation.</p>
@@ -192,8 +185,8 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
         <input id="quiz-first" name="first_name" type="text" autocomplete="given-name" required />
       </div>
       <div class="quiz__field">
-        <label for="quiz-last">Last Name</label>
-        <input id="quiz-last" name="last_name" type="text" autocomplete="family-name" required />
+        <label for="quiz-last">Last Name <span class="quiz__optional">(optional)</span></label>
+        <input id="quiz-last" name="last_name" type="text" autocomplete="family-name" />
       </div>
     </div>
     <div class="quiz__field">
@@ -204,7 +197,18 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
       <label for="quiz-email">Email</label>
       <input id="quiz-email" name="email" type="email" inputmode="email" autocomplete="email" required />
     </div>
-    <p class="quiz__error" data-quiz-error hidden>Please fill in all fields with a valid phone and email.</p>
+    <div class="quiz__field">
+      <label for="quiz-address">Property Address</label>
+      <input
+        id="quiz-address"
+        name="address"
+        type="text"
+        autocomplete="street-address"
+        placeholder="Street, city"
+        required
+      />
+    </div>
+    <p class="quiz__error" data-quiz-error hidden>Please fill in the boxes marked in red.</p>
     <button type="submit" class="quiz__next quiz__submit">
       Request My Free Estimate <span aria-hidden="true">&rarr;</span>
     </button>
@@ -226,22 +230,6 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     const back = form.querySelector<HTMLButtonElement>("[data-quiz-back]")!;
     let current = 0;
 
-    // Client-requested: roof replacements specifically are booked out
-    // through spring - shown only when that exact checkbox is checked,
-    // not any of the other project types, so a repair/gutter/maintenance
-    // lead (no such delay) never sees it.
-    const replacementNotice = form.querySelector<HTMLElement>("[data-replacement-notice]");
-    const replacementCheckbox = form.querySelector<HTMLInputElement>(
-      'input[name="services[]"][value="Roof Replacement"]'
-    );
-    if (replacementNotice && replacementCheckbox) {
-      const updateReplacementNotice = () => {
-        replacementNotice.hidden = !replacementCheckbox.checked;
-      };
-      replacementCheckbox.addEventListener("change", updateReplacementNotice);
-      updateReplacementNotice();
-    }
-
     // Carry ad attribution from the landing URL into the lead.
     const params = new URLSearchParams(window.location.search);
     form.querySelectorAll<HTMLInputElement>("[data-tracking]").forEach((input) => {
@@ -253,22 +241,68 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
       if (fbq) fbq("trackCustom", event, data);
     };
 
-    const isStepValid = (step: HTMLFieldSetElement) => {
+    type TextField = HTMLInputElement | HTMLTextAreaElement;
+
+    const isFieldValid = (field: TextField) => {
+      if (field.required && !field.value.trim()) return false;
+      if (field.type === "tel" && field.value.replace(/\D/g, "").length < 10) return false;
+      return field.checkValidity();
+    };
+
+    // Red box on a field that failed validation; cleared as soon as it's fixed.
+    const markField = (field: TextField, invalid: boolean) => {
+      if (invalid) field.setAttribute("aria-invalid", "true");
+      else field.removeAttribute("aria-invalid");
+    };
+
+    // The text fields a step currently shows (skips the hidden "Something
+    // Else" box when another service is picked).
+    const visibleFields = (step: HTMLFieldSetElement) =>
+      Array.from(
+        step.querySelectorAll<TextField>('input:not([type="radio"]):not([type="checkbox"]), textarea')
+      ).filter((field) => !field.closest("[hidden]"));
+
+    const isStepValid = (step: HTMLFieldSetElement, mark = false) => {
+      let valid = true;
       const group = step.dataset.requiredGroup;
-      if (group) {
-        return step.querySelector(`input[name="${group}"]:checked`) !== null;
+      if (group && !step.querySelector(`input[name="${group}"]:checked`)) valid = false;
+      for (const field of visibleFields(step)) {
+        const fieldValid = isFieldValid(field);
+        if (mark) markField(field, !fieldValid);
+        if (!fieldValid) valid = false;
       }
-      const fields = Array.from(step.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea"));
-      return fields.every((field) => {
-        if (field.type === "tel" && field.value.replace(/\D/g, "").length < 10) return false;
-        return field.checkValidity();
-      });
+      return valid;
     };
 
     const showError = (step: HTMLFieldSetElement, show: boolean) => {
       const error = step.querySelector<HTMLElement>("[data-quiz-error]");
-      if (error) error.hidden = !show;
+      if (!error) return;
+      error.hidden = !show;
+      if (!show) return;
+      // Step 1: a service is picked but the "Something Else" box is empty.
+      error.dataset.default ??= error.textContent ?? "";
+      const group = step.dataset.requiredGroup;
+      const picked = group ? step.querySelector(`input[name="${group}"]:checked`) : null;
+      error.textContent = picked && step.querySelector("[data-other-box]:not([hidden])")
+        ? "Tell us what you need help with to continue."
+        : error.dataset.default;
+      step.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
     };
+
+    // "Something Else" opens a box to explain - and makes it required.
+    const otherBox = form.querySelector<HTMLElement>("[data-other-box]");
+    const otherText = form.querySelector<HTMLTextAreaElement>("#quiz-other");
+    const setOther = (on: boolean) => {
+      if (!otherBox || !otherText) return;
+      otherBox.hidden = !on;
+      otherText.required = on;
+      if (!on) {
+        // Switched to another service - don't send stale "something else" text.
+        otherText.value = "";
+        markField(otherText, false);
+      }
+    };
+    setOther(false);
 
     const show = (index: number, focus = true) => {
       current = index;
@@ -289,7 +323,7 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
 
     const next = () => {
       const step = steps[current];
-      if (!isStepValid(step)) {
+      if (!isStepValid(step, true)) {
         showError(step, true);
         return;
       }
@@ -316,11 +350,28 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
 
     // Single-choice steps advance on tap - one less button press per
     // question. A short delay lets the selected state register visually.
+    // "Something Else" doesn't advance - it opens its explain box instead.
     steps.forEach((step) => {
-      step.addEventListener("change", () => {
+      step.addEventListener("change", (event) => {
+        const target = event.target as HTMLInputElement;
+        if (target.type !== "radio") return;
         showError(step, false);
+        if (target.name === "services[]") {
+          const isOther = target.value === "Something Else";
+          setOther(isOther);
+          if (isOther) {
+            otherText?.focus();
+            return;
+          }
+        }
         if (step.dataset.autoAdvance !== undefined) window.setTimeout(next, 220);
       });
+    });
+
+    // Clear a red box as soon as what's typed in it becomes valid.
+    form.addEventListener("input", (event) => {
+      const field = event.target as TextField;
+      if (field.getAttribute("aria-invalid") === "true" && isFieldValid(field)) markField(field, false);
     });
 
     // Enter in a text input moves forward instead of submitting early.
@@ -334,7 +385,7 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
 
     form.addEventListener("submit", (event) => {
       const step = steps[current];
-      if (current !== steps.length - 1 || !isStepValid(step)) {
+      if (current !== steps.length - 1 || !isStepValid(step, true)) {
         event.preventDefault();
         if (current === steps.length - 1) showError(step, true);
         else next();
@@ -480,36 +531,22 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
     line-height: var(--leading-snug);
     letter-spacing: var(--tracking-tight);
     text-wrap: balance;
+    text-align: center;
     color: var(--color-text);
     padding: 0;
     outline: none;
   }
 
   .quiz__hint {
-    margin-top: var(--space-2);
-    margin-bottom: var(--space-5);
+    margin: var(--space-2) auto var(--space-5);
     font-size: var(--text-body-sm);
-  }
-
-  .quiz__notice {
-    font-size: var(--text-body-sm);
-    color: var(--color-text);
-    background: var(--color-accent-tint);
-    border-left: 3px solid var(--color-accent-strong);
-    padding: var(--space-3) var(--space-4);
-    margin-top: var(--space-4);
+    text-align: center;
   }
 
   /* ---- Option tiles ---- */
   .quiz__options {
     display: grid;
     gap: var(--space-3);
-  }
-
-  @media (min-width: 600px) {
-    .quiz__options--grid {
-      grid-template-columns: 1fr 1fr;
-    }
   }
 
   .quiz__option {
@@ -656,6 +693,35 @@ const META_FIELDS = ["event_id", "fbp", "fbc"];
   .quiz__field textarea {
     resize: vertical;
     min-height: 110px;
+  }
+
+  .quiz__other {
+    margin-top: var(--space-4);
+    margin-bottom: 0;
+  }
+
+  /* .quiz__field's display: flex would otherwise override [hidden]. */
+  .quiz__other[hidden] {
+    display: none;
+  }
+
+  .quiz__other textarea {
+    min-height: 90px;
+  }
+
+  /* Missing or invalid on a Continue/Submit attempt. */
+  .quiz__field input[aria-invalid="true"],
+  .quiz__field textarea[aria-invalid="true"] {
+    border-color: #a3261b;
+    border-width: 2px;
+    background: #fdf1f0;
+  }
+
+  .quiz__optional {
+    font-weight: var(--weight-body);
+    letter-spacing: var(--tracking-normal);
+    text-transform: none;
+    color: var(--color-text-muted);
   }
 
   .quiz__error {
